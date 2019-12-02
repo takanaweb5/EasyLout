@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+
 Private objColumn    As Range   'ŠY“–‚Ì—ñ
 
 '*****************************************************************************
@@ -61,9 +62,9 @@ End Property
 '*****************************************************************************
 Public Property Get Pixel(Optional ByVal i As Long = 0) As Long
     If i = 0 Then
-        Pixel = objColumn.Width / 0.75
+        Pixel = objColumn.Width / DPIRatio
     Else
-        Pixel = objColumn.Columns(i).Width / 0.75
+        Pixel = objColumn.Columns(i).Width / DPIRatio
     End If
 End Property
 

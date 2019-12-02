@@ -1,13 +1,40 @@
 Attribute VB_Name = "GeneralTools"
 Option Explicit
+Option Private Module
 
+#If VBA7 Then
+Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+Public Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Public Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long
+Public Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
+Public Declare PtrSafe Function IsZoomed Lib "user32" (ByVal hwnd As Long) As Long
+Public Declare PtrSafe Function GetSystemMenu Lib "user32" (ByVal hwnd As Long, ByVal bRevert As Long) As Long
+Public Declare PtrSafe Function EnableMenuItem Lib "user32.dll" (ByVal hMenu As Long, ByVal uIDEnableItem As Long, ByVal uEnable As Long) As Long
+Public Declare PtrSafe Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As Long
+Public Declare PtrSafe Function GetExitCodeProcess Lib "kernel32.dll" (ByVal PROCESS As Long, lpExitCode As Long) As Long
+'Public Declare PtrSafe Function CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long) As Long
+'Public Declare PtrSafe Function TerminateProcess Lib "KERNEL32.DLL" (ByVal hProcess As Long, ByVal uExitCode As Long) As Long
+Public Declare PtrSafe Function LoadCursor Lib "user32.dll" Alias "LoadCursorA" (ByVal hInstance As Long, ByVal lpCursorName As Long) As Long
+Public Declare PtrSafe Function SetCursor Lib "user32.dll" (ByVal hCursor As Long) As Long
+Public Declare PtrSafe Function GetKeyState Lib "user32" (ByVal lngVirtKey As Long) As Integer
+'Public Declare PtrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As Long) As Long
+Public Declare PtrSafe Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As Long, ByVal b As Long) As Long
+Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As Long, ByVal himc As Long) As Long
+Public Declare PtrSafe Function ReleaseCapture Lib "user32.dll" () As Long
+Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hdc As Long, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
+Public Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
+#Else
 Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
-Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long) As Long
-Public Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hWnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-Public Declare Function ShowWindow Lib "user32" (ByVal hWnd As Long, ByVal nCmdShow As Long) As Long
+Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+Public Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Public Declare Function ShowWindow Lib "user32" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long
 Public Declare Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
-Public Declare Function IsZoomed Lib "user32" (ByVal hWnd As Long) As Long
-Public Declare Function GetSystemMenu Lib "user32" (ByVal hWnd As Long, ByVal bRevert As Long) As Long
+Public Declare Function IsZoomed Lib "user32" (ByVal hwnd As Long) As Long
+Public Declare Function GetSystemMenu Lib "user32" (ByVal hwnd As Long, ByVal bRevert As Long) As Long
 Public Declare Function EnableMenuItem Lib "user32.dll" (ByVal hMenu As Long, ByVal uIDEnableItem As Long, ByVal uEnable As Long) As Long
 Public Declare Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As Long
 Public Declare Function GetExitCodeProcess Lib "kernel32.dll" (ByVal PROCESS As Long, lpExitCode As Long) As Long
@@ -16,12 +43,24 @@ Public Declare Function GetExitCodeProcess Lib "kernel32.dll" (ByVal PROCESS As 
 Public Declare Function LoadCursor Lib "user32.dll" Alias "LoadCursorA" (ByVal hInstance As Long, ByVal lpCursorName As Long) As Long
 Public Declare Function SetCursor Lib "user32.dll" (ByVal hCursor As Long) As Long
 Public Declare Function GetKeyState Lib "user32" (ByVal lngVirtKey As Long) As Integer
-Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+'Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As Long) As Long
+Public Declare Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As Long, ByVal b As Long) As Long
+Public Declare Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As Long, ByVal himc As Long) As Long
+Public Declare Function ReleaseCapture Lib "user32.dll" () As Long
+Public Declare Function GetDeviceCaps Lib "gdi32" (ByVal hdc As Long, ByVal nIndex As Long) As Long
+Public Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
+Public Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
+#End If
 
 ' 定数の定義
 Public Const IDC_HAND = 32649
+Public Const IDC_SIZENWSE = 32642
 Public Const SC_CLOSE = 61536
+Public Const SC_SIZE = &HF000&
 Public Const GWL_WNDPROC = (-4)
+Public Const WM_SYSCOMMAND = &H112
 Public Const WM_RBUTTONDOWN = &H204 '右マウスボタンを押した
 Public Const WM_MOUSEWHEEL = &H20A  'ホイールが回された（Win98,NT4.0以降）
 Public Const MF_BYCOMMAND = 0
@@ -37,11 +76,16 @@ Public Const PROCESS_TERMINATE As Long = &H1
 Public Const PROCESS_QUERY_INFORMATION = &H400
 Public Const STILL_ACTIVE = &H103
 Public Const MAXROWCOLCNT = 1000
+Public Const LOGPIXELSX = 88
+Public Const LOGPIXELSY = 90
+
+Public DPIRatio As Double
 
 '選択タイプ
 Public Enum ESelectionType
     E_Range
     E_Shape
+    E_Non
     E_Other
 End Enum
 
@@ -52,6 +96,13 @@ Public Enum EMergeType
     E_MTBOTH
 End Enum
 
+'ソート用構造体
+Public Type TSortArray
+    Key1  As Long
+    Key2  As Long
+    Key3  As Long
+End Type
+
 '*****************************************************************************
 '[ 関数名 ]　CheckSelection
 '[ 概  要 ]　選択されているかオブジェクトの種類を判定する
@@ -60,6 +111,11 @@ End Enum
 '*****************************************************************************
 Public Function CheckSelection() As ESelectionType
 On Error GoTo ErrHandle
+    If ActiveWorkbook Is Nothing Then
+        CheckSelection = E_Non
+        Exit Function
+    End If
+    
     If Selection Is Nothing Then
         CheckSelection = E_Other
         Exit Function
@@ -85,9 +141,18 @@ End Function
 '*****************************************************************************
 Public Function GetRangeText(ByRef objRange As Range) As String
     Dim i   As Long
+    Dim lngLast    As Long
+    
+    'すべての行の選択時
+    If objRange.Rows.Count = Rows.Count Then
+        '使用されている最後の行
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Row
+    Else
+        lngLast = objRange.Rows.Count
+    End If
     
     '行の数だけループ
-    For i = 1 To objRange.Rows.Count
+    For i = 1 To lngLast
         GetRangeText = GetRangeText & GetRowText(objRange.Rows(i)) & vbLf
     Next i
     
@@ -294,7 +359,6 @@ End Function
 '[ 戻り値 ]　整理した領域
 '*****************************************************************************
 Public Function ArrangeRange(ByRef objRange As Range) As Range
-    Dim objUsedRange As Range
     Dim objArea      As Range
     
     If objRange Is Nothing Then
@@ -307,10 +371,7 @@ Public Function ArrangeRange(ByRef objRange As Range) As Range
     Next
     
     '最後のセル以降の領域を足す
-    With objRange.Worksheet
-        Set objUsedRange = .Range(.Cells(1, 1), .Cells.SpecialCells(xlLastCell))
-    End With
-    Set ArrangeRange = UnionRange(ArrangeRange, MinusRange(objRange, objUsedRange))
+    Set ArrangeRange = UnionRange(ArrangeRange, MinusRange(objRange, GetUsedRange(objRange.Worksheet)))
 End Function
 
 '*****************************************************************************
@@ -381,6 +442,40 @@ Private Function ReverseRange(ByRef objRange As Range) As Range
 End Function
 
 '*****************************************************************************
+'[ 関数名 ]　ReSelectRange
+'[ 概　要 ]　新しい領域を、元の領域の選択ごとのエリアに分割する
+'　　　　　　例:ReSelectRange(Range("A1,A2,A3"),Range("A1:A2")).Address→"A1,A2"
+'[ 引　数 ]　objSelection:元の領域、objNewRange:新しい領域
+'[ 戻り値 ]  objNewRangeを元の領域の選択ごとのエリアに分割したもの
+'*****************************************************************************
+Public Function ReSelectRange(ByRef objSelection As Range, ByRef objNewRange As Range) As Range
+    Dim objTmpRange As Range
+    Dim i As Long
+    Dim strAddress As String
+    Dim strRange   As String
+        
+    For i = 1 To objSelection.Areas.Count
+        Set objTmpRange = IntersectRange(objSelection.Areas(i), objNewRange)
+        If Not (objTmpRange Is Nothing) Then
+            strRange = objTmpRange.Address(False, False)
+            If Not (MinusRange(objTmpRange, Range(strRange)) Is Nothing) Then
+                Set ReSelectRange = objNewRange
+                Exit Function
+            End If
+            strAddress = strAddress & strRange & ","
+        End If
+    Next i
+    
+    '末尾のカンマを削除
+    strAddress = Left$(strAddress, Len(strAddress) - 1)
+    If Len(strAddress) < 256 Then
+        Set ReSelectRange = Range(strAddress)
+    Else
+        Set ReSelectRange = objNewRange
+    End If
+End Function
+
+'*****************************************************************************
 '[ 関数名 ]　GetRowMergeRange
 '[ 概　要 ]　結合された領域を取得する
 '[ 引　数 ]　結合タイプ、対象領域
@@ -391,7 +486,7 @@ Public Function GetMergeRange(ByRef objSelection As Range, Optional ByVal enmMer
     Dim objCell    As Range
     
     '結合されたセルはUsedRange以外にはないので
-    Set objRange = IntersectRange(objSelection, objSelection.Parent.UsedRange) 'Undo出来なくなっちゃう
+    Set objRange = IntersectRange(objSelection, GetUsedRange())
     If objRange Is Nothing Then
         Exit Function
     End If
@@ -545,6 +640,31 @@ ErrHandle:
 End Function
 
 '*****************************************************************************
+'[ 関数名 ]　GetCharactersText
+'[ 概  要 ]　テキストボックスの中身の文字列を取得する
+'[ 引  数 ]　TextFrameオブジェクト
+'[ 戻り値 ]　中身の文字列
+'*****************************************************************************
+Public Function GetCharactersText(ByRef objTextFrame As TextFrame) As String
+    Dim i As Long
+    Dim strText  As String
+    
+    GetCharactersText = ""
+    If objTextFrame.Characters.Text = "" Then
+        Exit Function
+    End If
+
+    'Characters.Textは255文字以上は返さないため、それ以上の文字数の時の対応を行う
+    For i = 1 To 100000 Step 250
+        strText = objTextFrame.Characters(i).Text
+        GetCharactersText = GetCharactersText & Left$(strText, 250)
+        If Len(strText) <= 250 Then
+            Exit Function
+        End If
+    Next
+End Function
+
+'*****************************************************************************
 '[ 関数名 ]　CheckDupRange
 '[ 概  要 ]　領域に重複がないかどうか判定する
 '[ 引  数 ]　判定する領域
@@ -601,26 +721,6 @@ Public Function GetSheeetShapeRange(ByRef objSheet As Worksheet) As ShapeRange
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　DeleteSheet
-'[ 概  要 ]　ワークシートの中身を削除する
-'[ 引  数 ]　対象のワークシート
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Public Sub DeleteSheet(ByRef objSheet As Worksheet)
-    Dim objShape  As Shape
-    For Each objShape In objSheet.Shapes
-        Call objShape.Delete
-    Next objShape
-    
-    With objSheet.Cells
-        Call .Delete
-    End With
-
-    '最後のセルを修正する
-    Call objSheet.Cells.Parent.UsedRange
-End Sub
-
-'*****************************************************************************
 '[ 関数名 ]　GetMergeAddress
 '[ 概  要 ]　結合セル1つだけの時、左上のアドレスしか返らないので、全体を返す
 '[ 引  数 ]　対象アドレス
@@ -637,6 +737,178 @@ Public Function GetMergeAddress(ByVal strAddress As String) As String
             End With
         End If
     End With
+End Function
+
+'*****************************************************************************
+'[ 関数名 ]　StrConvert
+'[ 概  要 ]　文字種の変換を行う
+'[ 引  数 ]　変換前の文字列、変換種類
+'[ 戻り値 ]　変更後の文字列
+'*****************************************************************************
+Public Function StrConvert(ByVal strText As String, ByVal strCommand As String) As String
+    StrConvert = strText
+    Select Case strCommand
+    Case "UpperCase"  '大文字に変換
+        StrConvert = StrConv(StrConvert, vbUpperCase)
+    Case "LowerCase"  '小文字に変換
+        StrConvert = StrConv(StrConvert, vbLowerCase)
+    Case "ProperCase" '先頭のみ大文字に変換
+        StrConvert = StrConv(StrConvert, vbProperCase)
+    Case "Hiragana" 'ひらがなに変換
+        StrConvert = StrConv(StrConvert, vbHiragana)
+    Case "Katakana" 'カタカナに変換
+        StrConvert = StrConv(StrConvert, vbKatakana)
+    Case "Wide"     '全角に変換
+        StrConvert = Replace(StrConvert, """", Chr(&H8168))
+        StrConvert = Replace(StrConvert, "'", "’")
+        StrConvert = Replace(StrConvert, "\", "￥")
+        StrConvert = StrConv(StrConvert, vbWide)
+    Case "Narrow"   '半角に変換
+        StrConvert = Replace(StrConvert, "～", Chr(1) & "~")
+        StrConvert = StrConv(StrConvert, vbNarrow)
+        StrConvert = Replace(StrConvert, Chr(1) & "~", "～")
+    Case "NarrowExceptKana" 'カタカナ以外半角に変換
+        StrConvert = Replace(StrConvert, "～", Chr(1) & "~")
+        StrConvert = StrConvNarrowExceptKana(StrConvert)
+        StrConvert = Replace(StrConvert, Chr(1) & "~", "～")
+    Case "WideOnlyKana" 'カタカナのみ全角に変換
+        StrConvert = StrConvWideOnlyKana(StrConvert)
+    Case "Trim" '前後の空白を削除
+        StrConvert = Trim(StrConvert)
+    End Select
+End Function
+
+'*****************************************************************************
+'[ 関数名 ]　StrConvNarrowExceptKana
+'[ 概  要 ]　カタカナ以外半角に変換
+'[ 引  数 ]　変換前の文字列
+'[ 戻り値 ]　変換後の文字列
+'*****************************************************************************
+Private Function StrConvNarrowExceptKana(ByVal strText As String) As String
+    Dim i       As Long
+    Dim strChar As String
+    
+    '文字数分ループ
+    For i = 1 To Len(strText)
+        strChar = Mid$(strText, i, 1)
+        Select Case AscW(strChar)
+        Case AscW("ア") To AscW("ン"), AscW("ァ"), AscW("ヴ"), _
+             AscW("ー"), AscW("、"), AscW("。")
+            StrConvNarrowExceptKana = StrConvNarrowExceptKana & strChar
+        Case Else
+            StrConvNarrowExceptKana = StrConvNarrowExceptKana & StrConv(strChar, vbNarrow)
+        End Select
+    Next
+End Function
+
+'*****************************************************************************
+'[ 関数名 ]　StrConvWideOnlyKana
+'[ 概  要 ]　カタカナのみ全角に変換
+'[ 引  数 ]　変換前の文字列
+'[ 戻り値 ]　変換後の文字列
+'*****************************************************************************
+Private Function StrConvWideOnlyKana(ByVal strText As String) As String
+    Dim i           As Long
+    Dim strChar     As String
+    Dim strWideChar As String
+    
+    '先頭が(半)濁点の時の対応として、先頭に適当な文字を追加しておく
+    strText = "?" & strText
+    
+    '文字数分後方からループ　※上記で設定した先頭文字は対象外
+    For i = Len(strText) To 2 Step -1
+        strChar = Mid$(strText, i, 1)
+        Select Case AscW(strChar)
+        Case AscW("ｱ") To AscW("ﾝ"), AscW("ｧ") To AscW("ｯ"), AscW("ｦ"), _
+             AscW("ｰ"), AscW("､"), AscW("｡")
+            StrConvWideOnlyKana = StrConv(strChar, vbWide) & StrConvWideOnlyKana
+        Case AscW("ﾞ"), AscW("ﾟ")
+            strWideChar = StrConv(Mid$(strText, i - 1, 2), vbWide)
+            If Len(strWideChar) = 1 Then
+                '例：ｶﾞ → ガ
+                StrConvWideOnlyKana = strWideChar & StrConvWideOnlyKana
+                i = i - 1
+            Else
+                '例：ﾞ(半角) → ゛(全角)
+                StrConvWideOnlyKana = StrConv(strChar, vbWide) & StrConvWideOnlyKana
+            End If
+        Case Else
+            StrConvWideOnlyKana = strChar & StrConvWideOnlyKana
+        End Select
+    Next
+End Function
+
+'*****************************************************************************
+'[ 関数名 ]　SortArray
+'[ 概  要 ]　SortArray配列をWorksheetを使ってソートする
+'[ 引  数 ]　PosArray配列
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub SortArray(ByRef udtSortArray() As TSortArray)
+On Error GoTo ErrHandle
+    Dim objWorksheet As Worksheet
+    Dim i As Long
+    
+    Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
+    Call DeleteSheet(objWorksheet)
+    For i = 1 To UBound(udtSortArray)
+        With udtSortArray(i)
+            objWorksheet.Cells(i, 1) = .Key1
+            objWorksheet.Cells(i, 2) = .Key2
+            objWorksheet.Cells(i, 3) = .Key3
+        End With
+    Next
+    
+    With objWorksheet.Cells(1, 1).CurrentRegion
+        'Key1、Key2 でソートする
+        Call .Sort(Key1:=.Columns(1), Key2:=.Columns(2), Header:=xlNo)
+    End With
+    
+    For i = 1 To UBound(udtSortArray)
+        With udtSortArray(i)
+            .Key1 = objWorksheet.Cells(i, 1)
+            .Key2 = objWorksheet.Cells(i, 2)
+            .Key3 = objWorksheet.Cells(i, 3)
+        End With
+    Next
+ErrHandle:
+    Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　IsBorderMerged
+'[ 概  要 ]　Rangeの境界が結合セルかどうか
+'[ 引  数 ]　判定するRange
+'[ 戻り値 ]　True:境界に結合セルあり、False:なし
+'*****************************************************************************
+Public Function IsBorderMerged(ByRef objRange As Range) As Boolean
+    IsBorderMerged = Not (MinusRange(ArrangeRange(objRange), objRange) Is Nothing)
+End Function
+
+'*****************************************************************************
+'[ 関数名 ]　IsOnlyCell
+'[ 概  要 ]　Rangeが(結合された)単一のセルかどうか
+'[ 引  数 ]　判定するRange
+'[ 戻り値 ]　True:単一のセル、False:複数のセル
+'*****************************************************************************
+Public Function IsOnlyCell(ByRef objRange As Range) As Boolean
+    IsOnlyCell = (objRange.Address = objRange(1, 1).MergeArea.Address)
+End Function
+
+'*****************************************************************************
+'[ 関数名 ]　GetUsedRange
+'[ 概  要 ]　使用されている領域を取得する
+'[ 引  数 ]　判定するRange
+'[ 戻り値 ]　使用されている領域
+'*****************************************************************************
+Public Function GetUsedRange(Optional ByRef objSheet As Worksheet = Nothing) As Range
+    If objSheet Is Nothing Then
+        Set GetUsedRange = Range(Cells(1, 1), Cells.SpecialCells(xlCellTypeLastCell))
+    Else
+        With objSheet
+            Set GetUsedRange = .Range(.Cells(1, 1), .Cells.SpecialCells(xlCellTypeLastCell))
+        End With
+    End If
 End Function
 
 '*****************************************************************************
@@ -675,84 +947,6 @@ Public Function ReSizeRange(ByRef objRange As Range, Optional ByVal lngRowOffset
     End With
     
     Set ReSizeRange = objRange.Worksheet.Range(objCell(1), objCell(2))
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　IsBorderMerged
-'[ 概  要 ]　Rangeの境界が結合セルかどうか
-'[ 引  数 ]　判定するRange
-'[ 戻り値 ]　True:境界に結合セルあり、False:なし
-'*****************************************************************************
-Public Function IsBorderMerged(ByRef objRange As Range) As Boolean
-    IsBorderMerged = Not (MinusRange(ArrangeRange(objRange), objRange) Is Nothing)
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　IsOnlyCell
-'[ 概  要 ]　Rangeが(結合された)単一のセルかどうか
-'[ 引  数 ]　判定するRange
-'[ 戻り値 ]　True:単一のセル、False:複数のセル
-'*****************************************************************************
-Public Function IsOnlyCell(ByRef objRange As Range) As Boolean
-    IsOnlyCell = (objRange.Address = objRange(1, 1).MergeArea.Address)
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　StrConvert
-'[ 概  要 ]　文字種の変換を行う
-'[ 引  数 ]　変換前の文字列、変換種類
-'[ 戻り値 ]　変更後の文字列
-'*****************************************************************************
-Public Function StrConvert(ByVal strText As String, ByVal strCommand As String) As String
-    StrConvert = strText
-    Select Case strCommand
-    Case "UpperCase"  '大文字に変換
-        StrConvert = StrConv(StrConvert, vbUpperCase)
-    Case "LowerCase"  '小文字に変換
-        StrConvert = StrConv(StrConvert, vbLowerCase)
-    Case "ProperCase" '先頭のみ大文字に変換
-        StrConvert = StrConv(StrConvert, vbProperCase)
-    Case "Hiragana" 'ひらがなに変換
-        StrConvert = StrConv(StrConvert, vbHiragana)
-    Case "Katakana" 'カタカナに変換
-        StrConvert = StrConv(StrConvert, vbKatakana)
-    Case "Wide"     '全角に変換
-        StrConvert = Replace(StrConvert, """", Chr(&H8168))
-        StrConvert = Replace(StrConvert, "'", "’")
-        StrConvert = Replace(StrConvert, "\", "￥")
-        StrConvert = StrConv(StrConvert, vbWide)
-    Case "Narrow"   '半角に変換
-        StrConvert = Replace(StrConvert, "～", Chr(1) & "~")
-        StrConvert = StrConv(StrConvert, vbNarrow)
-        StrConvert = Replace(StrConvert, Chr(1) & "~", "～")
-    Case "WideExceptKana" 'カタカナ以外半角に変換
-        StrConvert = Replace(StrConvert, "～", Chr(1) & "~")
-        StrConvert = StrConvWideExceptKana(StrConvert)
-        StrConvert = Replace(StrConvert, Chr(1) & "~", "～")
-    End Select
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　StrConvWideExceptKana
-'[ 概  要 ]　カタカナ以外半角に変換
-'[ 引  数 ]　変換前の文字列
-'[ 戻り値 ]　変換後の文字列
-'*****************************************************************************
-Private Function StrConvWideExceptKana(ByVal strText As String) As String
-    Dim i           As Long
-    Dim strWideChar As String
-    
-    '文字数分ループ
-    For i = 1 To Len(strText)
-        strWideChar = Mid$(strText, i, 1)
-        Select Case AscW(strWideChar)
-        Case AscW("ア") To AscW("ン"), AscW("ァ"), AscW("ヴ"), _
-             AscW("ー"), AscW("、"), AscW("。")
-            StrConvWideExceptKana = StrConvWideExceptKana & strWideChar
-        Case Else
-            StrConvWideExceptKana = StrConvWideExceptKana & StrConv(strWideChar, vbNarrow)
-        End Select
-    Next
 End Function
 
 '*****************************************************************************
@@ -806,12 +1000,45 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
+'[ 関数名 ]　DeleteSheet
+'[ 概  要 ]　ワークシートの中身を削除する
+'[ 引  数 ]　対象のワークシート
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub DeleteSheet(ByRef objSheet As Worksheet)
+    Dim objShape  As Shape
+    For Each objShape In objSheet.Shapes
+        Call objShape.Delete
+    Next objShape
+    
+    With objSheet.Cells
+        Call .Delete
+    End With
+
+    '最後のセルを修正する
+    Call objSheet.Cells.Parent.UsedRange
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　ClearBook
+'[ 概  要 ]　Workbookをクリアする
+'[ 引  数 ]　Workbook
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub ClearBook(ByRef objWorkbook As Workbook)
+    '名前オブジェクトをすべて削除する
+    Call DeleteNames(ThisWorkbook)
+    'スタイルをすべて削除する
+    Call DeleteStyles(ThisWorkbook)
+End Sub
+
+'*****************************************************************************
 '[ 関数名 ]　DeleteNames
 '[ 概  要 ]　名前オブジェクトを削除する
 '[ 引  数 ]　Workbook
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub DeleteNames(ByRef objWorkbook As Workbook)
+Private Sub DeleteNames(ByRef objWorkbook As Workbook)
     Dim objName     As Name
     For Each objName In objWorkbook.Names
         Call objName.Delete
@@ -826,9 +1053,40 @@ End Sub
 '*****************************************************************************
 Public Sub DeleteStyles(ByRef objWorkbook As Workbook)
     Dim objStyle  As Style
-    On Error Resume Next
     For Each objStyle In objWorkbook.Styles
-        Call objStyle.Delete
+        If objStyle.BuiltIn = False Then
+            Call objStyle.Delete
+        End If
     Next objStyle
-    On Error GoTo 0
 End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　SetIMEOff
+'[ 概  要 ]　ＩＭＥをオフにする
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub SetIMEOff()
+On Error GoTo ErrHandle
+    Dim hIME As Long
+    hIME = ImmGetContext(Application.hwnd)
+    Call ImmSetOpenStatus(hIME, 0)
+ErrHandle:
+    If hIME <> 0 Then
+        Call ImmReleaseContext(Application.hwnd, hIME)
+    End If
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　SetDPIRatio
+'[ 概  要 ]　DPIの変換率を設定する ※72(ExcelのデフォルトのDPI)/画面のDPI
+'[ 引  数 ]　Workbook
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub SetDPIRatio()
+    Dim DC As Long
+    DC = GetDC(0)
+    DPIRatio = 72 / GetDeviceCaps(DC, LOGPIXELSX)
+    Call ReleaseDC(0, DC)
+End Sub
+

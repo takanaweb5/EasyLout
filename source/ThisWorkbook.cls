@@ -20,6 +20,7 @@ On Error GoTo ErrHandle
 
     'ＰＣによってはアイコンが表示されないことがあるため
     Call Sleep(1000)
+    MsgBox "Workbook_AddinInstall"
     
     'かんたんレイアウトのインストール
     Call InstToolBar
@@ -160,12 +161,20 @@ Private Sub InstTool2Bar()
         .BeginGroup = True
     End With
         
+    On Error Resume Next
+    With objCmdBar.Controls.Add(msoControlButton, 5837)
+        .Caption = "罫線を除くすべてを貼り付け"
+        .Style = msoButtonIcon
+    End With
+    On Error GoTo ErrHandle
+        
     With objCmdBar.Controls.Add(msoControlButton)
         .Caption = "値の貼り付け"
     End With
         
     With objCmdBar.Controls.Add(msoControlButton)
         .Caption = "値を保持して結合"
+        .BeginGroup = True
     End With
         
     With objCmdBar.Controls.Add(msoControlButton)
@@ -179,7 +188,7 @@ Private Sub InstTool2Bar()
     With objCmdBar.Controls.Add(msoControlPopup)
         .Caption = "その他"
         .BeginGroup = True
-        .OnAction = "SetEnabled"
+        .OnAction = "OnElseMenuClick"
     End With
         
     With objCmdBar.Controls("その他").Controls.Add(msoControlButton)
@@ -213,18 +222,27 @@ Private Sub InstTool2Bar()
         End With
         With .Controls.Add(msoControlButton)
             .Caption = "ひらがなに変換"
+            .BeginGroup = True
         End With
         With .Controls.Add(msoControlButton)
             .Caption = "カタカナに変換"
         End With
         With .Controls.Add(msoControlButton)
             .Caption = "全角に変換"
+            .BeginGroup = True
         End With
         With .Controls.Add(msoControlButton)
             .Caption = "半角に変換"
         End With
         With .Controls.Add(msoControlButton)
+            .Caption = "カタカナのみ全角に変換"
+        End With
+        With .Controls.Add(msoControlButton)
             .Caption = "カタカナ以外半角に変換"
+        End With
+        With .Controls.Add(msoControlButton)
+            .Caption = "先頭と末尾の空白を削除"
+            .BeginGroup = True
         End With
     End With
     
@@ -295,6 +313,7 @@ Private Sub Workbook_Open()
     Dim i As Long
     
     Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
+    Call SetDPIRatio
     
     If blnIsAddin = True Then
         Call Application.OnKey("+{F2}", "OpenEdit")
@@ -302,6 +321,18 @@ Private Sub Workbook_Open()
         Call Application.OnKey("+^{v}", "PasteText")
         Exit Sub
     End If
+    
+'    'ＰＣによってはアイコンが表示されないことがあるため
+'    Call Sleep(1000)
+'
+'    'かんたんレイアウトのインストール
+'    Call InstToolBar
+'    'かんたんレイアウト2のインストール
+'    Call InstTool2Bar
+'
+'    Application.CommandBars("かんたんレイアウト").Enabled = True
+'    Application.CommandBars("かんたんレイアウト2").Enabled = True
+'    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
     
     For i = 1 To AddIns.Count
         If UCase(AddIns(i).Name) = UCase("EasyLout.xla") Then
@@ -331,3 +362,4 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
     Call Application.OnKey("+^{v}")
     Call Application.OnKey("{BS}")
 End Sub
+

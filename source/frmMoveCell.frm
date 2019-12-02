@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 Public Enum EModeType
@@ -24,7 +25,7 @@ End Enum
 
 Private Enum EDirection
     E_ERR
-    E_NON
+    E_Non
     E_UP
     E_DOWN
     E_LEFT
@@ -130,7 +131,7 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
     If ActiveWindow.FreezePanes = False And ActiveWindow.Split = False Then '画面分割のない時
         If IntersectRange(ActiveWindow.VisibleRange, objToRange) Is Nothing Then
             With objToRange
-                Call ActiveWindow.ScrollIntoView(.Left / 0.75, .Top / 0.75, .Width / 0.75, .Height / 0.75)
+                Call ActiveWindow.ScrollIntoView(.Left / DPIRatio, .Top / DPIRatio, .Width / DPIRatio, .Height / DPIRatio)
             End With
         End If
     End If
@@ -565,18 +566,18 @@ Private Function SelectShapes(ByRef objRange As Range) As ShapeRange
     
     '選択されたエリアに含まれる図形を取得
     For Each objShape In ActiveSheet.Shapes
-        'Excel2007対応0.75の倍数に補正
+        'Excel2007対応DPIRatioの倍数に補正
         With objShape
-            udtShape.Height = .Height / 0.75
-            udtShape.Left = .Left / 0.75
-            udtShape.Top = .Top / 0.75
-            udtShape.Width = .Width / 0.75
+            udtShape.Height = .Height / DPIRatio
+            udtShape.Left = .Left / DPIRatio
+            udtShape.Top = .Top / DPIRatio
+            udtShape.Width = .Width / DPIRatio
         End With
         With objRange
-            udtRange.Height = .Height / 0.75
-            udtRange.Left = .Left / 0.75
-            udtRange.Top = .Top / 0.75
-            udtRange.Width = .Width / 0.75
+            udtRange.Height = .Height / DPIRatio
+            udtRange.Left = .Left / DPIRatio
+            udtRange.Top = .Top / DPIRatio
+            udtRange.Width = .Width / DPIRatio
         End With
             
         If udtRange.Left <= udtShape.Left And _
@@ -623,19 +624,17 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
         End With
     Next objShape
     
-    If blnCopy Then
-        '複写する
-        For i = 1 To objShapes.Count
-            If udtShapes(i).Placement <> xlFreeFloating Then
+    For i = 1 To objShapes.Count
+        If udtShapes(i).Placement <> xlFreeFloating Then
+            If blnCopy Then
+                '複写する
                 Call SetRect(GetShapeFromID(udtShapes(i).ID).Duplicate, objToRange, udtShapes(i))
+            Else
+                '移動する
+                Call SetRect(GetShapeFromID(udtShapes(i).ID), objToRange, udtShapes(i))
             End If
-        Next i
-    Else
-        '移動する
-        For i = 1 To objShapes.Count
-            Call SetRect(GetShapeFromID(udtShapes(i).ID), objToRange, udtShapes(i))
-        Next i
-    End If
+        End If
+    Next i
 End Sub
 
 '*****************************************************************************
@@ -650,7 +649,7 @@ Private Sub SetRect(ByRef objShape As Shape, ByRef objRange As Range, ByRef udtS
         objShape.Top = objRange.Rows(udtShape.TopRow).Top + udtShape.Top
         objShape.Left = objRange.Columns(udtShape.LeftColumn).Left + udtShape.Left
     End If
-    
+
     '幅と高さを設定する
     If udtShape.Placement = xlMoveAndSize Then
         objShape.Height = objRange.Rows(udtShape.BottomRow).Top + udtShape.Height - objShape.Top
@@ -848,8 +847,8 @@ Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
         End Select
         
         With ToRange
-            lngLeft = WorksheetFunction.Max(.Left / 0.75 - 1, 0) * ActiveWindow.Zoom / 100
-            lngTop = WorksheetFunction.Max(.Top / 0.75 - 1, 0) * ActiveWindow.Zoom / 100
+            lngLeft = WorksheetFunction.Max(.Left / DPIRatio - 1, 0) * ActiveWindow.Zoom / 100
+            lngTop = WorksheetFunction.Max(.Top / DPIRatio - 1, 0) * ActiveWindow.Zoom / 100
             Call ActiveWindow.ScrollIntoView(lngLeft, lngTop, 1, 1)
         End With
         Exit Sub
@@ -1147,7 +1146,7 @@ Private Sub CheckCutInsertRange()
     
     enmDirection = GetDirection()
     Select Case enmDirection
-    Case E_NON
+    Case E_Non
         Call Err.Raise(C_CheckErrMsg, , "挿入先に移動して下さい")
     Case E_ERR
         Call Err.Raise(C_CheckErrMsg, , "真上・真下・真横以外には挿入できません")
@@ -1349,7 +1348,7 @@ End Sub
 Private Function GetDirection() As EDirection
     Select Case True
     Case ToRange.Row = FromRange.Row And ToRange.Column = FromRange.Column
-        GetDirection = E_NON
+        GetDirection = E_Non
     Case ToRange.Row <> FromRange.Row And ToRange.Column <> FromRange.Column
         GetDirection = E_ERR
     Case ToRange.Row < FromRange.Row

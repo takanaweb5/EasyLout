@@ -87,10 +87,7 @@ Private Sub Class_Terminate()
     Call DeleteSheet(ThisWorkbook.Worksheets("Undo1"))
     Call DeleteSheet(ThisWorkbook.Worksheets("Undo2"))
     
-    '名前オブジェクトをすべて削除する
-    Call DeleteNames(ThisWorkbook)
-    'スタイルをすべて削除する
-    Call DeleteStyles(ThisWorkbook)
+    Call ClearBook(ThisWorkbook)
 End Sub
 
 '*****************************************************************************
@@ -135,11 +132,8 @@ On Error GoTo ErrHandle
     '最後のセルを修正する
     Call ActiveSheet.UsedRange  'Undo出来なくなります
     
-    '名前オブジェクトをすべて削除する
-    Call DeleteNames(ThisWorkbook)
-    
-    'スタイルをすべて削除する
-    Call DeleteStyles(ThisWorkbook)
+    'Workbookをクリアする
+    Call ClearBook(ThisWorkbook)
     
     udtUndoInfo(bytNo).UndoType = enmType
     Set udtUndoInfo(bytNo).Worksheet = ActiveSheet
@@ -240,15 +234,16 @@ On Error GoTo ErrHandle
         End If
     ElseIf TypeOf objObject Is ShapeRange Then
         If udtUndoInfo(bytNo).ShapeCount <> objObject.Count Then
-            '図形の数だけループ
-            For i = 1 To objObject.Count
-                With udtUndoInfo(bytNo)
-                    If .SelectShapes(i) <> objObject(i).ID Then
-                        Exit Function
-                    End If
-                End With
-            Next
+            Exit Function
         End If
+        '図形の数だけループ
+        For i = 1 To objObject.Count
+            With udtUndoInfo(bytNo)
+                If .SelectShapes(i) <> objObject(i).ID Then
+                    Exit Function
+                End If
+            End With
+        Next
     End If
     
     IsBeat = True

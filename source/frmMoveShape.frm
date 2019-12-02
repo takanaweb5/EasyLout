@@ -13,13 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Option Explicit
 
-Private Type TPos
-    TopLeft  As Long
-    Length   As Long
-    No       As Long
-End Type
+Option Explicit
 
 Private Type TRect
     Top      As Double
@@ -64,11 +59,17 @@ Private Sub UserForm_Initialize()
         .Add(, 666).BeginGroup = True  '上揃え
         .Add(, 669).BeginGroup = False '上下中央揃え
         .Add(, 667).BeginGroup = False '下揃え
-        .Add(, 408).BeginGroup = True  '左右に整列
-        .Add(, 465).BeginGroup = False '上下に整列
         
         With .Add(, 408)
+            .BeginGroup = True
+            .Caption = "左右に等間隔で整列(&H)"
+        End With
+        With .Add(, 465)
             .BeginGroup = False
+            .Caption = "上下に等間隔で整列(&V)"
+        End With
+        With .Add(, 408)
+            .BeginGroup = True
             .Caption = "横方向に連結(&J)"
         End With
         With .Add(, 465)
@@ -86,7 +87,7 @@ Private Sub UserForm_Initialize()
             .Caption = "高さを揃える(&E)"
         End With
         With .Add(, 549)
-            .BeginGroup = False
+            .BeginGroup = True
             .FaceId = 550
             .Caption = "グリッドに合せる(&G)"
         End With
@@ -105,8 +106,8 @@ Private Sub UserForm_Initialize()
         objTmpBar.Controls(4).Enabled = False  '上揃え
         objTmpBar.Controls(5).Enabled = False  '上下中央揃え
         objTmpBar.Controls(6).Enabled = False  '下揃え
-        objTmpBar.Controls(7).Enabled = False  '左右に整列
-        objTmpBar.Controls(8).Enabled = False  '上下に整列
+        objTmpBar.Controls(7).Enabled = False  '左右に等間隔で整列
+        objTmpBar.Controls(8).Enabled = False  '上下に等間隔で整列
         objTmpBar.Controls(9).Enabled = False  '横方向に連結
         objTmpBar.Controls(10).Enabled = False '縦方向に連結
         objTmpBar.Controls(11).Enabled = False '幅を揃える
@@ -336,6 +337,7 @@ Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
     
 On Error GoTo ErrHandle
     Dim dblSave    As Double
+    Dim strMove    As String
     
     If GetKeyState(vbKeyShift) < 0 Then
         '図形の大きさを変更
@@ -343,10 +345,12 @@ On Error GoTo ErrHandle
             Select Case (KeyCode)
             Case vbKeyLeft
                 Call ChangeShapesWidth(objShapeRange, 1, blnGrid, True)
+                strMove = "Left"
             Case vbKeyRight
                 Call ChangeShapesWidth(objShapeRange, -1, blnGrid, True)
             Case vbKeyUp
                 Call ChangeShapesHeight(objShapeRange, 1, blnGrid, True)
+                strMove = "Up"
             Case vbKeyDown
                 Call ChangeShapesHeight(objShapeRange, -1, blnGrid, True)
             End Select
@@ -356,10 +360,12 @@ On Error GoTo ErrHandle
                 Call ChangeShapesWidth(objShapeRange, -1, blnGrid, False)
             Case vbKeyRight
                 Call ChangeShapesWidth(objShapeRange, 1, blnGrid, False)
+                strMove = "Right"
             Case vbKeyUp
                 Call ChangeShapesHeight(objShapeRange, -1, blnGrid, False)
             Case vbKeyDown
                 Call ChangeShapesHeight(objShapeRange, 1, blnGrid, False)
+                strMove = "Down"
             End Select
         End If
     Else
@@ -367,16 +373,69 @@ On Error GoTo ErrHandle
         Select Case (KeyCode)
         Case vbKeyLeft
             Call MoveShapesLR(objShapeRange, -1, blnGrid)
+            strMove = "Left"
         Case vbKeyRight
             Call MoveShapesLR(objShapeRange, 1, blnGrid)
+            strMove = "Right"
         Case vbKeyUp
             Call MoveShapesUD(objShapeRange, -1, blnGrid)
+            strMove = "Up"
         Case vbKeyDown
             Call MoveShapesUD(objShapeRange, 1, blnGrid)
+            strMove = "Down"
         End Select
+    End If
+
+    '選択領域が画面から消えたら画面をスクロール
+    Dim i As Long
+    If ActiveWindow.FreezePanes = False And ActiveWindow.Split = False Then '画面分割のない時
+        If strMove <> "" Then
+            With GetShapeRangeRange(objShapeRange)
+                Select Case (strMove)
+                Case "Left"
+                    i = WorksheetFunction.Max(.Column - 1, 1)
+                    If IntersectRange(ActiveWindow.VisibleRange, Columns(i)) Is Nothing Then
+                        Call ActiveWindow.SmallScroll(, , , 1)
+                    End If
+                Case "Right"
+                    i = WorksheetFunction.Min(.Column + .Columns.Count, Columns.Count)
+                    If IntersectRange(ActiveWindow.VisibleRange, Columns(i)) Is Nothing Then
+                        Call ActiveWindow.SmallScroll(, , 1)
+                    End If
+                Case "Up"
+                    i = WorksheetFunction.Max(.Row - 1, 1)
+                    If IntersectRange(ActiveWindow.VisibleRange, Rows(i)) Is Nothing Then
+                        Call ActiveWindow.SmallScroll(, 1)
+                    End If
+                Case "Down"
+                    i = WorksheetFunction.Min(.Row + .Rows.Count, Rows.Count)
+                    If IntersectRange(ActiveWindow.VisibleRange, Rows(i)) Is Nothing Then
+                        Call ActiveWindow.SmallScroll(1)
+                    End If
+                End Select
+            End With
+            
+            '描画の残像を消すため
+            Application.ScreenUpdating = True
+        End If
     End If
 ErrHandle:
 End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　GetShapeRangeRange
+'[ 概  要 ]  ShapeRangeの四方のセル範囲を取得する
+'[ 引  数 ]　ShapeRangeオブジェクト
+'[ 戻り値 ]　セル範囲
+'*****************************************************************************
+Private Function GetShapeRangeRange(ByRef objShapeRange As ShapeRange) As Range
+    Dim i As Long
+    Set GetShapeRangeRange = GetNearlyRange(objShapeRange(1))
+    
+    For i = 2 To objShapeRange.Count
+        Set GetShapeRangeRange = Range(GetShapeRangeRange, GetNearlyRange(objShapeRange(i)))
+    Next
+End Function
 
 '*****************************************************************************
 '[ 関数名 ]　SaveBeforeChange
@@ -513,26 +572,27 @@ End Sub
 Private Sub ConnectShapesH(ByRef objShapes As ShapeRange)
     Dim i     As Long
     
-    ReDim udtPosArray(1 To objShapes.Count) As TPos
+    ReDim udtSortArray(1 To objShapes.Count) As TSortArray
     For i = 1 To objShapes.Count
-        With udtPosArray(i)
-            .No = i
-            .TopLeft = objShapes(i).Left / 0.75
-            .Length = objShapes(i).Width / 0.75
+        With udtSortArray(i)
+            .Key1 = objShapes(i).Left / DPIRatio
+            .Key2 = objShapes(i).Width / DPIRatio
+            .Key3 = i
         End With
     Next
 
-    Call SortPosArray(udtPosArray())
+    'Let,Widthの順でソートする
+    Call SortArray(udtSortArray())
 
-    Dim lngLeft    As Long
-    lngLeft = udtPosArray(1).TopLeft
+    Dim lngTopLeft    As Long
+    lngTopLeft = udtSortArray(1).Key1
     
     For i = 2 To objShapes.Count
-        If udtPosArray(i).TopLeft > udtPosArray(i - 1).TopLeft Then
-            lngLeft = lngLeft + udtPosArray(i - 1).Length
+        If udtSortArray(i).Key1 > udtSortArray(i - 1).Key1 Then
+            lngTopLeft = lngTopLeft + udtSortArray(i - 1).Key2
         End If
         
-        objShapes(udtPosArray(i).No).Left = lngLeft * 0.75
+        objShapes(udtSortArray(i).Key3).Left = lngTopLeft * DPIRatio
     Next
 End Sub
 
@@ -545,66 +605,28 @@ End Sub
 Private Sub ConnectShapesV(ByRef objShapes As ShapeRange)
     Dim i     As Long
     
-    ReDim udtPosArray(1 To objShapes.Count) As TPos
+    ReDim udtSortArray(1 To objShapes.Count) As TSortArray
     For i = 1 To objShapes.Count
-        With udtPosArray(i)
-            .No = i
-            .TopLeft = objShapes(i).Top / 0.75
-            .Length = objShapes(i).Height / 0.75
+        With udtSortArray(i)
+            .Key1 = objShapes(i).Top / DPIRatio
+            .Key2 = objShapes(i).Height / DPIRatio
+            .Key3 = i
         End With
     Next
 
-    Call SortPosArray(udtPosArray())
+    'Top,Heightの順でソートする
+    Call SortArray(udtSortArray())
 
-    Dim lngLeft    As Long
-    lngLeft = udtPosArray(1).TopLeft
+    Dim lngTopLeft    As Long
+    lngTopLeft = udtSortArray(1).Key1
     
     For i = 2 To objShapes.Count
-        If udtPosArray(i).TopLeft > udtPosArray(i - 1).TopLeft Then
-            lngLeft = lngLeft + udtPosArray(i - 1).Length
+        If udtSortArray(i).Key1 > udtSortArray(i - 1).Key1 Then
+            lngTopLeft = lngTopLeft + udtSortArray(i - 1).Key2
         End If
         
-        objShapes(udtPosArray(i).No).Top = lngLeft * 0.75
+        objShapes(udtSortArray(i).Key3).Top = lngTopLeft * DPIRatio
     Next
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　SortPosArray
-'[ 概  要 ]　PosArray配列をWorksheetを使ってソートする
-'[ 引  数 ]　PosArray配列
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub SortPosArray(ByRef udtPosArray() As TPos)
-On Error GoTo ErrHandle
-    Dim objWorksheet As Worksheet
-    Dim i As Long
-    
-    Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
-    Call DeleteSheet(objWorksheet)
-    For i = 1 To UBound(udtPosArray)
-        With udtPosArray(i)
-            objWorksheet.Cells(i, 1) = .TopLeft
-            objWorksheet.Cells(i, 2) = .Length
-            objWorksheet.Cells(i, 3) = .No
-        End With
-    Next
-    
-    With objWorksheet.Cells(1, 1).CurrentRegion
-        'Key1:TopLeft、Key2:Length でソートする
-        Call .Sort(Key1:=.Columns(1), Order1:=xlAscending, _
-                   Key2:=.Columns(2), Order2:=xlAscending, _
-                   Header:=xlNo, OrderCustom:=1, Orientation:=xlTopToBottom)
-    End With
-    
-    For i = 1 To UBound(udtPosArray)
-        With udtPosArray(i)
-            .TopLeft = objWorksheet.Cells(i, 1)
-            .Length = objWorksheet.Cells(i, 2)
-            .No = objWorksheet.Cells(i, 3)
-        End With
-    Next
-ErrHandle:
-    Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
 End Sub
 
 '*****************************************************************************
@@ -626,24 +648,24 @@ Private Sub MoveShapesLR(ByRef objShapes As ShapeRange, ByVal lngSize As Long, B
     If blnFitGrid = True Then
         '図形の数だけループ
         For Each objShape In objShapes
-            lngLeft = Round(objShape.Left / 0.75)
-            lngRight = Round((objShape.Left + objShape.Width) / 0.75)
+            lngLeft = Round(objShape.Left / DPIRatio)
+            lngRight = Round((objShape.Left + objShape.Width) / DPIRatio)
             
             If lngSize < 0 Then
                 lngNewLeft = GetLeftGrid(lngLeft, objShape.TopLeftCell.EntireColumn)
                 If lngNewLeft < lngLeft Then
-                   objShape.Left = lngNewLeft * 0.75
+                   objShape.Left = lngNewLeft * DPIRatio
                 End If
             Else
                 lngNewRight = GetRightGrid(lngRight, objShape.BottomRightCell.EntireColumn)
                 If lngNewRight > lngRight Then
-                   objShape.Left = (lngLeft + lngNewRight - lngRight) * 0.75
+                   objShape.Left = (lngLeft + lngNewRight - lngRight) * DPIRatio
                 End If
             End If
         Next objShape
     Else
         'ピクセル単位の移動を行う
-        Call objShapes.IncrementLeft(lngSize * 0.75)
+        Call objShapes.IncrementLeft(lngSize * DPIRatio)
     End If
 End Sub
 
@@ -666,23 +688,23 @@ Private Sub MoveShapesUD(ByRef objShapes As ShapeRange, ByVal lngSize As Long, B
     If blnFitGrid = True Then
         '図形の数だけループ
         For Each objShape In objShapes
-            lngTop = Round(objShape.Top / 0.75)
-            lngBottom = Round((objShape.Top + objShape.Height) / 0.75)
+            lngTop = Round(objShape.Top / DPIRatio)
+            lngBottom = Round((objShape.Top + objShape.Height) / DPIRatio)
             
             If lngSize < 0 Then
                 lngNewTop = GetTopGrid(lngTop, objShape.TopLeftCell.EntireRow)
                 If lngNewTop < lngTop Then
-                   objShape.Top = lngNewTop * 0.75
+                   objShape.Top = lngNewTop * DPIRatio
                 End If
             Else
                 lngNewBottom = GetBottomGrid(lngBottom, objShape.BottomRightCell.EntireRow)
                 If lngNewBottom > lngBottom Then
-                   objShape.Top = (lngTop + lngNewBottom - lngBottom) * 0.75
+                   objShape.Top = (lngTop + lngNewBottom - lngBottom) * DPIRatio
                 End If
             End If
         Next objShape
     Else
         'ピクセル単位の移動を行う
-        Call objShapes.IncrementTop(lngSize * 0.75)
+        Call objShapes.IncrementTop(lngSize * DPIRatio)
     End If
 End Sub

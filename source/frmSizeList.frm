@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 'タイプ
@@ -118,7 +119,7 @@ Private Sub SetSizeInfoLabel()
         
     If udtSizeInfo.Millimeters = 0 Then
         udtSizeInfo.Millimeters = 100
-        udtSizeInfo.Pixel = Application.CentimetersToPoints(10) / 0.75
+        udtSizeInfo.Pixel = Application.CentimetersToPoints(10) / DPIRatio
     End If
     
     With udtSizeInfo
@@ -134,81 +135,61 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub InitCol()
-    Dim objSelection As Range
     Dim objSizeList  As CSizeList
-    Dim objRange     As Range
-    Dim lngMin       As Long
-    Dim lngNo        As Long
     Dim i            As Long
-    Dim j            As Long
-    Dim k            As Long
     
     '***************************************
     '１列単位の情報を作成
     '***************************************
-    '***********************
-    'エリアをソートする
-    '***********************
+    Dim objSelection As Range
+    Dim j            As Long
+    Dim k            As Long
+    
     '選択範囲のColumnsの和集合を取り重複列を排除する
-    Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn) '@
-    
-    ReDim lngColNo(1 To objSelection.Areas.Count) As Long '@
-    ReDim lngIdxNo(1 To objSelection.Areas.Count) As Long
-    
-    'エリアの数だけループ
-    For i = LBound(lngColNo) To UBound(lngColNo) '@
-        lngColNo(i) = objSelection.Areas(i).Column '@
-    Next i
-    
-    'エリアの数だけループ
-    For i = LBound(lngIdxNo) To UBound(lngIdxNo)
-        lngMin = 9999999
-        For j = LBound(lngColNo) To UBound(lngColNo) '@
-            If lngColNo(j) < lngMin Then '@
-                lngMin = lngColNo(j) '@
-                lngNo = j
-            End If
-        Next j
-        lngIdxNo(i) = lngNo
-        lngColNo(lngNo) = 9999999 '@
-    Next i
-    
-    '***********************
-    'コントロールを作成する
-    '***********************
-    k = 0
-    'エリアの数だけループ
-    For i = LBound(lngIdxNo) To UBound(lngIdxNo)
-        With objSelection.Areas(lngIdxNo(i))
-            '列の数だけループ
-            For j = 1 To .Columns.Count '@
-                k = k + 1
-                Set objSizeList = New CSizeList                      '@
-                Call objSizeList.CreateSizeList(k, frmPage2)
-                Call objSizeList.SetValues(.Columns(j).EntireColumn) '@
-                Call colSizeList(2).Add(objSizeList)
+    Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
         
-                '256を最大とする
-                If k > C_MAX Then
-                    Application.ScreenUpdating = True
-                    Call Err.Raise(513, , C_MAX & "以上の列に対して実行できません。")
-                End If
-            Next j
-        End With
-    Next i
+    'トータル列数のカウント
+    For i = 1 To objSelection.Areas.Count
+        j = j + objSelection.Areas(i).Columns.Count
+        
+        '256を最大とする
+        If j > C_MAX Then
+            Application.ScreenUpdating = True
+            Call Err.Raise(513, , C_MAX & "以上の列に対して実行できません。")
+        End If
+    Next
+    
+    '配列に列番号を格納する
+    ReDim udtSortArray(1 To j) As TSortArray
+    For i = 1 To objSelection.Areas.Count
+        For j = 1 To objSelection.Areas(i).Columns.Count
+            k = k + 1
+            udtSortArray(k).Key1 = objSelection.Areas(i).Columns(j).Column
+        Next
+    Next
+
+    '列番号でソートする
+    Call SortArray(udtSortArray())
+    
+    '列の数だけループ
+    For i = 1 To UBound(udtSortArray)
+        k = udtSortArray(i).Key1
+        Set objSizeList = New CSizeList
+        Call objSizeList.CreateSizeList(i, frmPage2)
+        Call objSizeList.SetValues(Columns(k).EntireColumn)
+        Call colSizeList(2).Add(objSizeList)
+    Next
     
     '***************************************
     'エリア単位の情報を作成
     '***************************************
-    k = 0
     'エリアの数だけループ
-    For Each objRange In Selection.Areas
-        k = k + 1
+    For i = 1 To Selection.Areas.Count
         Set objSizeList = New CSizeList
-        Call objSizeList.CreateSizeList(k, frmPage1)
-        Call objSizeList.SetValues(objRange.Columns.EntireColumn) '@
+        Call objSizeList.CreateSizeList(i, frmPage1)
+        Call objSizeList.SetValues(Selection.Areas(i).Columns.EntireColumn)
         Call colSizeList(1).Add(objSizeList)
-    Next objRange
+    Next
 End Sub
 
 '*****************************************************************************
@@ -218,81 +199,61 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub InitRow()
-    Dim objSelection As Range
     Dim objSizeList  As CSizeList
-    Dim objRange     As Range
-    Dim lngMin       As Long
-    Dim lngNo        As Long
     Dim i            As Long
+    
+    '***************************************
+    '１列単位の情報を作成
+    '***************************************
+    Dim objSelection As Range
     Dim j            As Long
     Dim k            As Long
     
-    '***************************************
-    '１行単位の情報を作成
-    '***************************************
-    '***********************
-    'エリアをソートする
-    '***********************
     '選択範囲のColumnsの和集合を取り重複列を排除する
-    Set objSelection = Union(Selection.EntireRow, Selection.EntireRow) '@
-    
-    ReDim lngRowNo(1 To objSelection.Areas.Count) As Long '@
-    ReDim lngIdxNo(1 To objSelection.Areas.Count) As Long
-    
-    'エリアの数だけループ
-    For i = LBound(lngRowNo) To UBound(lngRowNo) '@
-        lngRowNo(i) = objSelection.Areas(i).Row  '@
-    Next i
-    
-    'エリアの数だけループ
-    For i = LBound(lngIdxNo) To UBound(lngIdxNo)
-        lngMin = 9999999
-        For j = LBound(lngRowNo) To UBound(lngRowNo) '@
-            If lngRowNo(j) < lngMin Then '@
-                lngMin = lngRowNo(j) '@
-                lngNo = j
-            End If
-        Next j
-        lngIdxNo(i) = lngNo
-        lngRowNo(lngNo) = 9999999  '@
-    Next i
-    
-    '***********************
-    'コントロールを作成する
-    '***********************
-    k = 0
-    'エリアの数だけループ
-    For i = LBound(lngIdxNo) To UBound(lngIdxNo)
-        With objSelection.Areas(lngIdxNo(i))
-            '行の数だけループ
-            For j = 1 To .Rows.Count '@
-                k = k + 1
-                Set objSizeList = New CSizeList                      '@
-                Call objSizeList.CreateSizeList(k, frmPage2)
-                Call objSizeList.SetValues(.Rows(j).EntireRow) '@
-                Call colSizeList(2).Add(objSizeList)
+    Set objSelection = Union(Selection.EntireRow, Selection.EntireRow)
         
-                '256を最大とする
-                If k > C_MAX Then
-                    Application.ScreenUpdating = True
-                    Call Err.Raise(513, , C_MAX & "以上の行に対して実行できません。")
-                End If
-            Next j
-        End With
-    Next i
+    'トータル列数のカウント
+    For i = 1 To objSelection.Areas.Count
+        j = j + objSelection.Areas(i).Rows.Count
+        
+        '256を最大とする
+        If j > C_MAX Then
+            Application.ScreenUpdating = True
+            Call Err.Raise(513, , C_MAX & "以上の行に対して実行できません。")
+        End If
+    Next
     
+    '配列に行番号を格納する
+    ReDim udtSortArray(1 To j) As TSortArray
+    For i = 1 To objSelection.Areas.Count
+        For j = 1 To objSelection.Areas(i).Rows.Count
+            k = k + 1
+            udtSortArray(k).Key1 = objSelection.Areas(i).Rows(j).Row
+        Next
+    Next
+
+    '列番号でソートする
+    Call SortArray(udtSortArray())
+    
+    '列の数だけループ
+    For i = 1 To UBound(udtSortArray)
+        k = udtSortArray(i).Key1
+        Set objSizeList = New CSizeList
+        Call objSizeList.CreateSizeList(i, frmPage2)
+        Call objSizeList.SetValues(Rows(k).EntireRow)
+        Call colSizeList(2).Add(objSizeList)
+    Next
+
     '***************************************
     'エリア単位の情報を作成
     '***************************************
-    k = 0
     'エリアの数だけループ
-    For Each objRange In Selection.Areas
-        k = k + 1
+    For i = 1 To Selection.Areas.Count
         Set objSizeList = New CSizeList
-        Call objSizeList.CreateSizeList(k, frmPage1)
-        Call objSizeList.SetValues(objRange.Rows.EntireRow)  '@
+        Call objSizeList.CreateSizeList(i, frmPage1)
+        Call objSizeList.SetValues(Selection.Areas(i).Rows.EntireRow)
         Call colSizeList(1).Add(objSizeList)
-    Next objRange
+    Next
 End Sub
 
 '*****************************************************************************
