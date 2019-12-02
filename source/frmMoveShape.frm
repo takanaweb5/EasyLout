@@ -27,8 +27,9 @@ Private Type TRect
     Left     As Double
     Width    As Double
 End Type
+
 Private Type TShapes  'Undoî•ñ
-    Shapes()       As TRect
+    Shapes() As TRect
 End Type
 
 Private udtShapes(1 To 100) As TShapes
@@ -65,7 +66,7 @@ Private Sub UserForm_Initialize()
         .Add(, 667).BeginGroup = False '‰º‘µ‚¦
         .Add(, 408).BeginGroup = True  '¶‰E‚É®—ñ
         .Add(, 465).BeginGroup = False 'ã‰º‚É®—ñ
-
+        
         With .Add(, 408)
             .BeginGroup = False
             .Caption = "‰¡•ûŒü‚É˜AŒ‹(&J)"

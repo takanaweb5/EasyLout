@@ -13,23 +13,75 @@ Private x2 As Byte '2文字のピクセル
 
 Private Const MaxColumnWidth = 255  '幅の最大サイズ
 
-Private Sub ReduceColsWidth()
-    Call ChangeColsWidth(-1)
+'*****************************************************************************
+'[ 関数名 ]　ChangeWidth
+'[ 概  要 ]　幅の変更
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub ChangeWidth()
+On Error GoTo ErrHandle
+    Dim lngSize As Long
+    
+    '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
+    lngSize = CommandBars.ActionControl.Parameter
+    If GetKeyState(vbKeyControl) < 0 Then
+        lngSize = lngSize * 5
+    End If
+    
+    '選択されているオブジェクトを判定
+    Select Case CheckSelection()
+    Case E_Range
+        Call ChangeColsWidth(lngSize)
+    Case E_Shape
+        Call ChangeShapeWidth(lngSize)
+    End Select
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
-Private Sub ExpandColsWidth()
-    Call ChangeColsWidth(1)
+
+'*****************************************************************************
+'[ 関数名 ]　MoveVerticalBorder
+'[ 概  要 ]　列の境界線を左右に移動する
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub MoveVerticalBorder()
+On Error GoTo ErrHandle
+    Dim lngSize As Long
+    
+    '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
+    lngSize = CommandBars.ActionControl.Parameter
+    If GetKeyState(vbKeyControl) < 0 Then
+        lngSize = lngSize * 5
+    End If
+    
+    '選択されているオブジェクトを判定
+    Select Case CheckSelection()
+    Case E_Range
+        Call MoveBorder(lngSize)
+    Case E_Shape
+'        Call MoveShape(lngSize)
+        Exit Sub
+    End Select
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
-Private Sub MoveColBorderL()
-    Call MoveColBorder(-1)
-End Sub
-Private Sub MoveColBorderR()
-    Call MoveColBorder(1)
-End Sub
-Private Sub MoveCellBorderL()
-    Call MoveCellBorder(-1)
-End Sub
-Private Sub MoveCellBorderR()
-    Call MoveCellBorder(1)
+
+'*****************************************************************************
+'[ 関数名 ]　MoveColumnsBorder
+'[ 概  要 ]　列の境界のセルを左右に移動する
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub MoveColumnsBorder()
+On Error GoTo ErrHandle
+    Call MoveCellBorder(CommandBars.ActionControl.Parameter)
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
 
 '*****************************************************************************
@@ -44,26 +96,9 @@ On Error GoTo ErrHandle
     Dim objSelection As Range   '選択されたすべての列
     Dim strSelection As String
     
-    '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
-        lngSize = lngSize * 5
-    End If
-    
-    '選択されているオブジェクトを判定
-    Select Case CheckSelection()
-    Case E_Other
-        Exit Sub
-    Case E_Shape
-        Call ChangeShapeWidth(lngSize)
-        Exit Sub
-    End Select
-    
     '選択範囲のColumnsの和集合を取り重複列を排除する
     strSelection = Selection.Address
     Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
-    
-    'ピクセル情報を設定する
-    Call SetPixelInfo
     
     '***********************************************
     '非表示の列があるかどうかの判定
@@ -116,12 +151,9 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim lngPixel    As Long    '幅(単位:Pixel)
     For i = 1 To colAddress.Count
-        lngPixel = WidthToPixel(Range(colAddress(i)).Columns(1).ColumnWidth) + lngSize
+        lngPixel = Range(colAddress(i)).Columns(1).Width / 0.75 + lngSize
         If lngPixel < 0 Then
             Call MsgBox("これ以上縮小出来ません", vbExclamation)
-            Exit Sub
-        ElseIf lngPixel > WidthToPixel(MaxColumnWidth) Then
-            Call MsgBox("これ以上拡大出来ません", vbExclamation)
             Exit Sub
         End If
     Next i
@@ -139,11 +171,11 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_ColSize, Range(strSelection), colAddress)
+    Call SaveUndoInfo(E_ColSize2, Range(strSelection), colAddress)
     
     '同じ幅の塊ごとに幅を設定する
     For i = 1 To colAddress.Count
-        lngPixel = WidthToPixel(Range(colAddress(i)).Columns(1).ColumnWidth) + lngSize
+        lngPixel = Range(colAddress(i)).Columns(1).Width / 0.75 + lngSize
         Range(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
     Next i
     
@@ -170,11 +202,15 @@ Public Function GetSameWidthAddresses(ByRef objSelection As Range) As Collection
     Dim i           As Long
     Dim objRange    As Range
     Dim lngLastCell As Long
+    Dim objColumns  As Range
     
     Set GetSameWidthAddresses = New Collection
     
+    '選択範囲のColumnsの和集合を取り重複列を排除する
+    Set objColumns = Union(objSelection.EntireColumn, objSelection.EntireColumn)
+    
     'エリアの数だけループ
-    For Each objRange In objSelection.Areas
+    For Each objRange In objColumns.Areas
         i = objRange.Column
         lngLastCell = i + objRange.Columns.Count - 1
         
@@ -219,7 +255,7 @@ On Error GoTo ErrHandle
     
     'アンドゥ用に元のサイズを保存する
     Application.ScreenUpdating = False
-    Call SaveUndoInfo(E_ShapeSize, Selection.ShapeRange)
+    Call SaveUndoInfo(E_ShapeSize2, Selection.ShapeRange)
     
     '回転している図形をグループ化する
     Set objGroups = GroupSelection(Selection.ShapeRange)
@@ -334,7 +370,7 @@ Public Function GetLeftGrid(ByVal lngPos As Long, ByRef objColumn As Range) As L
     End If
     
     For i = objColumn.Column To 1 Step -1
-        lngLeft = Round(Columns(i).Left / 0.75)
+        lngLeft = Round(GetWidth(Range(Columns(1), Columns(i - 1))) / 0.75)
         If lngLeft < lngPos Then
             GetLeftGrid = lngLeft
             Exit Function
@@ -352,17 +388,14 @@ End Function
 Public Function GetRightGrid(ByVal lngPos As Long, ByRef objColumn As Range) As Long
     Dim i        As Long
     Dim lngRight As Long
-    Dim lngMax   As Long
     
-    lngMax = Round((Columns(Columns.Count).Left + Columns(Columns.Count).Width) / 0.75)
-    
-    If lngPos >= Round(Columns(Columns.Count).Left / 0.75) Then
-        GetRightGrid = lngMax
+    If lngPos >= Round(GetWidth(Range(Columns(1), Columns(Columns.Count - 1))) / 0.75) Then
+        GetRightGrid = Round(GetWidth(Columns) / 0.75)
         Exit Function
     End If
     
     For i = objColumn.Column + 1 To Columns.Count
-        lngRight = Round(Columns(i).Left / 0.75)
+        lngRight = Round(GetWidth(Range(Columns(1), Columns(i - 1))) / 0.75)
         If lngRight > lngPos Then
             GetRightGrid = lngRight
             Exit Function
@@ -390,31 +423,17 @@ ErrHandle:
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　MoveColBorder
+'[ 関数名 ]　MoveBorder
 '[ 概  要 ]　列の境界線を左右に移動する
 '[ 引  数 ]　lngSize : 移動サイズ(単位:ピクセル)
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveColBorder(ByVal lngSize As Long)
+Private Sub MoveBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
     Dim strSelection      As String
     Dim objRange          As Range
     Dim lngPixel(1 To 2)  As Long  '先頭列と最終列のサイズ
     Dim k                 As Long  '最終列の列番号
-    
-    '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
-        lngSize = lngSize * 5
-    End If
-    
-    '選択されているオブジェクトを判定
-    Select Case CheckSelection()
-    Case E_Other
-        Exit Sub
-    Case E_Shape
-'        Call MoveShape(lngSize)
-        Exit Sub
-    End Select
     
     strSelection = Selection.Address
     Set objRange = Selection
@@ -430,20 +449,15 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    'ピクセル情報を設定する
-    Call SetPixelInfo
-    
     '最終列の列番号
     k = objRange.Columns.Count
     
     '変更後のサイズ
-    lngPixel(1) = WidthToPixel(objRange.Columns(1).ColumnWidth) + lngSize '先頭列
-    lngPixel(2) = WidthToPixel(objRange.Columns(k).ColumnWidth) - lngSize '最終列
+    lngPixel(1) = objRange.Columns(1).Width / 0.75 + lngSize '先頭列
+    lngPixel(2) = objRange.Columns(k).Width / 0.75 - lngSize '最終列
     
     'サイズのチェック
-    If (0 <= lngPixel(1) And lngPixel(1) <= WidthToPixel(MaxColumnWidth)) And _
-       (0 <= lngPixel(2) And lngPixel(2) <= WidthToPixel(MaxColumnWidth)) Then
-    Else
+    If lngPixel(1) < 0 Or lngPixel(2) < 0 Then
         Exit Sub
     End If
     
@@ -455,7 +469,7 @@ On Error GoTo ErrHandle
     Dim colAddress  As New Collection
     Call colAddress.Add(objRange.Columns(1).Address)
     Call colAddress.Add(objRange.Columns(k).Address)
-    Call SaveUndoInfo(E_ColSize, Range(strSelection), colAddress)
+    Call SaveUndoInfo(E_ColSize2, Range(strSelection), colAddress)
     
     'サイズの変更
     objRange.Columns(1).ColumnWidth = PixelToWidth(lngPixel(1))
@@ -479,7 +493,7 @@ End Sub
 '
 '    'アンドゥ用に元のサイズを保存する
 '    Application.ScreenUpdating = False
-'    Call SaveUndoInfo(E_ShapeSize, Selection.ShapeRange)
+'    Call SaveUndoInfo(E_ShapeSize2, Selection.ShapeRange)
 '
 '    '[Shift]Keyが押下されていれば、枠線に合わせて変更する
 '    If GetKeyState(vbKeyShift) < 0 Then
@@ -536,9 +550,6 @@ On Error GoTo ErrHandle
     strSelection = Selection.Address
     Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
     
-    'ピクセル情報を設定する
-    Call SetPixelInfo
-    
     '選択範囲の可視部分を取出す
     Set objVisible = GetVisibleCells(objSelection)
     
@@ -575,6 +586,7 @@ On Error GoTo ErrHandle
     'サイズの変更
     '***********************************************
     Application.ScreenUpdating = False
+    
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(objSelection))
     objSelection.ColumnWidth = PixelToWidth(dblWidth / 0.75 / lngColCount)
@@ -636,7 +648,7 @@ End Sub
 '*****************************************************************************
 '[ 関数名 ]　GetWidth
 '[ 概  要 ]　選択エリアの幅を取得
-'            Widthプロパティは32767以上の幅を計算出来ないため
+'            Width/Leftプロパティは32767以上の幅を計算出来ないため
 '[ 引  数 ]　幅を取得するエリア
 '[ 戻り値 ]　幅(Widthプロパティ)
 '*****************************************************************************
@@ -753,7 +765,6 @@ On Error GoTo ErrHandle
     Dim lngSplitCount   As Long    '分割数
     Dim blnCheckInsert  As Boolean
     Dim objNewCol       As Range   '新しい列
-    Dim objNewSelection As Range   '分割後の選択範囲
     
     'Rangeオブジェクトが選択されているか判定
     If CheckSelection() <> E_Range Then
@@ -773,9 +784,6 @@ On Error GoTo ErrHandle
         Call MsgBox("このコマンドは複数の選択列に対して実行できません。", vbExclamation)
         Exit Sub
     End If
-    
-    'ピクセル情報を設定する
-    Call SetPixelInfo
     
     '元の幅
     lngPixel = objRange.EntireColumn.Width / 0.75
@@ -824,18 +832,21 @@ On Error GoTo ErrHandle
     '*************************************************
     '罫線を整える
     '*************************************************
-    Dim strMsg  As String
     '挿入列の１セル毎に罫線をコピーする
-    i = CopyBorders(False, objNewCol)
-    If i <> 0 Then
-        strMsg = CStr(i + 1) & "行目以降のセルの罫線は整備していません。" & vbCrLf
-        strMsg = strMsg & "※通常はこのメッセージは表示されません"
+    If blnCheckInsert = True Then
+        Call CopyBorder("123", objRange.EntireColumn, objNewCol) '左右上下
+    Else
+        Call CopyBorder("23", objRange.EntireColumn, objNewCol)  '右上下
     End If
     
-    '境界線を消す
-    With Range(objRange, objNewCol).EntireColumn
-        .Borders(xlInsideVertical).LineStyle = xlNone
-    End With
+    '*************************************************
+    '横方向に結合する
+    '*************************************************
+    If blnCheckInsert = False Then
+        Call MergeCols(2, objRange.EntireColumn, objNewCol)
+    Else
+        Call MergeCols(3, objRange.EntireColumn, objNewCol)
+    End If
     
     '*************************************************
     '分割を繰返す
@@ -845,12 +856,18 @@ On Error GoTo ErrHandle
         Call objNewCol.EntireColumn.Insert
     Next i
     
-    Set objNewSelection = objRange.Resize(, lngSplitCount)
-    
+    '*************************************************
+    '各列を縦方向に結合する
+    '*************************************************
+    If blnCheckInsert = True Then
+        For i = 2 To lngSplitCount
+            Call MergeCols(4, objRange.EntireColumn, objRange(1, i).EntireColumn)
+        Next i
+    End If
+
     '*************************************************
     '幅の整備
     '*************************************************
-    '新しい幅に設定
     If blnCheckInsert = False Then
         If lngSplitCount = 2 Then
             objRange.EntireColumn.ColumnWidth = PixelToWidth(Int(lngPixel / 2 + 0.5))
@@ -867,9 +884,18 @@ On Error GoTo ErrHandle
     End If
     
     '*************************************************
+    '境界線を消す
+    '*************************************************
+    If blnCheckInsert = False Then
+        With Range(objRange, objNewCol).EntireColumn
+            .Borders(xlInsideVertical).LineStyle = xlNone
+        End With
+    End If
+    
+    '*************************************************
     '後処理
     '*************************************************
-    Call objNewSelection.Select
+    Call Range(objRange, objRange(1, lngSplitCount)).Select
     If blnCheckInsert = False Then
         Call ResetPlacement
     End If
@@ -879,9 +905,6 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Application.ScreenUpdating = True
-    If strMsg <> "" Then
-        Call MsgBox(strMsg, vbExclamation)
-    End If
 Exit Sub
 ErrHandle:
     If blnDisplayPageBreaks = True Then
@@ -901,7 +924,6 @@ End Sub
 '*****************************************************************************
 Private Sub EraseColumn()
 On Error GoTo ErrHandle
-    Dim i                 As Long
     Dim objSelection      As Range
     Dim strSelection      As String
     Dim objRange          As Range
@@ -943,19 +965,8 @@ On Error GoTo ErrHandle
     Dim enmSelectType As ESelectType  '消去パターン
     Dim blnHidden   As Boolean        '非表示とするかどうか
     With frmEraseSelect
-        'シートの１列目が選択されている時
-        If lngLeftCol = 0 Then
-            Call .SetEnabled(E_Back)
-            Call .SetEnabled(E_Middle)
-            .SelectType = E_Front
-        'シートの最終列が選択されている時
-        ElseIf lngRightCol > Columns.Count Then
-            Call .SetEnabled(E_Front)
-            Call .SetEnabled(E_Middle)
-            .SelectType = E_Back
-        Else
-            .SelectType = E_Back
-        End If
+        'シートの１列目が選択されているか
+        .TopSelect = (lngLeftCol = 0)
         
         '選択フォームを表示
         Call .Show
@@ -989,7 +1000,7 @@ On Error GoTo ErrHandle
     'Undo用に列幅を保存するための情報取得
     '****************************************
     Dim colAddress   As New Collection
-    Set colAddress = GetSameWidthAddresses(Range(strSelection).EntireColumn)
+    Set colAddress = GetSameWidthAddresses(Range(strSelection))
     
     '****************************************
     '選択列の左右の列を待避
@@ -1012,12 +1023,8 @@ On Error GoTo ErrHandle
     '****************************************
     '列を消去
     '****************************************
-    Dim strMsg    As String
     Dim lngPixel  As Long   '消去される列の幅(単位:ピクセル)
     Application.ScreenUpdating = False
-    
-    'ピクセル情報を設定する
-    Call SetPixelInfo
     
     'アンドゥ用に元の状態を保存する
     If blnHidden = True Then
@@ -1036,11 +1043,13 @@ On Error GoTo ErrHandle
         '非表示
         objRange.Hidden = True
     Else
-        i = CopyBorder(objRange)
-        If i <> 0 Then
-            strMsg = CStr(i + 1) & "行目以降のセルの罫線は整備していません。" & vbCrLf
-            strMsg = strMsg & "※通常はこのメッセージは表示されません"
-        End If
+        '右端の罫線をコピーする
+        With objRange
+            If .Column > 1 Then
+                Call CopyBorder("2", .Columns(.Columns.Count), .Columns(0))
+            End If
+        End With
+        
         '削除
         Call objRange.Delete(xlShiftToLeft)
     End If
@@ -1068,11 +1077,6 @@ On Error GoTo ErrHandle
     End Select
     Call ResetPlacement
     Call SetOnUndo
-    
-    Application.ScreenUpdating = True
-    If strMsg <> "" Then
-        Call MsgBox(strMsg, vbExclamation)
-    End If
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1081,113 +1085,141 @@ End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　CopyBorder
-'[ 概  要 ]　新しい列に元の列の罫線をコピーする
-'[ 引  数 ]　objRange:削除列
-'[ 戻り値 ]　0:成功、1以上:整備を中断した行
+'[ 概  要 ]　罫線をコピーする
+'[ 引  数 ]　罫線のタイプ(複数指定可):1:左、2:右、3:横罫線
+'            objFromCol：コピ－元の列、objToCol：コピー先の列
+'[ 戻り値 ]　なし
 '*****************************************************************************
-Private Function CopyBorder(ByRef objRange As Range) As Long
-    If objRange.Column > 1 Then
-        '１セル毎に罫線をコピーする
-        With objRange
-            CopyBorder = CopyRightBorder(.Columns(.Columns.Count), .Columns(0))
-        End With
-    End If
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　CopyBorders
-'[ 概  要 ]　新しい列に元の列の罫線をコピーする
-'[ 引  数 ]　blnMerge:すべての列を前の列と結合するかどうか、objRange:挿入列
-'[ 戻り値 ]　0:成功、1以上:整備を中断した行
-'*****************************************************************************
-Private Function CopyBorders(ByVal blnMerge As Boolean, ByRef objRange As Range) As Long
+Private Sub CopyBorder(ByVal strBorderType As String, ByRef objFromCol As Range, ByRef objToCol As Range)
     Dim i                 As Long
-    Dim objCell           As Range   'コピー先のセル
-    Dim objOrgCell        As Range   'コピー元のセル
-    Dim udtBorder(0 To 2) As TBorder '罫線の種類(上･下･右)
+    Dim udtBorder(0 To 3) As TBorder '罫線の種類(左・右・上・下)
     Dim lngLast    As Long
-    Dim sinTime    As Single  '経過時間計算用
     
-    sinTime = Timer()
-    'すべての行を整備するか、最後のセルまで整備するか、2000行まで整備すれば終了する
-    lngLast = WorksheetFunction.Min(Cells.SpecialCells(xlCellTypeLastCell).Row, _
-                              objRange.Row + objRange.Rows.Count - 1, 2000)
+    Call ActiveSheet.UsedRange '最後のセルを修正する Undo出来なくなります
+    If objFromCol.Rows.Count = Rows.Count Then
+        '最後のセルまで整備すれば終了する
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Row
+        If lngLast > MAXROWCOLCNT Then
+            lngLast = MAXROWCOLCNT
+        End If
+    Else
+        '選択されたすべての行を整備する
+        lngLast = objFromCol.Rows.Count
+    End If
+    
     '1行毎にループ
     For i = 1 To lngLast
-        Set objCell = objRange.Rows(i)
+        '罫線の種類を保存
+        With objFromCol.Rows(i)
+            '左の罫線が対象か？
+            If InStr(1, strBorderType, "1") <> 0 Then
+                udtBorder(0) = GetBorder(.Borders(xlEdgeLeft))
+            End If
+            
+            '右の罫線が対象か？
+            If InStr(1, strBorderType, "2") <> 0 Then
+                udtBorder(1) = GetBorder(.Borders(xlEdgeRight))
+            End If
+            
+            '縦の罫線が対象か？
+            If InStr(1, strBorderType, "3") <> 0 Then
+                udtBorder(2) = GetBorder(.Borders(xlEdgeTop))
+                udtBorder(3) = GetBorder(.Borders(xlEdgeBottom))
+            End If
+        End With
         
-        '新しい列のセルが結合セルか
-        If objCell.MergeCells = False Then
-            '元のセルを代入
-            Set objOrgCell = objCell.Offset(0, -1)
-            
-            '罫線の種類を保存(上･下･右)
-            With objOrgCell.MergeArea.Borders
-                udtBorder(0) = GetBorder(.Item(xlEdgeTop))
-                udtBorder(1) = GetBorder(.Item(xlEdgeBottom))
-                udtBorder(2) = GetBorder(.Item(xlEdgeRight))
-            End With
-            
-            '元のセルと結合セルか
-            If blnMerge = True Or objOrgCell.MergeCells = True Then
-                With objOrgCell.MergeArea
-                    '挿入列のセルを結合
-                    Call .Resize(, .Columns.Count + 1).Merge
-                End With
+        '罫線を書く
+        With objToCol.Rows(i)
+            '左の罫線が対象か？
+            If InStr(1, strBorderType, "1") <> 0 Then
+                Call SetBorder(udtBorder(0), .Borders(xlEdgeLeft))
             End If
             
-            With objCell.MergeArea.Borders
-                '罫線を書く(上･下･右)
-                Call SetBorder(udtBorder(0), .Item(xlEdgeTop))
-                Call SetBorder(udtBorder(1), .Item(xlEdgeBottom))
-                Call SetBorder(udtBorder(2), .Item(xlEdgeRight))
-            End With
-            
-            '5秒以上経過したか
-            If Timer() - sinTime > 5 Then
-                CopyBorders = objCell.Row
-                Exit Function
+            '右の罫線が対象か？
+            If InStr(1, strBorderType, "2") <> 0 Then
+                Call SetBorder(udtBorder(1), .Borders(xlEdgeRight))
             End If
-        End If
+            
+            '縦の罫線が対象か？
+            If InStr(1, strBorderType, "3") <> 0 Then
+                Call SetBorder(udtBorder(2), .Borders(xlEdgeTop))
+                Call SetBorder(udtBorder(3), .Borders(xlEdgeBottom))
+            End If
+        End With
     Next i
-    
-    If i = 2001 And Cells.SpecialCells(xlCellTypeLastCell).Row <> 2000 Then
-        CopyBorders = 2000
-    End If
-End Function
+End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　CopyRightBorder
-'[ 概  要 ]　削除列の右端の罫線をコピーする
-'[ 引  数 ]　objFromRange：コピ－元の列
-'　　　　　　objToRange：コピー先の列
-'[ 戻り値 ]　0:成功、1以上:整備を中断した行
+'[ 関数名 ]　MergeCols
+'[ 概  要 ]　先頭列から右端の列まで横方向に結合する
+'[ 引  数 ]　lngType:結合のタイプ、
+'            objTopRow：結合の先頭列、objBottomRow：結合の右端列
+'[ 戻り値 ]　なし
 '*****************************************************************************
-Private Function CopyRightBorder(ByRef objFromRange As Range, ByRef objToRange As Range) As Long
+Private Sub MergeCols(ByVal lngType As Long, ByRef objTopCol As Range, ByRef objRightCol As Range)
     Dim i          As Long
-    Dim udtBorder  As TBorder '右端の罫線の種類
     Dim lngLast    As Long
-    Dim sinTime    As Single  '経過時間計算用
-    sinTime = Timer()
-    'すべての行を整備するか、最後のセルまで整備するか、2000行まで整備すれば終了する
-    lngLast = WorksheetFunction.Min(Cells.SpecialCells(xlCellTypeLastCell).Row, _
-                              objFromRange.Row + objFromRange.Rows.Count - 1, 2000)
+    Dim objRange As Range
+
+    Call ActiveSheet.UsedRange '最後のセルを修正する Undo出来なくなります
+    If objTopCol.Rows.Count = Rows.Count Then
+        '最後のセルまで整備すれば終了する
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Row
+        If lngLast > MAXROWCOLCNT Then
+            lngLast = MAXROWCOLCNT
+        End If
+    Else
+        '選択されたすべての行を整備する
+        lngLast = objTopCol.Rows.Count
+    End If
+    
     '1行毎にループ
     For i = 1 To lngLast
-        'コピ－元のセルの罫線の種類を保存
-        udtBorder = GetBorder(objFromRange.Rows(i).Borders(xlEdgeRight))
-        'コピー先のセルにコピー
-        Call SetBorder(udtBorder, objToRange.Rows(i).Borders(xlEdgeRight))
-        
-        '5秒以上経過したか
-        If Timer() - sinTime > 5 Then
-            CopyRightBorder = objFromRange.Rows(i).Row
+        With objRightCol.Cells(i, 1)
+            '右端の列のセルが結合セルか
+            If .MergeArea.Count = 1 Then
+                Set objRange = GetMergeColRange(lngType, objTopCol.Cells(i, 1), .Cells)
+                If Not (objRange Is Nothing) Then
+                    Call objRange.Merge
+                End If
+            End If
+        End With
+    Next i
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　GetMergeColRange
+'[ 概  要 ]　横方向に結合する領域を取得する
+'[ 引  数 ]　lngType:結合のタイプ、
+'            objBaseCell:先頭列のセル、objTergetCell:対象の列のセル
+'[ 戻り値 ]　結合する領域(Nothing:結合しない時)
+'*****************************************************************************
+Private Function GetMergeColRange(ByVal lngType As Long, _
+                                  ByRef objBaseCell As Range, _
+                                  ByRef objTergetCell As Range) As Range
+    Select Case lngType
+    Case 1 '先頭列から最終の列まで横方向に結合する
+    Case 2 '先頭列が結合セルの時、先頭列から最終の列まで横方向に結合する
+        If objBaseCell.MergeArea.Count = 1 Then
             Exit Function
         End If
-    Next i
-    If i = 2001 And Cells.SpecialCells(xlCellTypeLastCell).Row <> 2000 Then
-        CopyRightBorder = 2000
-    End If
+    Case 3 '先頭列が横方向に結合セルの時、先頭列から最終の列まで横方向に結合する
+        If objBaseCell.MergeArea.Columns.Count = 1 Then
+            Exit Function
+        End If
+    Case 4 '先頭列が縦方向のみ結合セルの時、対象の列のセルを縦方向に結合する
+        If objBaseCell.MergeArea.Rows.Count = 1 Or _
+           objBaseCell.MergeArea.Columns.Count > 1 Then
+            Exit Function
+        End If
+    End Select
+    
+    Select Case lngType
+    Case 1, 2, 3
+        Set GetMergeColRange = Range(objBaseCell.MergeArea, objTergetCell)
+    Case 4
+        Set GetMergeColRange = objTergetCell.Resize(objBaseCell.MergeArea.Rows.Count, 1)
+    End Select
 End Function
 
 '*****************************************************************************
@@ -1202,9 +1234,6 @@ On Error GoTo ErrHandle
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If
-    
-    'ピクセル情報を設定する
-    Call SetPixelInfo
     
     Call frmSizeList.Initialize(E_Col)
     Call frmSizeList.Show
@@ -1280,7 +1309,7 @@ On Error GoTo ErrHandle
     Application.CopyObjectsWithCells = False
     Application.ScreenUpdating = False
     'アンドゥ用に元の状態を保存する
-    Call SaveUndoInfo(E_MergeCell, objSelection)
+    Call SaveUndoInfo(E_CellBorder, objSelection)
     
     '****************************************
     '元の領域を、"Workarea1"シートにコピー
@@ -1303,15 +1332,17 @@ On Error GoTo ErrHandle
     '****************************************
     If lngLeftRight < 0 Then
         '左に移動する
-        Call CopyRightBorder(objWkRange.Columns(2), objWkRange.Columns(1))
+        Call CopyBorder("2", objWkRange.Columns(2), objWkRange.Columns(1))
         Call objWkRange.Columns(2).Delete(xlToLeft)
-        Call CopyBorders(True, objWkRange.Columns(lngColCount))
+        Call CopyBorder("23", objWkRange.Columns(lngColCount - 1), objWkRange.Columns(lngColCount))
+        Call MergeCols(1, objWkRange.Columns(lngColCount - 1), objWkRange.Columns(lngColCount))
     Else
         '右に移動する
-        Call CopyRightBorder(objWkRange.Columns(lngColCount), objWkRange.Columns(lngColCount - 1))
+        Call CopyBorder("2", objWkRange.Columns(lngColCount), objWkRange.Columns(lngColCount - 1))
         Call objWkRange.Columns(lngColCount).Delete(xlToLeft)
         Call objWkRange.Columns(2).Insert(xlToRight)
-        Call CopyBorders(True, objWkRange.Columns(2))
+        Call CopyBorder("23", objWkRange.Columns(1), objWkRange.Columns(2))
+        Call MergeCols(1, objWkRange.Columns(1), objWkRange.Columns(2))
     End If
     
     Call objWkRange.Worksheet.Range(objSelection.Address).Copy(objSelection)
@@ -1344,14 +1375,12 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    Set objSelection = Selection
-    
-    If objSelection.Columns.Count = Columns.Count Then
-        Call MsgBox("このコマンドはすべての列の選択時は実行できません。", vbExclamation)
+    Set objSelection = IntersectRange(Selection, Range(Cells(1, 1), Cells.SpecialCells(xlCellTypeLastCell)))
+    If objSelection Is Nothing Then
         Exit Sub
     End If
     
-    'すべての行が選択されて、列方向の結合セルを含む時
+    '列方向の結合セルを含む時
     If IsBorderMerged(objSelection) Then
         Call MsgBox("結合されたセルの一部を選択することはできません。", vbExclamation)
         Exit Sub
@@ -1383,11 +1412,8 @@ On Error GoTo ErrHandle
     
     If objSelection.MergeCells = False Then
         
-        'ピクセル情報を設定する
-        Call SetPixelInfo
-        
         'アンドゥ用に元のサイズを保存する
-        Call SaveUndoInfo(E_ColSize, objSelection, GetSameWidthAddresses(Union(objSelection.EntireColumn, objSelection.EntireColumn)))
+        Call SaveUndoInfo(E_ColSize, objSelection, GetSameWidthAddresses(objSelection))
         
         Call objSelection.Columns.AutoFit
         
@@ -1416,18 +1442,10 @@ On Error GoTo ErrHandle
     '***********************************************
     '実行
     '***********************************************
-    Dim objUndoColumn As Range
-    
     Application.ScreenUpdating = False
     
-    'ピクセル情報を設定する
-    Call SetPixelInfo
-    
-    '選択範囲のColumnsの和集合を取り重複列を排除する
-    Set objUndoColumn = Union(objWorkRange.EntireColumn, objWorkRange.EntireColumn)
-    
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_ColSize, objSelection, GetSameWidthAddresses(objUndoColumn))
+    Call SaveUndoInfo(E_ColSize, objSelection, GetSameWidthAddresses(objWorkRange))
     
     '列毎にループ
     For i = 1 To colColumns.Count - 1
@@ -1545,8 +1563,8 @@ Private Sub SetColumnWidth(ByRef objColumns As Range)
     lngOldPixel = objColumns.EntireColumn.Width / 0.75
     lngNewPixel = GetNewPixel(objColumns)
     
-    '選択範囲のColumnsの和集合を取り重複列を排除し、同じ幅のセルを取得する
-    Set colAddress = GetSameWidthAddresses(Union(objColumns.EntireColumn, objColumns.EntireColumn))
+    '同じ幅のセルを取得する
+    Set colAddress = GetSameWidthAddresses(objColumns)
     
     '同じ幅の塊ごとに幅を設定する
     For i = 1 To colAddress.Count
@@ -1604,26 +1622,15 @@ End Function
 '[ 戻り値 ]　Width
 '*****************************************************************************
 Public Function PixelToWidth(ByVal lngPixel As Long) As Double
+    'ピクセル情報を設定する
+    Call SetPixelInfo 'Undoできなくなります
+    
     If lngPixel <= x1 Then
         PixelToWidth = lngPixel / x1
     Else
         PixelToWidth = (lngPixel - x1) / (x2 - x1) + 1
     End If
     PixelToWidth = WorksheetFunction.RoundDown(PixelToWidth, 3)
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　WidthToPixel
-'[ 概  要 ]　幅の単位を変換
-'[ 引  数 ]　dblColumnWidth : 幅
-'[ 戻り値 ]　幅(単位:ピクセル)
-'*****************************************************************************
-Private Function WidthToPixel(ByVal dblColumnWidth As Double) As Long
-    If dblColumnWidth <= 1 Then
-        WidthToPixel = dblColumnWidth * x1
-    Else
-        WidthToPixel = (dblColumnWidth - 1) * (x2 - x1) + x1
-    End If
 End Function
 
 '*****************************************************************************
@@ -1639,7 +1646,7 @@ On Error GoTo ErrHandle
     Dim objWorkbook As Workbook
         
     Set objWorkbook = ActiveWorkbook
-        
+    
     '標準スタイルのフォントが変更されたか判定
     With ActiveWorkbook.Styles("Normal").Font
         If udtFont.Name = .Name And udtFont.Size = .Size And _
@@ -1662,17 +1669,25 @@ On Error GoTo ErrHandle
     blnScreenUpdating = Application.ScreenUpdating
     Application.ScreenUpdating = False
     With ThisWorkbook.Styles("Normal").Font
-        .Name = udtFont.Name
-        .Size = udtFont.Size
-        .Bold = udtFont.Bold
-        .Italic = udtFont.Italic
+        If .Name <> udtFont.Name Then
+            .Name = udtFont.Name
+        End If
+        If .Size <> udtFont.Size Then
+            .Size = udtFont.Size
+        End If
+        If .Bold <> udtFont.Bold Then
+            .Bold = udtFont.Bold
+        End If
+        If .Italic <> udtFont.Italic Then
+            .Italic = udtFont.Italic
+        End If
     End With
     Application.ScreenUpdating = blnScreenUpdating
     
     'サイズ情報を保存する
     With ThisWorkbook.Worksheets("Commands")
-        x1 = .Range("J:J").Width / 0.75
-        x2 = .Range("K:K").Width / 0.75
+        x1 = .Range("K:K").Width / 0.75
+        x2 = .Range("L:L").Width / 0.75
     End With
     
     Call objWorkbook.Activate
@@ -1680,4 +1695,5 @@ Exit Sub
 ErrHandle:
     x1 = 13
     x2 = 21
+    Call objWorkbook.Activate
 End Sub

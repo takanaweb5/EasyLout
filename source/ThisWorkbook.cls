@@ -56,6 +56,7 @@ Private Sub InstToolBar()
         .OnAction = "ColRowChange"
         .TooltipText = "行と列を切替える"
         .Style = msoButtonCaption
+        .Tag = "{S+F2}{C+S+C}{C+S+V}"
     End With
     
     With objCmdBar.Controls.Add(msoControlButton)
@@ -178,6 +179,7 @@ Private Sub InstTool2Bar()
     With objCmdBar.Controls.Add(msoControlPopup)
         .Caption = "その他"
         .BeginGroup = True
+        .OnAction = "SetEnabled"
     End With
         
     With objCmdBar.Controls("その他").Controls.Add(msoControlButton)
@@ -201,13 +203,19 @@ Private Sub InstTool2Bar()
         .BeginGroup = True
         
         With .Controls.Add(msoControlButton)
-            .Caption = "小文字に変換"
-        End With
-        With .Controls.Add(msoControlButton)
             .Caption = "大文字に変換"
         End With
         With .Controls.Add(msoControlButton)
+            .Caption = "小文字に変換"
+        End With
+        With .Controls.Add(msoControlButton)
             .Caption = "先頭のみ大文字に変換"
+        End With
+        With .Controls.Add(msoControlButton)
+            .Caption = "ひらがなに変換"
+        End With
+        With .Controls.Add(msoControlButton)
+            .Caption = "カタカナに変換"
         End With
         With .Controls.Add(msoControlButton)
             .Caption = "全角に変換"
@@ -254,7 +262,6 @@ Private Sub InstTool2Bar()
     With objCmdBar.Controls("その他").Controls("文字種の変換").Controls
         For i = 1 To .Count
             Call SetCommand("文字種変換", .Item(i))
-            .Item(i).OnAction = "ConvertStr"
         Next i
     End With
     On Error GoTo ErrHandle
@@ -299,9 +306,8 @@ Private Sub Workbook_Open()
     For i = 1 To AddIns.Count
         If UCase(AddIns(i).Name) = UCase("EasyLout.xla") Then
             If AddIns(i).Installed = True Then
-                Call Application.OnKey("+{F2}", "OpenEdit")
-                Call Application.OnKey("+^{c}", "CopyText")
-                Call Application.OnKey("+^{v}", "PasteText")
+                Call SetKeys
+'                Call Application.OnTime(Now(), "LoadThisWorkbook")
                 Exit Sub
             End If
         End If
@@ -323,4 +329,5 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
     Call Application.OnKey("+{F2}")
     Call Application.OnKey("+^{c}")
     Call Application.OnKey("+^{v}")
+    Call Application.OnKey("{BS}")
 End Sub

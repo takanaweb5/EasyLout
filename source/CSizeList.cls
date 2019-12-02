@@ -277,9 +277,9 @@ Private Sub spbChgSize_Change()
     If frmSizeList.Caption = "サイズ一覧" Then
         'アンドゥ用に元のサイズを保存する
         If frmSizeList.Tag = E_Col Then
-            Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(Selection.EntireColumn))
+            Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(Selection))
         Else
-            Call SaveUndoInfo(E_RowSize, Selection, GetSameHeightAddresses(Selection.EntireRow))
+            Call SaveUndoInfo(E_RowSize, Selection, GetSameHeightAddresses(Selection))
         End If
     End If
     
@@ -428,7 +428,7 @@ Public Sub SetValues(ByRef objRange As Range)
         ReDim blnHidden(1 To objRange.Columns.Count)
         lblArea.Caption = GetColAddress(objRange) '例 「A:C」
         lngCount = objRange.Columns.Count
-    Case E_Row
+    Case E_ROW
         Set objColRows = New CSizeRow
         ReDim blnHidden(1 To objRange.Rows.Count)
         lblArea.Caption = GetRowAddress(objRange) '例 「1:10」

@@ -18,7 +18,7 @@ Option Explicit
 'タイプ
 Enum EColRowType
     E_Col = 1 '列変更時
-    E_Row = 2 '行変更時
+    E_ROW = 2 '行変更時
 End Enum
 
 'サイズ一覧のカスタマイズ情報「@@@mm は @@@ピクセル」
@@ -31,6 +31,7 @@ Private udtSizeInfo As TSizeInfo
 Private colSizeList(1 To 3) As New Collection
 Private lngSelNo   As Long '調整用の選択されたエリアNo
 Private blnDisplayPageBreaks As Boolean '改ページ表示
+Private lngWindowView As Long  'ページビュー
 Private lngRatioNo As Long '割合を保存しているエリアNo
 Private colAddress As Collection '同じ幅の塊ごとのアドレスの配列(Undo用)
 Private Const C_MAX = 256
@@ -41,6 +42,9 @@ Private Const C_MAX = 256
 '*****************************************************************************
 Private Sub UserForm_Initialize()
     '高速化のため改ページを非表示にする
+    lngWindowView = ActiveWindow.View
+    ActiveWindow.View = xlNormalView
+    
     If ActiveSheet.DisplayAutomaticPageBreaks = True Then
         blnDisplayPageBreaks = True
         ActiveSheet.DisplayAutomaticPageBreaks = False
@@ -55,6 +59,8 @@ Private Sub UserForm_Terminate()
     If blnDisplayPageBreaks = True Then
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
+    
+    ActiveWindow.View = lngWindowView
 End Sub
 
 '*****************************************************************************
@@ -66,6 +72,8 @@ End Sub
 Public Sub Initialize(ByVal Value As EColRowType)
     Me.Tag = Value
     
+    Application.ScreenUpdating = False
+    
     '例「100mm は 378ピクセル」
     Call SetSizeInfoLabel
     
@@ -73,12 +81,14 @@ Public Sub Initialize(ByVal Value As EColRowType)
     Case E_Col
         Call InitCol
         tbsTab(1).Caption = "1列単位の情報(全体)"
-    Case E_Row
+    Case E_ROW
         Call InitRow
         tbsTab(1).Caption = "1行単位の情報(全体)"
     End Select
     
     Call ReCalc
+    
+    Application.ScreenUpdating = True
 End Sub
 
 '*****************************************************************************
@@ -98,7 +108,7 @@ Private Sub SetSizeInfoLabel()
                 udtSizeInfo.Millimeters = strArray(0)
                 udtSizeInfo.Pixel = strArray(1)
             End If
-        Case E_Row
+        Case E_ROW
             If IsNumeric(strArray(2)) And IsNumeric(strArray(3)) Then
                 udtSizeInfo.Millimeters = strArray(2)
                 udtSizeInfo.Pixel = strArray(3)
@@ -178,8 +188,9 @@ Private Sub InitCol()
                 Call objSizeList.SetValues(.Columns(j).EntireColumn) '@
                 Call colSizeList(2).Add(objSizeList)
         
-                '100を最大とする
+                '256を最大とする
                 If k > C_MAX Then
+                    Application.ScreenUpdating = True
                     Call Err.Raise(513, , C_MAX & "以上の列に対して実行できません。")
                 End If
             Next j
@@ -261,8 +272,9 @@ Private Sub InitRow()
                 Call objSizeList.SetValues(.Rows(j).EntireRow) '@
                 Call colSizeList(2).Add(objSizeList)
         
-                '100を最大とする
+                '256を最大とする
                 If k > C_MAX Then
+                    Application.ScreenUpdating = True
                     Call Err.Raise(513, , C_MAX & "以上の行に対して実行できません。")
                 End If
             Next j
@@ -375,7 +387,7 @@ Private Sub tbsTab_Change()
     Select Case Me.Tag
     Case E_Col
         tbsTab(1).Caption = "1列単位の情報"
-    Case E_Row
+    Case E_ROW
         tbsTab(1).Caption = "1行単位の情報"
     End Select
     
@@ -414,7 +426,7 @@ Private Sub tbsTab_Change()
         Select Case Me.Tag
         Case E_Col
             Call TabChangeCol(lngNo)
-        Case E_Row
+        Case E_ROW
             Call TabChangeRow(lngNo)
         End Select
     Else

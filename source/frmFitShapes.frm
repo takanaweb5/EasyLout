@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmFitShapes 
    Caption         =   "‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢"
-   ClientHeight    =   2040
+   ClientHeight    =   1860
    ClientLeft      =   48
    ClientTop       =   336
    ClientWidth     =   3960
@@ -15,7 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
-Enum EFitType
+Public Enum EFitType
     E_Default
     E_TopLeft
     E_Another

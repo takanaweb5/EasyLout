@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmUnSelect 
    Caption         =   "選択してください"
-   ClientHeight    =   2136
+   ClientHeight    =   2145
    ClientLeft      =   108
    ClientTop       =   336
    ClientWidth     =   4668
@@ -152,7 +152,7 @@ Private Sub UserForm_Initialize()
     Application.ReferenceStyle = xlA1
 
     'オプションを隠す
-    Me.Height = 128
+    RefEdit.Top = RefEdit.Top + 100
     
     '呼び元に通知する
     blnFormLoad = True

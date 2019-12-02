@@ -3,23 +3,75 @@ Option Explicit
 
 Private Const MaxRowHeight = 409.5  '高さの最大サイズ
 
-Private Sub ReduceRowsHeight()
-    Call ChangeRowsHeight(-1)
+'*****************************************************************************
+'[ 関数名 ]　ChangeHeight
+'[ 概  要 ]　高さの変更
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub ChangeHeight()
+On Error GoTo ErrHandle
+    Dim lngSize As Long
+    
+    '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
+    lngSize = CommandBars.ActionControl.Parameter
+    If GetKeyState(vbKeyControl) < 0 Then
+        lngSize = lngSize * 5
+    End If
+    
+    '選択されているオブジェクトを判定
+    Select Case CheckSelection()
+    Case E_Range
+        Call ChangeRowsHeight(lngSize)
+    Case E_Shape
+        Call ChangeShapeHeight(lngSize)
+    End Select
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
-Private Sub ExpandRowsHeight()
-    Call ChangeRowsHeight(1)
+
+'*****************************************************************************
+'[ 関数名 ]　MoveHorizonBorder
+'[ 概  要 ]　行の境界線を上下に移動する
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub MoveHorizonBorder()
+On Error GoTo ErrHandle
+    Dim lngSize As Long
+    
+    '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
+    lngSize = CommandBars.ActionControl.Parameter
+    If GetKeyState(vbKeyControl) < 0 Then
+        lngSize = lngSize * 5
+    End If
+    
+    '選択されているオブジェクトを判定
+    Select Case CheckSelection()
+    Case E_Range
+        Call MoveBorder(lngSize)
+    Case E_Shape
+'        Call MoveShape(lngSize)
+        Exit Sub
+    End Select
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
-Private Sub MoveRowBorderU()
-    Call MoveRowBorder(-1)
-End Sub
-Private Sub MoveRowBorderD()
-    Call MoveRowBorder(1)
-End Sub
-Private Sub MoveCellBorderU()
-    Call MoveCellBorder(-1)
-End Sub
-Private Sub MoveCellBorderD()
-    Call MoveCellBorder(1)
+
+'*****************************************************************************
+'[ 関数名 ]　MoveRowsBorder
+'[ 概  要 ]　行の境界のセルを上下に移動する
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub MoveRowsBorder()
+On Error GoTo ErrHandle
+    Call MoveCellBorder(CommandBars.ActionControl.Parameter)
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
 
 '*****************************************************************************
@@ -33,20 +85,6 @@ On Error GoTo ErrHandle
     Dim i            As Long
     Dim objSelection As Range   '選択されたすべての列
     Dim strSelection As String
-    
-    '[Ctrl]Keyが押下されていれば、移動高さを5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
-        lngSize = lngSize * 5
-    End If
-    
-    '選択されているオブジェクトを判定
-    Select Case CheckSelection()
-    Case E_Other
-        Exit Sub
-    Case E_Shape
-        Call ChangeShapeHeight(lngSize)
-        Exit Sub
-    End Select
     
     '選択範囲のRowsの和集合を取り重複行を排除する
     strSelection = Selection.Address
@@ -103,12 +141,9 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim lngPixel    As Long    '幅(単位:Pixel)
     For i = 1 To colAddress.Count
-        lngPixel = HeightToPixel(Range(colAddress(i)).Rows(1).RowHeight) + lngSize
+        lngPixel = Range(colAddress(i)).Rows(1).Height / 0.75 + lngSize
         If lngPixel < 0 Then
             Call MsgBox("これ以上縮小出来ません", vbExclamation)
-            Exit Sub
-        ElseIf lngPixel > HeightToPixel(MaxRowHeight) Then
-            Call MsgBox("これ以上拡大出来ません", vbExclamation)
             Exit Sub
         End If
     Next i
@@ -126,11 +161,11 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_RowSize, Range(strSelection), colAddress)
+    Call SaveUndoInfo(E_RowSize2, Range(strSelection), colAddress)
     
     '同じ高さの塊ごとに高さを設定する
     For i = 1 To colAddress.Count
-        lngPixel = HeightToPixel(Range(colAddress(i)).Rows(1).RowHeight) + lngSize
+        lngPixel = Range(colAddress(i)).Rows(1).Height / 0.75 + lngSize
         Range(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
     Next i
     
@@ -154,26 +189,36 @@ End Sub
 '[ 戻り値 ]　アドレスの配列
 '*****************************************************************************
 Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collection
-    Dim i           As Long
-    Dim objRange    As Range
-    Dim lngLastCell As Long
-    Dim lngLastRow  As Long    '使用されている最後の行
-    Dim objWkRange  As Range
+    Dim i             As Long
+    Dim lngLastRow    As Long    '使用されている最後の行
+    Dim lngLastCell   As Long
+    Dim objRange      As Range
+    Dim objWkRange    As Range
+    Dim objRows       As Range
+    Dim objVisible    As Range
+    Dim objNonVisible As Range
     
     Set GetSameHeightAddresses = New Collection
     
     '使用されている最後の行
     lngLastRow = Cells.SpecialCells(xlCellTypeLastCell).Row
-   
+    
+    '選択範囲のRowsの和集合を取り重複行を排除する
+    Set objRows = Union(objSelection.EntireRow, objSelection.EntireRow)
+    
+    '可視セルと不可視セルに分ける
+    Set objVisible = GetVisibleCells(objRows)
+    Set objNonVisible = MinusRange(objRows, objVisible)
+    
     '***********************************************
-    '使用された最後の行以前の領域の設定
+    '使用された最後の行以前の領域の設定(可視領域)
     '***********************************************
-    Set objWkRange = IntersectRange(Range(Rows(1), Rows(lngLastRow)), objSelection)
+    Set objWkRange = IntersectRange(Range(Rows(1), Rows(lngLastRow)), objVisible)
     If Not (objWkRange Is Nothing) Then
         'エリアの数だけループ
         For Each objRange In objWkRange.Areas
             i = objRange.Row
-            lngLastCell = Application.WorksheetFunction.Min(i + objRange.Rows.Count - 1, lngLastRow)
+            lngLastCell = i + objRange.Rows.Count - 1
                     
             '同じ高さの塊ごとに行高を判定する
             While i <= lngLastCell
@@ -184,47 +229,19 @@ Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collectio
     End If
     
     '***********************************************
-    '使用された最後の行以降の領域の設定
+    '使用された最後の行以降の領域の設定(可視領域)
     '***********************************************
-    If lngLastRow = Rows.Count Then
-        Exit Function
-    End If
-    '使用された最後の行以降の領域
-    Set objWkRange = IntersectRange(Range(Rows(lngLastRow + 1), Rows(Rows.Count)), objSelection)
-    If objWkRange Is Nothing Then
-        Exit Function
-    End If
-    
-    '使用された最後の行以降の可視領域の設定
-    Dim objWkRange1 As Range
-    Set objWkRange1 = GetVisibleCells(objWkRange)
-    If objWkRange1 Is Nothing Then
-        '使用された最後の行以降の不可視領域の設定
+    Set objWkRange = IntersectRange(Range(Rows(lngLastRow + 1), Rows(Rows.Count)), objVisible)
+    If Not (objWkRange Is Nothing) Then
         Call GetSameHeightAddresses.Add(objWkRange.Address)
-        Exit Function
-    Else
-        '使用された最後の行以降の可視領域の設定
-        Call GetSameHeightAddresses.Add(objWkRange1.Address)
-        If objWkRange1.Address = objWkRange.Address Then
-            Exit Function
-        End If
     End If
-        
-    '***********************************************
-    '使用された最後の行以降の不可視領域の設定
-    '***********************************************
-    Dim lngLastRow2 As Long   '使用されている最後の行以降で選択された可視の行
-    lngLastRow2 = Rows.Count
-    'エリアの数だけループ
-    For Each objRange In objWkRange1.Areas
-        If objRange.Row < lngLastRow2 Then
-            lngLastRow2 = objRange.Row
-        End If
-    Next objRange
     
-    '使用されている最後の行以降の不可視領域の設定
-    Set objWkRange = IntersectRange(Range(Rows(lngLastRow + 1), Rows(lngLastRow2 - 1)), objSelection)
-    Call GetSameHeightAddresses.Add(objWkRange.Address)
+    '***********************************************
+    '不可視領域の設定
+    '***********************************************
+    If Not (objNonVisible Is Nothing) Then
+        Call GetSameHeightAddresses.Add(objNonVisible.Address)
+    End If
 End Function
 
 '*****************************************************************************
@@ -260,7 +277,7 @@ On Error GoTo ErrHandle
     
     'アンドゥ用に元のサイズを保存する
     Application.ScreenUpdating = False
-    Call SaveUndoInfo(E_ShapeSize, Selection.ShapeRange)
+    Call SaveUndoInfo(E_ShapeSize2, Selection.ShapeRange)
     
     '回転しているものをグループ化する
     Set objGroups = GroupSelection(Selection.ShapeRange)
@@ -431,31 +448,17 @@ ErrHandle:
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　MoveRowBorder
+'[ 関数名 ]　MoveBorder
 '[ 概  要 ]　行の境界線を上下に移動する
 '[ 引  数 ]　lngSize : 移動サイズ(単位:ピクセル)
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveRowBorder(ByVal lngSize As Long)
+Private Sub MoveBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
     Dim strSelection      As String
     Dim objRange          As Range
     Dim lngPixel(1 To 2)  As Long   '先頭行と最終行のサイズ
     Dim k                 As Long   '最終行の行番号
-    
-    '[Ctrl]Keyが押下されていれば、移動高さを5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
-        lngSize = lngSize * 5
-    End If
-    
-    '選択されているオブジェクトを判定
-    Select Case CheckSelection()
-    Case E_Other
-        Exit Sub
-    Case E_Shape
-'        Call MoveShape(lngSize)
-        Exit Sub
-    End Select
     
     strSelection = Selection.Address
     Set objRange = Selection
@@ -475,13 +478,11 @@ On Error GoTo ErrHandle
     k = objRange.Rows.Count
     
     '変更後のサイズ
-    lngPixel(1) = HeightToPixel(objRange.Rows(1).RowHeight) + lngSize '先頭行
-    lngPixel(2) = HeightToPixel(objRange.Rows(k).RowHeight) - lngSize '最終行
+    lngPixel(1) = objRange.Rows(1).Height / 0.75 + lngSize '先頭行
+    lngPixel(2) = objRange.Rows(k).Height / 0.75 - lngSize '最終行
     
     'サイズのチェック
-    If (0 <= lngPixel(1) And lngPixel(1) <= HeightToPixel(MaxRowHeight)) And _
-       (0 <= lngPixel(2) And lngPixel(2) <= HeightToPixel(MaxRowHeight)) Then
-    Else
+    If lngPixel(1) < 0 Or lngPixel(2) < 0 Then
         Exit Sub
     End If
     
@@ -493,7 +494,7 @@ On Error GoTo ErrHandle
     Dim colAddress  As New Collection
     Call colAddress.Add(objRange.Rows(1).Address)
     Call colAddress.Add(objRange.Rows(k).Address)
-    Call SaveUndoInfo(E_RowSize, Selection, colAddress)
+    Call SaveUndoInfo(E_RowSize2, Selection, colAddress)
     
     'サイズの変更
     objRange.Rows(1).RowHeight = PixelToHeight(lngPixel(1))
@@ -517,7 +518,7 @@ End Sub
 '
 '    'アンドゥ用に元のサイズを保存する
 '    Application.ScreenUpdating = False
-'    Call SaveUndoInfo(E_ShapeSize, Selection.ShapeRange)
+'    Call SaveUndoInfo(E_ShapeSize2, Selection.ShapeRange)
 '
 '    '[Shift]Keyが押下されていれば、枠線に合わせて変更する
 '    If GetKeyState(vbKeyShift) < 0 Then
@@ -788,7 +789,6 @@ On Error GoTo ErrHandle
     Dim lngSplitCount   As Long    '分割数
     Dim blnCheckInsert  As Boolean
     Dim objNewRow       As Range    '新しい行
-    Dim objNewSelection As Range   '分割後の選択範囲
     
     'Rangeオブジェクトが選択されているか判定
     If CheckSelection() <> E_Range Then
@@ -810,12 +810,11 @@ On Error GoTo ErrHandle
     End If
     
     '元の高さ
-    lngPixel = HeightToPixel(objRange.EntireRow.RowHeight)
+    lngPixel = objRange.EntireRow.Height / 0.75
     
     '****************************************
     '分割数を選択させる
     '****************************************
-    Dim enmSizeType As ESizeType  '選択されたタイプ
     With frmSplitCount
         'フォームを表示
         Call .Show
@@ -857,13 +856,21 @@ On Error GoTo ErrHandle
     '*************************************************
     '罫線を整える
     '*************************************************
-    '挿入列の１セル毎に罫線をコピーする
-    Call CopyBorders(False, objNewRow)
+    '挿入行の１セル毎に罫線をコピーする
+    If blnCheckInsert = True Then
+        Call CopyBorder("123", objRange.EntireRow, objNewRow) '上下左右
+    Else
+        Call CopyBorder("23", objRange.EntireRow, objNewRow)  '下左右
+    End If
     
-    '境界線を消す
-    With Range(objRange, objNewRow).EntireRow
-        .Borders(xlInsideHorizontal).LineStyle = xlNone
-    End With
+    '*************************************************
+    '縦方向に結合する
+    '*************************************************
+    If blnCheckInsert = False Then
+        Call MergeRows(2, objRange.EntireRow, objNewRow)
+    Else
+        Call MergeRows(3, objRange.EntireRow, objNewRow)
+    End If
     
     '*************************************************
     '分割を繰返す
@@ -873,8 +880,15 @@ On Error GoTo ErrHandle
         Call objNewRow.EntireRow.Insert
     Next i
     
-    Set objNewSelection = objRange.Resize(lngSplitCount)
-    
+    '*************************************************
+    '各行を横方向に結合する
+    '*************************************************
+    If blnCheckInsert = True Then
+        For i = 2 To lngSplitCount
+            Call MergeRows(4, objRange.EntireRow, objRange(i, 1).EntireRow)
+        Next i
+    End If
+
     '*************************************************
     '高さの整備
     '*************************************************
@@ -895,9 +909,18 @@ On Error GoTo ErrHandle
     End If
     
     '*************************************************
+    '境界線を消す
+    '*************************************************
+    If blnCheckInsert = False Then
+        With Range(objRange, objRange(lngSplitCount, 1)).EntireRow
+            .Borders(xlInsideHorizontal).LineStyle = xlNone
+        End With
+    End If
+    
+    '*************************************************
     '後処理
     '*************************************************
-    Call objNewSelection.Select
+    Call Range(objRange, objRange(lngSplitCount, 1)).Select
     If blnCheckInsert = False Then
         Call ResetPlacement
     End If
@@ -926,7 +949,6 @@ End Sub
 '*****************************************************************************
 Private Sub EraseRow()
 On Error GoTo ErrHandle
-    Dim i                 As Long
     Dim objSelection      As Range
     Dim strSelection      As String
     Dim objRange          As Range
@@ -968,19 +990,8 @@ On Error GoTo ErrHandle
     Dim enmSelectType As ESelectType  '消去パターン
     Dim blnHidden   As Boolean        '非表示とするかどうか
     With frmEraseSelect
-        'シートの１行目が選択されている時
-        If lngTopRow = 0 Then
-            Call .SetEnabled(E_Back)
-            Call .SetEnabled(E_Middle)
-            .SelectType = E_Front
-        'シートの最終行が選択されている時
-        ElseIf lngBottomRow > Rows.Count Then
-            Call .SetEnabled(E_Front)
-            Call .SetEnabled(E_Middle)
-            .SelectType = E_Back
-        Else
-            .SelectType = E_Back
-        End If
+        'シートの１行目が選択されているか
+        .TopSelect = (lngTopRow = 0)
         
         '選択フォームを表示
         Call .Show
@@ -1011,10 +1022,10 @@ On Error GoTo ErrHandle
     End If
     
     '****************************************
-    'Undo用に列幅を保存するための情報取得
+    'Undo用に行高を保存するための情報取得
     '****************************************
     Dim colAddress   As New Collection
-    Set colAddress = GetSameHeightAddresses(Range(strSelection).EntireRow)
+    Set colAddress = GetSameHeightAddresses(Range(strSelection))
     
     '****************************************
     '選択行の上下の行を待避
@@ -1057,8 +1068,13 @@ On Error GoTo ErrHandle
         '非表示
         objRange.Hidden = True
     Else
-        '罫線をコピーする
-        Call CopyBorder(objRange)
+        '下の罫線をコピーする
+        With objRange
+            If .Row > 1 Then
+                Call CopyBorder("2", .Rows(.Rows.Count), .Rows(0))
+            End If
+        End With
+        
         '削除
         Call objRange.Delete(xlShiftUp)
     End If
@@ -1094,92 +1110,142 @@ End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　CopyBorder
-'[ 概  要 ]　新しい行に元の行の罫線をコピーする
-'[ 引  数 ]　objRange:削除行
-'[ 戻り値 ]　0:成功、1以上:整備を中断した行
-'*****************************************************************************
-Private Sub CopyBorder(ByRef objRange As Range)
-    If objRange.Row > 1 Then
-        '１セル毎に罫線をコピーする
-        With objRange
-            Call CopyBottomBorder(.Rows(.Rows.Count), .Rows(0))
-        End With
-    End If
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　CopyBorders
-'[ 概  要 ]　新しい行に元の行の罫線をコピーする
-'[ 引  数 ]　blnMerge:すべての行を前の行と結合するかどうか、objRange:挿入行
+'[ 概  要 ]　罫線をコピーする
+'[ 引  数 ]　罫線のタイプ(複数指定可):1:上、2:下、3:縦罫線
+'[ 引  数 ]　objFromRow：コピ－元の行、objToRow：コピー先の行
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub CopyBorders(ByVal blnMerge As Boolean, ByRef objRange As Range)
-    Dim i                 As Long
-    Dim objCell           As Range   'コピー先のセル
-    Dim objOrgCell        As Range   'コピー元のセル
-    Dim udtBorder(0 To 2) As TBorder '罫線の種類(左･右･下)
+Private Sub CopyBorder(ByVal strBorderType As String, ByRef objFromRow As Range, ByRef objToRow As Range)
+    Dim i          As Long
+    Dim udtBorder(0 To 3) As TBorder '罫線の種類(上・下・左･右)
     Dim lngLast    As Long
     
-    'すべての列を整備するか、最後のセルまで整備すれば終了する
-    lngLast = WorksheetFunction.Min(Cells.SpecialCells(xlCellTypeLastCell).Column, _
-                              objRange.Column + objRange.Columns.Count - 1)
+    Call ActiveSheet.UsedRange '最後のセルを修正する Undo出来なくなります
+    If objFromRow.Columns.Count = Columns.Count Then
+        '最後のセルまで整備すれば終了する
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Column
+        If lngLast > MAXROWCOLCNT Then
+            lngLast = MAXROWCOLCNT
+        End If
+    Else
+        '選択されたすべての列を整備する
+        lngLast = objFromRow.Columns.Count
+    End If
+    
     '1列毎にループ
     For i = 1 To lngLast
-        Set objCell = objRange.Columns(i)
-        
-        '新しい行のセルが結合セルか
-        If objCell.MergeCells = False Then
-            '元のセルを代入
-            Set objOrgCell = objCell.Offset(-1, 0)
-            
-            '罫線の種類を保存(左･右･下)
-            With objOrgCell.MergeArea.Borders
-                udtBorder(0) = GetBorder(.Item(xlEdgeLeft))
-                udtBorder(1) = GetBorder(.Item(xlEdgeRight))
-                udtBorder(2) = GetBorder(.Item(xlEdgeBottom))
-            End With
-            
-            '元のセルが結合セルか
-            If blnMerge = True Or objOrgCell.MergeCells = True Then
-                With objOrgCell.MergeArea
-                    '挿入行のセルを結合
-                    Call .Resize(.Rows.Count + 1).Merge
-                End With
+        '罫線の種類を保存
+        With objFromRow.Columns(i)
+            '上の罫線が対象か？
+            If InStr(1, strBorderType, "1") <> 0 Then
+                udtBorder(0) = GetBorder(.Borders(xlEdgeTop))
             End If
             
-            With objCell.MergeArea.Borders
-                '罫線を書く(左･右･下)
-                Call SetBorder(udtBorder(0), .Item(xlEdgeLeft))
-                Call SetBorder(udtBorder(1), .Item(xlEdgeRight))
-                Call SetBorder(udtBorder(2), .Item(xlEdgeBottom))
-            End With
-        End If
+            '下の罫線が対象か？
+            If InStr(1, strBorderType, "2") <> 0 Then
+                udtBorder(1) = GetBorder(.Borders(xlEdgeBottom))
+            End If
+            
+            '横の罫線が対象か？
+            If InStr(1, strBorderType, "3") <> 0 Then
+                udtBorder(2) = GetBorder(.Borders(xlEdgeLeft))
+                udtBorder(3) = GetBorder(.Borders(xlEdgeRight))
+            End If
+        End With
+        
+        '罫線を書く
+        With objToRow.Columns(i)
+            '上の罫線が対象か？
+            If InStr(1, strBorderType, "1") <> 0 Then
+                Call SetBorder(udtBorder(0), .Borders(xlEdgeTop))
+            End If
+            
+            '下の罫線が対象か？
+            If InStr(1, strBorderType, "2") <> 0 Then
+                Call SetBorder(udtBorder(1), .Borders(xlEdgeBottom))
+            End If
+            
+            '横の罫線が対象か？
+            If InStr(1, strBorderType, "3") <> 0 Then
+                Call SetBorder(udtBorder(2), .Borders(xlEdgeLeft))
+                Call SetBorder(udtBorder(3), .Borders(xlEdgeRight))
+            End If
+        End With
     Next i
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　CopyBottomBorder
-'[ 概  要 ]　削除行の下端の罫線をコピーする
-'[ 引  数 ]　objFromRange：コピ－元の行
-'　　　　　　objToRange：コピー先の行
+'[ 関数名 ]　MergeRows
+'[ 概  要 ]　先頭行から底の行まで縦方向に結合する
+'[ 引  数 ]　lngType:結合のタイプ、
+'            objTopRow：結合の先頭行、objBottomRow：結合の底の行
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub CopyBottomBorder(ByRef objFromRange As Range, ByRef objToRange As Range)
+Private Sub MergeRows(ByVal lngType As Long, ByRef objTopRow As Range, ByRef objBottomRow As Range)
     Dim i          As Long
-    Dim udtBorder  As TBorder    '下端の罫線の種類
     Dim lngLast    As Long
+    Dim objRange As Range
     
-    'すべての列を整備するか、最後のセルまで整備すれば終了する
-    lngLast = WorksheetFunction.Min(Cells.SpecialCells(xlCellTypeLastCell).Column, _
-                              objFromRange.Column + objFromRange.Columns.Count - 1)
+    Call ActiveSheet.UsedRange '最後のセルを修正する
+    If objTopRow.Columns.Count = Columns.Count Then
+        '最後のセルまで整備すれば終了する
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Column
+        If lngLast > MAXROWCOLCNT Then
+            lngLast = MAXROWCOLCNT
+        End If
+    Else
+        '選択されたすべての列を整備する
+        lngLast = objTopRow.Columns.Count
+    End If
+    
     '1列毎にループ
     For i = 1 To lngLast
-        'コピ－元のセルの罫線の種類を保存
-        udtBorder = GetBorder(objFromRange.Columns(i).Borders(xlEdgeBottom))
-        'コピー先のセルにコピー
-        Call SetBorder(udtBorder, objToRange.Columns(i).Borders(xlEdgeBottom))
+        With objBottomRow.Cells(1, i)
+            '底の行のセルが結合セルか
+            If .MergeArea.Count = 1 Then
+                Set objRange = GetMergeRowRange(lngType, objTopRow.Cells(1, i), .Cells)
+                If Not (objRange Is Nothing) Then
+                    Call objRange.Merge
+                End If
+            End If
+        End With
     Next i
 End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　GetMergeRowRange
+'[ 概  要 ]　縦方向に結合する領域を取得する
+'[ 引  数 ]　lngType:結合のタイプ、
+'            objBaseCell:先頭行のセル、objTergetCell:対象の行のセル
+'[ 戻り値 ]　結合する領域(Nothing:結合しない時)
+'*****************************************************************************
+Private Function GetMergeRowRange(ByVal lngType As Long, _
+                                  ByRef objBaseCell As Range, _
+                                  ByRef objTergetCell As Range) As Range
+    Select Case lngType
+    Case 1 '先頭行から最終の行まで縦方向に結合する
+    Case 2 '先頭行が結合セルの時、先頭行から最終の行まで縦方向に結合する
+        If objBaseCell.MergeArea.Count = 1 Then
+            Exit Function
+        End If
+    Case 3 '先頭行が縦方向に結合セルの時、先頭行から最終の行まで縦方向に結合する
+        If objBaseCell.MergeArea.Rows.Count = 1 Then
+            Exit Function
+        End If
+    Case 4 '先頭行が横方向のみ結合セルの時、対象の行のセルを横方向に結合する
+        If objBaseCell.MergeArea.Columns.Count = 1 Or _
+           objBaseCell.MergeArea.Rows.Count > 1 Then
+            Exit Function
+        End If
+    End Select
+    
+    Select Case lngType
+    Case 1, 2, 3
+        Set GetMergeRowRange = Range(objBaseCell.MergeArea, objTergetCell)
+    Case 4
+        Set GetMergeRowRange = objTergetCell.Resize(1, objBaseCell.MergeArea.Columns.Count)
+    End Select
+End Function
 
 '*****************************************************************************
 '[ 関数名 ]　ShowHeight
@@ -1194,7 +1260,7 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    Call frmSizeList.Initialize(E_Row)
+    Call frmSizeList.Initialize(E_ROW)
     Call frmSizeList.Show
 Exit Sub
 ErrHandle:
@@ -1268,7 +1334,7 @@ On Error GoTo ErrHandle
     Application.CopyObjectsWithCells = False
     Application.ScreenUpdating = False
     'アンドゥ用に元の状態を保存する
-    Call SaveUndoInfo(E_MergeCell, objSelection)
+    Call SaveUndoInfo(E_CellBorder, objSelection)
     
     '****************************************
     '元の領域を、"Workarea1"シートにコピー
@@ -1291,15 +1357,17 @@ On Error GoTo ErrHandle
     '****************************************
     If lngUpDown < 0 Then
         '上に移動する
-        Call CopyBottomBorder(objWkRange.Rows(2), objWkRange.Rows(1))
+        Call CopyBorder("2", objWkRange.Rows(2), objWkRange.Rows(1))
         Call objWkRange.Rows(2).Delete(xlUp)
-        Call CopyBorders(True, objWkRange.Rows(lngRowCount))
+        Call CopyBorder("23", objWkRange.Rows(lngRowCount - 1), objWkRange.Rows(lngRowCount))
+        Call MergeRows(1, objWkRange.Rows(lngRowCount - 1), objWkRange.Rows(lngRowCount))
     Else
         '下に移動する
-        Call CopyBottomBorder(objWkRange.Rows(lngRowCount), objWkRange.Rows(lngRowCount - 1))
+        Call CopyBorder("2", objWkRange.Rows(lngRowCount), objWkRange.Rows(lngRowCount - 1))
         Call objWkRange.Rows(lngRowCount).Delete(xlUp)
         Call objWkRange.Rows(2).Insert(xlDown)
-        Call CopyBorders(True, objWkRange.Rows(2))
+        Call CopyBorder("23", objWkRange.Rows(1), objWkRange.Rows(2))
+        Call MergeRows(1, objWkRange.Rows(1), objWkRange.Rows(2))
     End If
     
     Call objWkRange.Worksheet.Range(objSelection.Address).Copy(objSelection)
@@ -1371,7 +1439,7 @@ On Error GoTo ErrHandle
     End If
     
     'WorkSheetの標準スタイルを実行シートとあわせる
-    Call SetPixelInfo
+    Call SetPixelInfo 'Undoできなくなります
     
     '***********************************************
     '実行
@@ -1379,7 +1447,7 @@ On Error GoTo ErrHandle
     Application.ScreenUpdating = False
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_RowSize, objSelection, GetSameHeightAddresses(objSelection.EntireRow))
+    Call SaveUndoInfo(E_RowSize, objSelection, GetSameHeightAddresses(objSelection))
     
     '標準コマンドで高さを適正化(編集でFontを変えても自動で調製されるようにする対応)
     Call objSelection2.Rows.AutoFit
@@ -1479,14 +1547,4 @@ End Function
 '*****************************************************************************
 Public Function PixelToHeight(ByVal lngPixel As Long) As Double
     PixelToHeight = lngPixel * 0.75
-End Function
-
-'*****************************************************************************
-'[ 関数名 ]　HeightToPixel
-'[ 概  要 ]　高さの単位を変換
-'[ 引  数 ]　dblHeight : 高さ
-'[ 戻り値 ]　高さ(単位:ピクセル)
-'*****************************************************************************
-Private Function HeightToPixel(ByVal dblHeight As Double) As Long
-    HeightToPixel = Int(dblHeight / 0.75)
 End Function

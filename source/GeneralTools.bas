@@ -36,12 +36,20 @@ Public Const SYNCHRONIZE       As Long = &H100000
 Public Const PROCESS_TERMINATE As Long = &H1
 Public Const PROCESS_QUERY_INFORMATION = &H400
 Public Const STILL_ACTIVE = &H103
+Public Const MAXROWCOLCNT = 1000
 
 '選択タイプ
 Public Enum ESelectionType
     E_Range
     E_Shape
     E_Other
+End Enum
+
+'結合タイプ
+Public Enum EMergeType
+    E_MTROW
+    E_MTCOL
+    E_MTBOTH
 End Enum
 
 '*****************************************************************************
@@ -115,16 +123,26 @@ End Function
 '*****************************************************************************
 Public Function GetCellText(ByRef objCell As Range) As String
 On Error GoTo ErrHandle
-    If objCell.Text <> "" Then
-        Select Case objCell.NumberFormat
-        Case "General", "@"
-            GetCellText = objCell.Value
-        Case Else
-            GetCellText = WorksheetFunction.Text(objCell, objCell.NumberFormat)
-        End Select
+    Select Case objCell.NumberFormat
+    Case "General", "@"
+        GetCellText = RTrim$(objCell.Value)
+        Exit Function
+    End Select
+                
+    If objCell.Text <> WorksheetFunction.Rept("#", Len(objCell.Text)) Then
+        GetCellText = RTrim$(objCell.Text)
+        Exit Function
     End If
-    GetCellText = RTrim$(GetCellText)
-Exit Function
+
+    If IsDate(objCell.Value) Then
+        GetCellText = WorksheetFunction.Text(objCell.Value, objCell.NumberFormatLocal)
+        Exit Function
+    End If
+    
+    If IsNumeric(objCell.Value) Then
+        GetCellText = objCell.Value
+        Exit Function
+    End If
 ErrHandle:
     GetCellText = RTrim$(objCell.Value)
 End Function
@@ -363,6 +381,55 @@ Private Function ReverseRange(ByRef objRange As Range) As Range
 End Function
 
 '*****************************************************************************
+'[ 関数名 ]　GetRowMergeRange
+'[ 概　要 ]　結合された領域を取得する
+'[ 引　数 ]　結合タイプ、対象領域
+'[ 戻り値 ]　結合された領域
+'*****************************************************************************
+Public Function GetMergeRange(ByRef objSelection As Range, Optional ByVal enmMergeType As EMergeType = E_MTBOTH) As Range
+    Dim objRange   As Range
+    Dim objCell    As Range
+    
+    '結合されたセルはUsedRange以外にはないので
+    Set objRange = IntersectRange(objSelection, objSelection.Parent.UsedRange) 'Undo出来なくなっちゃう
+    If objRange Is Nothing Then
+        Exit Function
+    End If
+    
+On Error GoTo ErrHandle
+    If objRange.Count > 100000 Then
+        Call Err.Raise(C_CheckErrMsg, , "選択されたセルが多すぎます")
+    End If
+    
+    'セルの数だけループ
+    For Each objCell In objRange
+        With objCell.MergeArea
+            '結合セルか？
+            If .Count > 1 Then
+                '左上のセルか
+                If .Row = objCell.Row And .Column = objCell.Column Then
+                    Select Case enmMergeType
+                    Case E_MTBOTH
+                        Set GetMergeRange = UnionRange(GetMergeRange, objCell)
+                    Case E_MTROW
+                        If .Rows.Count > 1 Then
+                            Set GetMergeRange = UnionRange(GetMergeRange, objCell)
+                        End If
+                    Case E_MTCOL
+                        If .Columns.Count > 1 Then
+                            Set GetMergeRange = UnionRange(GetMergeRange, objCell)
+                        End If
+                    End Select
+                End If
+            End If
+        End With
+    Next
+Exit Function
+ErrHandle:
+    Call Err.Raise(C_CheckErrMsg, , "選択されたセルが多すぎます")
+End Function
+
+'*****************************************************************************
 '[ 関数名 ]　GetNearlyRange
 '[ 概  要 ]  Shapeの四方に最も近いセル範囲を取得する
 '[ 引  数 ]　Shapeオブジェクト
@@ -474,7 +541,7 @@ ErrHandle:
     strMsg = "コピー元のセルの取得に失敗しました。以下の点を確認してください。" & vbCrLf
     strMsg = strMsg & "複数の範囲をコピーして実行できません。" & vbCrLf
     strMsg = strMsg & "ファイルのパスが長すぎると実行できません。"
-    Call Err.Raise(Err.Number, Err.Source, strMsg)
+    Call Err.Raise(Err.NUMBER, Err.Source, strMsg)
 End Function
 
 '*****************************************************************************
@@ -546,7 +613,6 @@ Public Sub DeleteSheet(ByRef objSheet As Worksheet)
     Next objShape
     
     With objSheet.Cells
-        Call .Clear
         Call .Delete
     End With
 
@@ -564,11 +630,11 @@ Public Function GetMergeAddress(ByVal strAddress As String) As String
     GetMergeAddress = strAddress
     With Range(strAddress)
         If .Rows.Count = 1 And .Columns.Count = 1 Then
-            If .MergeCells = True Then
-                With .MergeArea
-                    GetMergeAddress = strAddress & ":" & .Cells(.Rows.Count, .Columns.Count).Address
-                End With
-            End If
+            With .MergeArea
+                If .Count > 1 Then
+                    GetMergeAddress = .Address
+                End If
+            End With
         End If
     End With
 End Function
@@ -632,12 +698,47 @@ Public Function IsOnlyCell(ByRef objRange As Range) As Boolean
 End Function
 
 '*****************************************************************************
+'[ 関数名 ]　StrConvert
+'[ 概  要 ]　文字種の変換を行う
+'[ 引  数 ]　変換前の文字列、変換種類
+'[ 戻り値 ]　変更後の文字列
+'*****************************************************************************
+Public Function StrConvert(ByVal strText As String, ByVal strCommand As String) As String
+    StrConvert = strText
+    Select Case strCommand
+    Case "UpperCase"  '大文字に変換
+        StrConvert = StrConv(StrConvert, vbUpperCase)
+    Case "LowerCase"  '小文字に変換
+        StrConvert = StrConv(StrConvert, vbLowerCase)
+    Case "ProperCase" '先頭のみ大文字に変換
+        StrConvert = StrConv(StrConvert, vbProperCase)
+    Case "Hiragana" 'ひらがなに変換
+        StrConvert = StrConv(StrConvert, vbHiragana)
+    Case "Katakana" 'カタカナに変換
+        StrConvert = StrConv(StrConvert, vbKatakana)
+    Case "Wide"     '全角に変換
+        StrConvert = Replace(StrConvert, """", Chr(&H8168))
+        StrConvert = Replace(StrConvert, "'", "’")
+        StrConvert = Replace(StrConvert, "\", "￥")
+        StrConvert = StrConv(StrConvert, vbWide)
+    Case "Narrow"   '半角に変換
+        StrConvert = Replace(StrConvert, "～", Chr(1) & "~")
+        StrConvert = StrConv(StrConvert, vbNarrow)
+        StrConvert = Replace(StrConvert, Chr(1) & "~", "～")
+    Case "WideExceptKana" 'カタカナ以外半角に変換
+        StrConvert = Replace(StrConvert, "～", Chr(1) & "~")
+        StrConvert = StrConvWideExceptKana(StrConvert)
+        StrConvert = Replace(StrConvert, Chr(1) & "~", "～")
+    End Select
+End Function
+
+'*****************************************************************************
 '[ 関数名 ]　StrConvWideExceptKana
 '[ 概  要 ]　カタカナ以外半角に変換
 '[ 引  数 ]　変換前の文字列
 '[ 戻り値 ]　変換後の文字列
 '*****************************************************************************
-Public Function StrConvWideExceptKana(ByVal strText As String) As String
+Private Function StrConvWideExceptKana(ByVal strText As String) As String
     Dim i           As Long
     Dim strWideChar As String
     
@@ -645,7 +746,8 @@ Public Function StrConvWideExceptKana(ByVal strText As String) As String
     For i = 1 To Len(strText)
         strWideChar = Mid$(strText, i, 1)
         Select Case AscW(strWideChar)
-        Case AscW("ア") To AscW("ン"), AscW("ァ"), AscW("ヴ"), AscW("ー")
+        Case AscW("ア") To AscW("ン"), AscW("ァ"), AscW("ヴ"), _
+             AscW("ー"), AscW("、"), AscW("。")
             StrConvWideExceptKana = StrConvWideExceptKana & strWideChar
         Case Else
             StrConvWideExceptKana = StrConvWideExceptKana & StrConv(strWideChar, vbNarrow)
@@ -695,7 +797,38 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Public Sub ClearClipbord()
-    ThisWorkbook.Worksheets("Commands").Range("I1").Copy
-    Application.CutCopyMode = False
+On Error GoTo ErrHandle
+    Dim objCb As New DataObject
+    Call objCb.Clear
+    Call objCb.PutInClipboard
+ErrHandle:
+    Set objCb = Nothing
 End Sub
 
+'*****************************************************************************
+'[ 関数名 ]　DeleteNames
+'[ 概  要 ]　名前オブジェクトを削除する
+'[ 引  数 ]　Workbook
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub DeleteNames(ByRef objWorkbook As Workbook)
+    Dim objName     As Name
+    For Each objName In objWorkbook.Names
+        Call objName.Delete
+    Next objName
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　DeleteStyles
+'[ 概  要 ]　スタイルを削除する
+'[ 引  数 ]　Workbook
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub DeleteStyles(ByRef objWorkbook As Workbook)
+    Dim objStyle  As Style
+    On Error Resume Next
+    For Each objStyle In objWorkbook.Styles
+        Call objStyle.Delete
+    Next objStyle
+    On Error GoTo 0
+End Sub

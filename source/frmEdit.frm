@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmEdit 
    Caption         =   "かんたんレイアウト"
-   ClientHeight    =   3756
+   ClientHeight    =   3825
    ClientLeft      =   48
    ClientTop       =   336
    ClientWidth     =   7368
@@ -19,6 +19,7 @@ Private hWnd       As Long
 Private OrgWndProc As Long
 Private blnZoomed  As Boolean
 Private objTmpBar  As CommandBar
+Private dblAnchor  As Double
 
 '*****************************************************************************
 '[イベント]　UserForm_Initialize
@@ -27,6 +28,8 @@ Private objTmpBar  As CommandBar
 Private Sub UserForm_Initialize()
     Dim lngStyle As Long
     Dim i        As Long
+    
+    dblAnchor = Me.Height - cmdCancel.Top
     
     '********************************************
     'ウィンドウのサイズを変更出来るように変更
@@ -75,24 +78,19 @@ Private Sub UserForm_Initialize()
     Set objTmpBar = CommandBars.Add(Position:=msoBarPopup, Temporary:=True)
     With objTmpBar.Controls
         With .Add()
-            .BeginGroup = False
             .Caption = "元に戻す(&U)　　　Ctrl+Z"
         End With
         With .Add()
-            .BeginGroup = False
             .Caption = "やり直し(&F)　Ctrl+Shift+Z"
         End With
         With .Add(, 21)
             .BeginGroup = True
         End With
         With .Add(, 19)
-            .BeginGroup = False
         End With
         With .Add(, 22)
-            .BeginGroup = False
         End With
         With .Add()
-            .BeginGroup = False
             .Caption = "削除(&D)"
         End With
         With .Add()
@@ -101,26 +99,27 @@ Private Sub UserForm_Initialize()
         End With
         With .Add()
             .BeginGroup = True
-            .Caption = "小文字に変換"
-        End With
-        With .Add()
-            .BeginGroup = False
             .Caption = "大文字に変換"
         End With
         With .Add()
-            .BeginGroup = False
+            .Caption = "小文字に変換"
+        End With
+        With .Add()
             .Caption = "先頭のみ大文字に変換"
         End With
         With .Add()
-            .BeginGroup = False
+            .Caption = "ひらがなに変換"
+        End With
+        With .Add()
+            .Caption = "カタカナに変換"
+        End With
+        With .Add()
             .Caption = "全角に変換"
         End With
         With .Add()
-            .BeginGroup = False
             .Caption = "半角に変換"
         End With
         With .Add()
-            .BeginGroup = False
             .Caption = "カタカナ以外半角に変換"
         End With
     End With
@@ -180,7 +179,8 @@ On Error GoTo ErrHandle
     Else
         Set objOldSelection = Selection
         Set objNewSelection = GetPasteRange(strText, Selection)
-        Call SaveUndoInfo(E_CellValue, objNewSelection)
+        Call SaveUndoInfo(E_CellValue, objOldSelection)
+        Call objOldSelection.ClearContents
         Call objNewSelection.Select
         Call PasteTabText(strText, objNewSelection)
         Call SetOnUndo
@@ -266,7 +266,7 @@ Private Sub UserForm_Resize()
         Me.Height = 65
     End If
     
-    cmdCancel.Top = Me.Height - cmdCancel.Height - 24
+    cmdCancel.Top = Me.Height - dblAnchor
     cmdCancel.Left = Me.Width - cmdCancel.Width - 10
     cmdOK.Top = cmdCancel.Top
     cmdOK.Left = cmdCancel.Left - 10 - cmdOK.Width
@@ -323,6 +323,8 @@ Private Sub txtEdit_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByV
         objTmpBar.Controls(11).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.Controls(12).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.Controls(13).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(14).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(15).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.ShowPopup
     End If
 End Sub
@@ -342,7 +344,6 @@ On Error GoTo ErrHandle
     Case 2 'やり直し
         Call Me.RedoAction
     Case 3 '切り取り
-        Call Me.UndoAction
         Call SendKeys("^x", True)
     Case 4 'コピー
         Call SendKeys("^c", True)
@@ -352,18 +353,22 @@ On Error GoTo ErrHandle
         Call SendKeys("{DEL}", True)
     Case 7 'すべて選択
         Call SendKeys("^a", True)
-    Case 8  '小文字に変換
-        strNewSelText = StrConv(txtEdit.SelText, vbLowerCase)
-    Case 9  '大文字に変換
-        strNewSelText = StrConv(txtEdit.SelText, vbUpperCase)
+    Case 8  '大文字に変換
+        strNewSelText = StrConvert(txtEdit.SelText, "UpperCase")
+    Case 9  '小文字に変換
+        strNewSelText = StrConvert(txtEdit.SelText, "LowerCase")
     Case 10 '先頭のみ大文字に変換
-        strNewSelText = StrConv(txtEdit.SelText, vbProperCase)
-    Case 11 '全角に変換
-        strNewSelText = StrConv(txtEdit.SelText, vbWide)
-    Case 12 '半角に変換
-        strNewSelText = StrConv(txtEdit.SelText, vbNarrow)
-    Case 13 'カタカナ以外半角に変換
-        strNewSelText = StrConvWideExceptKana(txtEdit.SelText)
+        strNewSelText = StrConvert(txtEdit.SelText, "ProperCase")
+    Case 11 'ひらがなに変換
+        strNewSelText = StrConvert(txtEdit.SelText, "Hiragana")
+    Case 12 'カタカナに変換
+        strNewSelText = StrConvert(txtEdit.SelText, "Katakana")
+    Case 13 '全角に変換
+        strNewSelText = StrConvert(txtEdit.SelText, "Wide")
+    Case 14 '半角に変換
+        strNewSelText = StrConvert(txtEdit.SelText, "Narrow")
+    Case 15 'カタカナ以外半角に変換
+        strNewSelText = StrConvert(txtEdit.SelText, "WideExceptKana")
     End Select
     
     'Undoができるようにクリップボードを使用する
@@ -409,4 +414,3 @@ End Property
 Public Property Get WndProc() As Long
     WndProc = OrgWndProc
 End Property
-

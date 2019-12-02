@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSplitCount 
    Caption         =   "選択してください"
-   ClientHeight    =   1608
+   ClientHeight    =   1605
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   4248
@@ -14,12 +14,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-
-Enum ESizeType
-    E_OrgSize
-    E_SameSiZe
-    E_NonSize
-End Enum
 
 '*****************************************************************************
 '[イベント]　UserForm_Initialize

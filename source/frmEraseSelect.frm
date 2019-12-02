@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 '選択されたタイプ
-Enum ESelectType
+Public Enum ESelectType
     E_Front
     E_Middle
     E_Back
@@ -87,43 +87,6 @@ Private Sub cmdCancel_Click()
 End Sub
 
 '*****************************************************************************
-'[イベント]　UserForm_Activate
-'[ 概  要 ]　フォームがアクティブになる時
-'*****************************************************************************
-Private Sub UserForm_Activate()
-    
-    'デフォルト選択値を設定し、フォーカスをあてる
-    Select Case m_enmSelectType
-    Case E_Front
-        optFront.Value = True
-        optFront.SetFocus
-    Case E_Middle
-        optMiddle.Value = True
-        optMiddle.SetFocus
-    Case E_Back
-        optBack.Value = True
-        optBack.SetFocus
-    End Select
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　SetEnabled
-'[ 概  要 ]　選択出来ない寄せ方を選択出来なくする
-'[ 引  数 ]　enmSelectType : 選択出来ない寄せ方
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Public Sub SetEnabled(ByVal enmSelectType As ESelectType)
-    Select Case enmSelectType
-    Case E_Front
-        optFront.Enabled = False
-    Case E_Middle
-        optMiddle.Enabled = False
-    Case E_Back
-        optBack.Enabled = False
-    End Select
-End Sub
-
-'*****************************************************************************
 '[プロパティ]　SelectType
 '[ 概  要 ]　選択タイプ
 '[ 引  数 ]　なし
@@ -138,9 +101,6 @@ Public Property Get SelectType() As ESelectType
         SelectType = E_Back
     End Select
 End Property
-Public Property Let SelectType(ByVal Value As ESelectType)
-    m_enmSelectType = Value
-End Property
 
 '*****************************************************************************
 '[プロパティ]　Hidden
@@ -149,4 +109,21 @@ End Property
 '*****************************************************************************
 Public Property Get Hidden() As Boolean
     Hidden = chkHidden
+End Property
+
+'*****************************************************************************
+'[プロパティ]　TopSelect
+'[ 概  要 ]　先頭列(行)を選択しているかどうか
+'[ 引  数 ]　なし
+'*****************************************************************************
+Public Property Let TopSelect(ByVal Value As Boolean)
+    If Value = True Then
+        optMiddle.Enabled = False
+        optBack.Enabled = False
+        optFront.Value = True
+        Call optFront.SetFocus
+    Else
+        optBack.Value = True
+        Call optBack.SetFocus
+    End If
 End Property

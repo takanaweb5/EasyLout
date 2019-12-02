@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmMoveCell 
    Caption         =   "領域の操作"
-   ClientHeight    =   2976
+   ClientHeight    =   2970
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   5004
@@ -18,7 +18,6 @@ Option Explicit
 Public Enum EModeType
     E_Move
     E_Copy
-    E_CopyText
     E_Exchange
     E_CutInsert
 End Enum
@@ -73,6 +72,7 @@ Private lngZoom      As Long
 '*****************************************************************************
 Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, ByRef objToRange As Range)
     
+    lngDisplayObjects = ActiveWorkbook.DisplayDrawingObjects
     enmModeType = enmType
     Set objFromSheet = objFromRange.Worksheet
     
@@ -96,7 +96,6 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
     End If
     
     'テキストボックス作成
-    lngDisplayObjects = ActiveWorkbook.DisplayDrawingObjects
     ActiveWorkbook.DisplayDrawingObjects = xlDisplayShapes
     With Range(strToRange)
         Set objTextbox = ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, .Left, .Top, .Width, .Height)
@@ -157,6 +156,10 @@ End Sub
 '*****************************************************************************
 Private Function GetToRange(ByVal objFromRange As Range, ByVal objToRange As Range) As Range
     Select Case True
+    Case objFromRange.Columns.Count = Columns.Count
+        Set GetToRange = objToRange.EntireRow
+    Case objFromRange.Rows.Count = Rows.Count
+        Set GetToRange = objToRange.EntireColumn
     Case objToRange.Rows.Count = 1 And objToRange.Columns.Count = 1
         With Range(objFromRange.Address)
             Set GetToRange = objToRange.Range(Cells(1, 1), Cells(.Rows.Count, .Columns.Count))
@@ -218,8 +221,6 @@ On Error GoTo ErrHandle
     
     'アンドゥ用に元の状態を保存する
     Select Case enmModeType
-    Case E_CopyText
-        Call SaveUndoInfo(E_PasteValue, ToRange)
     Case E_Copy
         If blnSameSheet = True Then
             Call SaveUndoInfo(E_CopyCell, FromRange)
@@ -234,7 +235,7 @@ On Error GoTo ErrHandle
     Select Case enmModeType
     Case E_Move
         Call MoveCell
-    Case E_Copy, E_CopyText
+    Case E_Copy
         Call CopyCell
     Case E_Exchange
         Call ExchangeCell
@@ -423,10 +424,12 @@ Private Sub CopyMergeRange(ByRef objFromRange As Range, ByRef objToRange As Rang
         '列の数だけループ
         For j = 1 To objFromRange.Columns.Count
             With objFromRange(i, j).MergeArea
-                '結合セルの左上のセルなら
-                If objFromRange(i, j).Address = .Cells(1, 1).Address Then
-                    '複写先のセルを結合
-                    Call objToRange(i, j).Resize(.Rows.Count, .Columns.Count).Merge
+                If .Count > 1 Then
+                    '結合セルの左上のセルなら
+                    If objFromRange(i, j).Address = .Cells(1, 1).Address Then
+                        '複写先のセルを結合
+                        Call objToRange(i, j).Resize(.Rows.Count, .Columns.Count).Merge
+                    End If
                 End If
             End With
         Next j
@@ -730,15 +733,6 @@ Private Sub ChangeMode()
         chkExchange.Value = False
         chkCutInsert.Value = False
         chkOnlyValue.Enabled = True
-    Case E_CopyText
-        chkCopy.Value = True
-        chkExchange.Value = False
-        chkCutInsert.Value = False
-        chkOnlyValue.Value = True
-        chkCopy.Enabled = False
-        chkExchange.Enabled = False
-        chkCutInsert.Enabled = False
-        chkOnlyValue.Enabled = False
     Case E_Exchange
         chkCopy.Value = False
         chkExchange.Value = True
@@ -756,7 +750,7 @@ Private Sub ChangeMode()
     Select Case enmModeType
     Case E_Move
         lblTitle.Caption = "移動先"
-    Case E_Copy, E_CopyText
+    Case E_Copy
         lblTitle.Caption = "コピー先"
     Case E_Exchange
         lblTitle.Caption = "入替え先"
@@ -888,16 +882,29 @@ Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
         End Select
     Case 1
         '選択領域の大きさを変更
-        Select Case (KeyCode)
-        Case vbKeyLeft
-            lngRight = lngRight - 1
-        Case vbKeyRight
-            lngRight = lngRight + 1
-        Case vbKeyUp
-            lngBottom = lngBottom - 1
-        Case vbKeyDown
-            lngBottom = lngBottom + 1
-        End Select
+        If GetKeyState(vbKeyZ) < 0 Then
+            Select Case (KeyCode)
+            Case vbKeyLeft
+                lngLeft = lngLeft - 1
+            Case vbKeyRight
+                lngLeft = lngLeft + 1
+            Case vbKeyUp
+                lngTop = lngTop - 1
+            Case vbKeyDown
+                lngTop = lngTop + 1
+            End Select
+        Else
+            Select Case (KeyCode)
+            Case vbKeyLeft
+                lngRight = lngRight - 1
+            Case vbKeyRight
+                lngRight = lngRight + 1
+            Case vbKeyUp
+                lngBottom = lngBottom - 1
+            Case vbKeyDown
+                lngBottom = lngBottom + 1
+            End Select
+        End If
     Case Else
         Exit Sub
     End Select
@@ -930,28 +937,28 @@ Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
 
     '選択領域が画面から消えたら画面をスクロール
     If ActiveWindow.FreezePanes = False And ActiveWindow.Split = False Then '画面分割のない時
-            Select Case (KeyCode)
-            Case vbKeyLeft
-                i = WorksheetFunction.Max(ToRange.Column - 1, 1)
-                If IntersectRange(ActiveWindow.VisibleRange, Columns(i)) Is Nothing Then
-                    Call ActiveWindow.SmallScroll(, , , 1)
-                End If
-            Case vbKeyRight
-                i = WorksheetFunction.Min(ToRange.Column + ToRange.Columns.Count, Columns.Count)
-                If IntersectRange(ActiveWindow.VisibleRange, Columns(i)) Is Nothing Then
-                    Call ActiveWindow.SmallScroll(, , 1)
-                End If
-            Case vbKeyUp
-                i = WorksheetFunction.Max(ToRange.Row - 1, 1)
-                If IntersectRange(ActiveWindow.VisibleRange, Rows(i)) Is Nothing Then
-                    Call ActiveWindow.SmallScroll(, 1)
-                End If
-            Case vbKeyDown
-                i = WorksheetFunction.Min(ToRange.Row + ToRange.Rows.Count, Rows.Count)
-                If IntersectRange(ActiveWindow.VisibleRange, Rows(i)) Is Nothing Then
-                    Call ActiveWindow.SmallScroll(1)
-                End If
-            End Select
+        Select Case (KeyCode)
+        Case vbKeyLeft
+            i = WorksheetFunction.Max(ToRange.Column - 1, 1)
+            If IntersectRange(ActiveWindow.VisibleRange, Columns(i)) Is Nothing Then
+                Call ActiveWindow.SmallScroll(, , , 1)
+            End If
+        Case vbKeyRight
+            i = WorksheetFunction.Min(ToRange.Column + ToRange.Columns.Count, Columns.Count)
+            If IntersectRange(ActiveWindow.VisibleRange, Columns(i)) Is Nothing Then
+                Call ActiveWindow.SmallScroll(, , 1)
+            End If
+        Case vbKeyUp
+            i = WorksheetFunction.Max(ToRange.Row - 1, 1)
+            If IntersectRange(ActiveWindow.VisibleRange, Rows(i)) Is Nothing Then
+                Call ActiveWindow.SmallScroll(, 1)
+            End If
+        Case vbKeyDown
+            i = WorksheetFunction.Min(ToRange.Row + ToRange.Rows.Count, Rows.Count)
+            If IntersectRange(ActiveWindow.VisibleRange, Rows(i)) Is Nothing Then
+                Call ActiveWindow.SmallScroll(1)
+            End If
+        End Select
     End If
 End Sub
 
@@ -1079,10 +1086,10 @@ Private Sub EditTextbox()
 On Error GoTo ErrHandle
     If blnSameSheet Then
         Select Case enmModeType
-        Case E_Copy, E_Exchange, E_CopyText
+        Case E_Copy, E_Exchange
             If Not (IntersectRange(FromRange, ToRange) Is Nothing) Then
                 Select Case enmModeType
-                Case E_Copy, E_CopyText
+                Case E_Copy
                     Call Err.Raise(C_CheckErrMsg, , "元の領域にはコピーできません")
                 Case E_Exchange
                     Call Err.Raise(C_CheckErrMsg, , "元の領域とは入替えできません")
@@ -1092,9 +1099,13 @@ On Error GoTo ErrHandle
     End If
 
     Select Case enmModeType
-    Case E_Move, E_Copy, E_Exchange, E_CopyText
+    Case E_Move, E_Copy, E_Exchange
         If CheckBorder() = True Then
             Call Err.Raise(C_CheckErrMsg, , "結合されたセルの一部を変更することはできません")
+        End If
+        If FromRange.Columns.Count = Columns.Count And _
+           ToRange.Columns.Count <> Columns.Count Then
+            Call Err.Raise(C_CheckErrMsg, , "すべての列の選択時は列の幅を変更できません")
         End If
     Case E_CutInsert
         Call CheckCutInsertRange
@@ -1107,14 +1118,14 @@ On Error GoTo ErrHandle
     End With
 Exit Sub
 ErrHandle:
-    If Err.Number = C_CheckErrMsg Then
+    If Err.NUMBER = C_CheckErrMsg Then
         With objTextbox.TextFrame.Characters
             .Text = Err.Description
             .Font.ColorIndex = 3
             cmdOK.Enabled = False 'OKボタンを使用不可にする
         End With
     Else
-        Call Err.Raise(Err.Number, Err.Source, Err.Description)
+        Call Err.Raise(Err.NUMBER, Err.Source, Err.Description)
     End If
 End Sub
 
@@ -1165,7 +1176,7 @@ Private Function CheckBorder() As Boolean
     Select Case enmModeType
     Case E_Move
         Set objChkRange = MinusRange(ArrangeRange(ToRange), UnionRange(ToRange, FromRange))
-    Case E_Copy, E_Exchange, E_CopyText
+    Case E_Copy, E_Exchange
         Set objChkRange = MinusRange(ArrangeRange(ToRange), ToRange)
     End Select
     
