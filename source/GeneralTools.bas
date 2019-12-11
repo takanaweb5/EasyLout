@@ -636,7 +636,7 @@ ErrHandle:
     strMsg = "コピー元のセルの取得に失敗しました。以下の点を確認してください。" & vbCrLf
     strMsg = strMsg & "複数の範囲をコピーして実行できません。" & vbCrLf
     strMsg = strMsg & "ファイルのパスが長すぎると実行できません。"
-    Call Err.Raise(Err.NUMBER, Err.Source, strMsg)
+    Call Err.Raise(Err.Number, Err.Source, strMsg)
 End Function
 
 '*****************************************************************************
@@ -1042,6 +1042,7 @@ Private Sub DeleteNames(ByRef objWorkbook As Workbook)
     Dim objName     As Name
     For Each objName In objWorkbook.Names
         Select Case objName.MacroType
+        'EXCEL2019の謎の事象対応(TEXTJOIN関数等を使えば勝手に名前が定義されるが削除すると例外になるので回避)
         Case xlFunction, xlCommand, xlNotXLM
         Case Else
             Call objName.Delete
