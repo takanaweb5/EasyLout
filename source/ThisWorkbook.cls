@@ -9,31 +9,22 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 Option Explicit
 
-Dim blnIsAddin As Boolean
-
 '*****************************************************************************
 '[イベント]　AddinInstall
 '[ 概  要 ]　アドインのインストール時に実行される
 '*****************************************************************************
 Private Sub Workbook_AddinInstall()
-On Error GoTo ErrHandle
-
+    On Error Resume Next
+    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
+        
     'ＰＣによってはアイコンが表示されないことがあるため
-    Call Sleep(1000)
-    MsgBox "Workbook_AddinInstall"
-    
+    Call Sleep(100)
     'かんたんレイアウトのインストール
     Call InstToolBar
     'かんたんレイアウト2のインストール
     Call InstTool2Bar
-    
-    blnIsAddin = True
-    Application.CommandBars("かんたんレイアウト").Enabled = True
-    Application.CommandBars("かんたんレイアウト2").Enabled = True
-    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
-Exit Sub
-ErrHandle:
-'    Call MsgBox("インストールに失敗しました", vbCritical)
+
+    Call SetKeys
 End Sub
 
 '*****************************************************************************
@@ -57,7 +48,7 @@ Private Sub InstToolBar()
         .OnAction = "ColRowChange"
         .TooltipText = "行と列を切替える"
         .Style = msoButtonCaption
-        .Tag = "{S+F2}{C+S+C}{C+S+V}"
+        .Tag = "{S+F2}{C+S+C}{C+S+V}{BS}"
     End With
     
     With objCmdBar.Controls.Add(msoControlButton)
@@ -301,9 +292,6 @@ Private Sub Workbook_AddinUninstall()
     Call Application.CommandBars("かんたんレイアウトアイコン").Delete
 End Sub
 
-Private Sub Auto_Remove()
-End Sub
-
 '*****************************************************************************
 '[イベント]　Workbook_Open
 '[ 概  要 ]　開く時
@@ -312,43 +300,43 @@ Private Sub Workbook_Open()
     Dim strMsg As String
     Dim i As Long
     
-    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
     Call SetDPIRatio
     
-    If blnIsAddin = True Then
-        Call Application.OnKey("+{F2}", "OpenEdit")
-        Call Application.OnKey("+^{c}", "CopyText")
-        Call Application.OnKey("+^{v}", "PasteText")
-        Exit Sub
+    On Error Resume Next
+    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
+    Application.CommandBars("かんたんレイアウト").Visible = True
+    Application.CommandBars("かんたんレイアウト2").Visible = True
+    
+    'EXCEL2013以降、アドインインストール後再起動するとツールバーが消えてしまう事象の対応
+    '100%再現するわけではなく、消えないこともある
+    If Err.Number <> 0 Then
+        'ＰＣによってはアイコンが表示されないことがあるため
+        Call Sleep(100)
+        'かんたんレイアウトのインストール
+        Call InstToolBar
+        'かんたんレイアウト2のインストール
+        Call InstTool2Bar
+    Else
+        'ツールバーのボタンFaceの書換えが反映されない謎の事象の対応
+        '再度ボタンFaceの書換えを実施する
+        With Application.CommandBars("かんたんレイアウト").Controls
+            .Item(1).Caption = "列"
+            For i = 2 To .Count
+                Call SetCommand("列", .Item(i))
+            Next
+        End With
+        With Application.CommandBars("かんたんレイアウト2").Controls
+            For i = 1 To .Count
+                Call SetCommand("ツール", .Item(i))
+            Next i
+        End With
+        With Application.CommandBars("かんたんレイアウト2").Controls("その他").Controls
+            For i = 1 To .Count
+                Call SetCommand("その他", .Item(i))
+            Next i
+        End With
     End If
-    
-'    'ＰＣによってはアイコンが表示されないことがあるため
-'    Call Sleep(1000)
-'
-'    'かんたんレイアウトのインストール
-'    Call InstToolBar
-'    'かんたんレイアウト2のインストール
-'    Call InstTool2Bar
-'
-'    Application.CommandBars("かんたんレイアウト").Enabled = True
-'    Application.CommandBars("かんたんレイアウト2").Enabled = True
-'    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
-    
-    For i = 1 To AddIns.Count
-        If UCase(AddIns(i).Name) = UCase("EasyLout.xla") Then
-            If AddIns(i).Installed = True Then
-                Call SetKeys
-'                Call Application.OnTime(Now(), "LoadThisWorkbook")
-                Exit Sub
-            End If
-        End If
-    Next i
-    
-    strMsg = "このファイルを開くことは出来ません。" & vbCrLf
-    strMsg = strMsg & "アドインに登録して使用して下さい。" & vbCrLf & vbCrLf
-    strMsg = strMsg & "登録方法はヘルプファイルをご覧下さい。"
-    Call MsgBox(strMsg, vbExclamation, ThisWorkbook.Name)
-    Call ThisWorkbook.Close
+    Call SetKeys
 End Sub
 
 '*****************************************************************************

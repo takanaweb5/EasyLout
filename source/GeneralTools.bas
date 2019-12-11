@@ -1041,7 +1041,11 @@ End Sub
 Private Sub DeleteNames(ByRef objWorkbook As Workbook)
     Dim objName     As Name
     For Each objName In objWorkbook.Names
-        Call objName.Delete
+        Select Case objName.MacroType
+        Case xlFunction, xlCommand, xlNotXLM
+        Case Else
+            Call objName.Delete
+        End Select
     Next objName
 End Sub
 
