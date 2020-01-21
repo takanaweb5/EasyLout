@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmUnSelect 
    Caption         =   "選択してください"
-   ClientHeight    =   2325
-   ClientLeft      =   108
-   ClientTop       =   336
-   ClientWidth     =   4668
+   ClientHeight    =   2328
+   ClientLeft      =   105
+   ClientTop       =   330
+   ClientWidth     =   4665
    OleObjectBlob   =   "frmUnSelect.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 '領域の取消し画面のモード
@@ -76,7 +75,7 @@ Private Sub RefEdit_Change()
         If strSelectBefore <> "" Then
             If Range(RefEdit.Value).Areas.Count <= 1 And _
                Range(strSelectBefore).Areas.Count > 1 Then
-                Call MsgBox("選択範囲のアドレスが255文字を超えましたので、これ以上は選択出来ません", vbExclamation)
+                Call MsgBox("これ以上は選択出来ません", vbExclamation)
                 RefEdit.Value = strSelectBefore
                 Call cmdOK.SetFocus
                 Call RefEdit.SetFocus
@@ -84,21 +83,20 @@ Private Sub RefEdit_Change()
             End If
         End If
     End If
-    
     strSelectBefore = RefEdit.Value
 End Sub
 
-'*****************************************************************************
-'[イベント]　RefEditで領域選択中にCtrlキーを離した時
-'[ 概  要 ]　アドレスが255文字を超えた時の対応
-'*****************************************************************************
-Private Sub SetEnterEnabled()
-    If RefEdit.Value = "" And Me.Mode <> E_Merge Then
-        cmdOK.Enabled = False
-    Else
-        cmdOK.Enabled = True
-    End If
-End Sub
+''*****************************************************************************
+''[イベント]　RefEditで領域選択中にCtrlキーを離した時
+''[ 概  要 ]　アドレスが255文字を超えた時の対応
+''*****************************************************************************
+'Private Sub SetEnterEnabled()
+'    If RefEdit.Value = "" And Me.Mode <> E_Merge Then
+'        cmdOK.Enabled = False
+'    Else
+'        cmdOK.Enabled = True
+'    End If
+'End Sub
 
 '*****************************************************************************
 '[イベント]　RefEditで領域選択中にCtrlキーを離した時
@@ -213,11 +211,10 @@ End Sub
 '[ 概  要 ]　フォームロード時
 '*****************************************************************************
 Private Sub UserForm_Initialize()
-
     lngReferenceStyle = Application.ReferenceStyle
     Application.ReferenceStyle = xlA1
 
-    'オプションを隠す
+    'RefEditを隠す
     RefEdit.Top = RefEdit.Top + 100
     
     '呼び元に通知する

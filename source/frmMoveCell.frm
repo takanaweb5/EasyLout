@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmMoveCell 
    Caption         =   "領域の操作"
-   ClientHeight    =   2970
-   ClientLeft      =   48
-   ClientTop       =   432
-   ClientWidth     =   5004
+   ClientHeight    =   2976
+   ClientLeft      =   45
+   ClientTop       =   435
+   ClientWidth     =   5010
    OleObjectBlob   =   "frmMoveCell.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -920,6 +920,9 @@ Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
     '新しい選択領域を示すRange
     strToRange = objToRange.Address
     
+    'テキストボックスを編集
+    Call EditTextbox
+    
     'テキストボックスを移動
     With Range(strToRange)
         objTextbox.Left = .Left
@@ -927,9 +930,6 @@ Private Sub UserForm_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
         objTextbox.Width = .Width
         objTextbox.Height = .Height
     End With
-    
-    'テキストボックスを編集
-    Call EditTextbox
     
     '移動先(コピー先)の編集
     lblCellAddress.Caption = " " & Replace$(strToRange, "$", "")
@@ -1117,14 +1117,14 @@ On Error GoTo ErrHandle
     End With
 Exit Sub
 ErrHandle:
-    If Err.NUMBER = C_CheckErrMsg Then
+    If Err.Number = C_CheckErrMsg Then
         With objTextbox.TextFrame.Characters
             .Text = Err.Description
             .Font.ColorIndex = 3
             cmdOK.Enabled = False 'OKボタンを使用不可にする
         End With
     Else
-        Call Err.Raise(Err.NUMBER, Err.Source, Err.Description)
+        Call Err.Raise(Err.Number, Err.Source, Err.Description)
     End If
 End Sub
 
