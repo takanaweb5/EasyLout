@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmEdit 
    Caption         =   "かんたんレイアウト"
    ClientHeight    =   3825
-   ClientLeft      =   48
-   ClientTop       =   228
-   ClientWidth     =   7368
+   ClientLeft      =   45
+   ClientTop       =   225
+   ClientWidth     =   7365
    OleObjectBlob   =   "frmEdit.frx":0000
    StartUpPosition =   2  '画面の中央
 End
@@ -16,8 +16,8 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private hwnd       As Long
-Private OrgWndProc As Long
+Private hwnd       As LongPtr
+'Private OrgWndProc As Long
 Private blnZoomed  As Boolean
 Private objTmpBar  As CommandBar
 Private dblAnchor  As Double

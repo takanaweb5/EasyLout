@@ -37,7 +37,7 @@ Public blnFormLoad As Boolean
 
 Private clsUndoObject  As CUndoObject  'Undo情報
 Private lngProcessId As Long   'ヘルプのプロセスID
-Private hHelp        As Long   'ヘルプのハンドル
+Private hHelp        As LongPtr   'ヘルプのハンドル
 Private udtPlacement() As TPlacement
 
 Private objRepeatCmd As CommandBarControl

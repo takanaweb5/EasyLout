@@ -365,7 +365,7 @@ On Error GoTo ErrHandle
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
-    Call Err.Raise(Err.NUMBER, Err.Source, Err.Description)
+    Call Err.Raise(Err.Number, Err.Source, Err.Description)
 End Sub
 
 '*****************************************************************************
@@ -667,7 +667,7 @@ Private Sub RecoverSheet()
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
-    Call Err.Raise(Err.NUMBER, Err.Source, Err.Description)
+    Call Err.Raise(Err.Number, Err.Source, Err.Description)
 End Sub
 
 '*****************************************************************************
