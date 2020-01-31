@@ -919,7 +919,9 @@ On Error GoTo ErrHandle
         Call MsgBox(strErrMsg, vbExclamation)
         Exit Sub
     End If
-
+    
+    'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
+    Call SetPixelInfo
     Call ShowMoveCellForm(enmModeType, objFromRange, objToRange)
 Exit Sub
 ErrHandle:
