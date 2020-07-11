@@ -360,6 +360,9 @@ On Error GoTo ErrHandle
     With udtUndoInfo(bytNo)
         Call DeleteSheet(.UndoSheet)
         Call objWorksheet.Cells.Copy(.UndoSheet.Cells)
+        
+        'Excel2013用のおまじない（ないとクリップボードが汚される）
+        DoEvents
     End With
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
 Exit Sub

@@ -1720,6 +1720,8 @@ On Error GoTo ErrHandle
     
     'ÉTÉCÉYèÓïÒÇï€ë∂Ç∑ÇÈ
     With ThisWorkbook.Worksheets("Commands")
+        .Range("K:K").ColumnWidth = 1
+        .Range("L:L").ColumnWidth = 2
         x1 = .Range("K:K").Width / DPIRatio
         x2 = .Range("L:L").Width / DPIRatio
     End With

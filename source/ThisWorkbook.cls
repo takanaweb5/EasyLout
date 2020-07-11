@@ -15,16 +15,75 @@ Option Explicit
 '*****************************************************************************
 Private Sub Workbook_AddinInstall()
     On Error Resume Next
+    Application.CommandBars("かんたんレイアウトアイコン").Visible = False
     Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
-        
-    'ＰＣによってはアイコンが表示されないことがあるため
-    Call Sleep(100)
-    'かんたんレイアウトのインストール
-    Call InstToolBar
-    'かんたんレイアウト2のインストール
-    Call InstTool2Bar
 
+'    Debug.Print "Workbook_AddinInstall"
+    DoEvents
+    Call MsgBox("メニューが表示されない場合は、Excelを再起動すれば表示されます")
+End Sub
+
+'*****************************************************************************
+'[イベント]　AddinUninstall
+'[ 概  要 ]　アドインのアンインストール時に実行される
+'*****************************************************************************
+Private Sub Workbook_AddinUninstall()
+    On Error Resume Next
+    Call Application.CommandBars("かんたんレイアウト").Delete
+    Call Application.CommandBars("かんたんレイアウト2").Delete
+    Call Application.CommandBars("かんたんレイアウトアイコン").Delete
+End Sub
+
+'*****************************************************************************
+'[イベント]　Workbook_Open
+'[ 概  要 ]　開く時
+'*****************************************************************************
+Private Sub Workbook_Open()
+    On Error Resume Next
+    Application.CommandBars("かんたんレイアウトアイコン").Visible = False
+    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
+    
+    If ThisWorkbook.IsAddin = True Then
+'        Debug.Print "Workbook_Open: IsAddin=True"
+        Application.ScreenUpdating = False
+        ThisWorkbook.IsAddin = False
+        
+        'かんたんレイアウトのインストール
+        Call InstToolBar
+        'かんたんレイアウト2のインストール
+        Call InstTool2Bar
+        
+        ThisWorkbook.IsAddin = True
+        ThisWorkbook.Saved = True
+        Application.ScreenUpdating = True
+    Else
+'        Debug.Print "Workbook_Open: IsAddin=False"
+        
+        'かんたんレイアウトのインストール
+        Call InstToolBar
+        'かんたんレイアウト2のインストール
+        Call InstTool2Bar
+    End If
+    
+    On Error Resume Next
+    Application.CommandBars("かんたんレイアウト").Visible = True
+    Application.CommandBars("かんたんレイアウト2").Visible = True
+    
+    Call SetDPIRatio
     Call SetKeys
+End Sub
+
+'*****************************************************************************
+'[イベント]　Workbook_BeforeClose
+'[ 概  要 ]　閉じる時
+'*****************************************************************************
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
+    ThisWorkbook.Saved = True
+    On Error Resume Next
+    Call Application.OnKey("+{F2}")
+    Call Application.OnKey("+^{c}")
+    Call Application.OnKey("+^{v}")
+    Call Application.OnKey("{BS}")
 End Sub
 
 '*****************************************************************************
@@ -34,14 +93,14 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub InstToolBar()
-    Dim objCmdBar    As CommandBar 'かんたんレイアウト2バー
+    Dim objCmdBar    As CommandBar
     Dim i As Long
     
     On Error Resume Next
     Call Application.CommandBars("かんたんレイアウト").Delete
     On Error GoTo ErrHandle
     
-    Set objCmdBar = Application.CommandBars.Add("かんたんレイアウト")
+    Set objCmdBar = Application.CommandBars.Add("かんたんレイアウト", Temporary:=True)
     
     With objCmdBar.Controls.Add(msoControlButton)
         .Caption = "列"
@@ -126,14 +185,14 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub InstTool2Bar()
-    Dim objCmdBar    As CommandBar 'かんたんレイアウト2バー
+    Dim objCmdBar    As CommandBar
     Dim i As Long
     
     On Error Resume Next
     Call Application.CommandBars("かんたんレイアウト2").Delete
     On Error GoTo ErrHandle
     
-    Set objCmdBar = Application.CommandBars.Add("かんたんレイアウト2")
+    Set objCmdBar = Application.CommandBars.Add("かんたんレイアウト2", Temporary:=True)
     
     With objCmdBar.Controls.Add(msoControlButton, 849)
         .Caption = "数式バー"
@@ -279,75 +338,5 @@ Private Sub InstTool2Bar()
 Exit Sub
 ErrHandle:
     Call MsgBox("インストールに失敗しました", vbCritical)
-End Sub
-
-'*****************************************************************************
-'[イベント]　AddinUninstall
-'[ 概  要 ]　アドインのアンインストール時に実行される
-'*****************************************************************************
-Private Sub Workbook_AddinUninstall()
-    On Error Resume Next
-    Call Application.CommandBars("かんたんレイアウト").Delete
-    Call Application.CommandBars("かんたんレイアウト2").Delete
-    Call Application.CommandBars("かんたんレイアウトアイコン").Delete
-End Sub
-
-'*****************************************************************************
-'[イベント]　Workbook_Open
-'[ 概  要 ]　開く時
-'*****************************************************************************
-Private Sub Workbook_Open()
-    Dim strMsg As String
-    Dim i As Long
-    
-    Call SetDPIRatio
-    
-    On Error Resume Next
-    Application.CommandBars("かんたんレイアウトアイコン").Enabled = False
-    Application.CommandBars("かんたんレイアウト").Visible = True
-    Application.CommandBars("かんたんレイアウト2").Visible = True
-    
-    'EXCEL2013以降、アドインインストール後再起動するとツールバーが消えてしまう事象の対応
-    '100%再現するわけではなく、消えないこともある
-    If Err.Number <> 0 Then
-        'ＰＣによってはアイコンが表示されないことがあるため
-        Call Sleep(100)
-        'かんたんレイアウトのインストール
-        Call InstToolBar
-        'かんたんレイアウト2のインストール
-        Call InstTool2Bar
-    Else
-        'ツールバーのボタンFaceの書換えが反映されない謎の事象の対応
-        '再度ボタンFaceの書換えを実施する
-        With Application.CommandBars("かんたんレイアウト").Controls
-            .Item(1).Caption = "列"
-            For i = 2 To .Count
-                Call SetCommand("列", .Item(i))
-            Next
-        End With
-        With Application.CommandBars("かんたんレイアウト2").Controls
-            For i = 1 To .Count
-                Call SetCommand("ツール", .Item(i))
-            Next i
-        End With
-        With Application.CommandBars("かんたんレイアウト2").Controls("その他").Controls
-            For i = 1 To .Count
-                Call SetCommand("その他", .Item(i))
-            Next i
-        End With
-    End If
-    Call SetKeys
-End Sub
-
-'*****************************************************************************
-'[イベント]　Workbook_BeforeClose
-'[ 概  要 ]　閉じる時
-'*****************************************************************************
-Private Sub Workbook_BeforeClose(Cancel As Boolean)
-    On Error Resume Next
-    Call Application.OnKey("+{F2}")
-    Call Application.OnKey("+^{c}")
-    Call Application.OnKey("+^{v}")
-    Call Application.OnKey("{BS}")
 End Sub
 

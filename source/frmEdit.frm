@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmEdit 
    Caption         =   "かんたんレイアウト"
-   ClientHeight    =   3825
-   ClientLeft      =   45
-   ClientTop       =   225
-   ClientWidth     =   7365
+   ClientHeight    =   3828
+   ClientLeft      =   48
+   ClientTop       =   228
+   ClientWidth     =   7368
    OleObjectBlob   =   "frmEdit.frx":0000
    StartUpPosition =   2  '画面の中央
 End
@@ -405,6 +405,8 @@ On Error GoTo ErrHandle
         lngSelStart = txtEdit.SelStart
         Call SetClipbordText(strNewSelText)
         Call SendKeys("^v", True)
+        'Excel2019ではこれがないと、ClearClipbord後にCtrl+Vが実行されて何も起こらない
+        DoEvents
         txtEdit.SelStart = lngSelStart
         txtEdit.SelLength = Len(strNewSelText)
         

@@ -61,7 +61,7 @@ Private Sub ColRowChange()
         Exit Sub
     End If
     
-    strClipText = GetClipbordText()
+'    strClipText = GetClipbordText()
     
     With CommandBars("かんたんレイアウト").Controls(1)
         If .Caption = "行" Then
@@ -79,12 +79,12 @@ Private Sub ColRowChange()
         Next i
     End With
     
-    'クリップボードの復元
-    If strClipText = "" Then
-        Call ClearClipbord
-    Else
-        Call SetClipbordText(strClipText)
-    End If
+'    'クリップボードの復元
+'    If strClipText = "" Then
+'        Call ClearClipbord
+'    Else
+'        Call SetClipbordText(strClipText)
+'    End If
 End Sub
 
 '*****************************************************************************
@@ -99,7 +99,8 @@ Public Sub SetCommand(ByVal strGroup As String, ByRef objCmdBarBtn As CommandBar
     Dim strCommand As String
     Dim objRange   As Range
 '    Dim objMask    As IPictureDisp
-    
+    Dim objBtn As CommandBarButton
+         
     strCommand = objCmdBarBtn.Caption
     
     'ワークシ－トのコマンドを設定する
@@ -112,8 +113,10 @@ Public Sub SetCommand(ByVal strGroup As String, ByRef objCmdBarBtn As CommandBar
                 If objRange(i, "C") <> "" Then
                     .FaceId = objRange(i, "C")
                 Else
-                    If CopyIconFromHidden(strGroup & "_" & strCommand) = True Then
-                        Call .PasteFace
+                    If CopyIconFromHidden(strGroup & "_" & strCommand, objBtn) = True Then
+                        .Picture = objBtn.Picture
+                        .Mask = objBtn.Mask
+'                        Call .PasteFace
                     End If
 '                    Set objMask = Nothing
 '                    If CopyIconFromCell(objRange.Cells(i, "E")) = True Then
@@ -176,17 +179,16 @@ End Sub
 '[ 引  数 ]　コマンドの名前　例：列_縮小
 '[ 戻り値 ]　True:成功、False:失敗
 '*****************************************************************************
-Private Function CopyIconFromHidden(ByVal strCommand As String) As Boolean
+Private Function CopyIconFromHidden(ByVal strCommand As String, ByRef objBtn As CommandBarButton) As Boolean
 On Error GoTo ErrHandle
-    Dim objBtn As CommandBarButton
-
-    For Each objBtn In CommandBars("かんたんレイアウトアイコン").Controls
-        If objBtn.Caption = strCommand Then
-            Call objBtn.CopyFace
+    Dim objButton As CommandBarButton
+    For Each objButton In CommandBars("かんたんレイアウトアイコン").Controls
+        If objButton.Caption = strCommand Then
+            Set objBtn = objButton
             CopyIconFromHidden = True
             Exit Function
         End If
-    Next objBtn
+    Next
 ErrHandle:
 End Function
 
@@ -990,6 +992,7 @@ On Error GoTo ErrHandle
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If
+    Set objSelection = Selection
     
     '取消領域を選択させる
     With frmUnSelect
@@ -1008,7 +1011,6 @@ On Error GoTo ErrHandle
         End If
         
         enmUnselectMode = .Mode
-        Set objSelection = Selection
         Select Case (enmUnselectMode)
         Case E_Unselect, E_Reverse, E_Intersect, E_Union
             Set objUnSelect = .SelectRange

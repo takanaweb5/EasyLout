@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmAlignment 
    Caption         =   "選択してください"
    ClientHeight    =   1632
-   ClientLeft      =   45
-   ClientTop       =   330
-   ClientWidth     =   2925
+   ClientLeft      =   48
+   ClientTop       =   336
+   ClientWidth     =   2928
    OleObjectBlob   =   "frmAlignment.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End

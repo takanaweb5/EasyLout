@@ -2,7 +2,6 @@ Attribute VB_Name = "GeneralTools"
 Option Explicit
 Option Private Module
 
-#If VBA7 Then
 Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 Public Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As Long
 Public Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
@@ -27,32 +26,6 @@ Public Declare PtrSafe Function ReleaseCapture Lib "user32.dll" () As Long
 Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hdc As LongPtr, ByVal nIndex As Long) As Long
 Public Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As Long
 Public Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hdc As LongPtr) As Long
-#Else
-Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
-Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
-Public Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-Public Declare Function ShowWindow Lib "user32" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long
-Public Declare Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
-Public Declare Function IsZoomed Lib "user32" (ByVal hwnd As Long) As Long
-Public Declare Function GetSystemMenu Lib "user32" (ByVal hwnd As Long, ByVal bRevert As Long) As Long
-Public Declare Function EnableMenuItem Lib "user32.dll" (ByVal hMenu As Long, ByVal uIDEnableItem As Long, ByVal uEnable As Long) As Long
-Public Declare Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As Long
-Public Declare Function GetExitCodeProcess Lib "kernel32.dll" (ByVal PROCESS As Long, lpExitCode As Long) As Long
-'Public Declare Function CloseHandle Lib "KERNEL32.DLL" (ByVal hObject As Long) As Long
-'Public Declare Function TerminateProcess Lib "KERNEL32.DLL" (ByVal hProcess As Long, ByVal uExitCode As Long) As Long
-Public Declare Function LoadCursor Lib "user32.dll" Alias "LoadCursorA" (ByVal hInstance As Long, ByVal lpCursorName As Long) As Long
-Public Declare Function SetCursor Lib "user32.dll" (ByVal hCursor As Long) As Long
-Public Declare Function GetKeyState Lib "user32" (ByVal lngVirtKey As Long) As Integer
-'Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As Long) As Long
-Public Declare Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As Long, ByVal b As Long) As Long
-Public Declare Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As Long, ByVal himc As Long) As Long
-Public Declare Function ReleaseCapture Lib "user32.dll" () As Long
-Public Declare Function GetDeviceCaps Lib "gdi32" (ByVal hdc As Long, ByVal nIndex As Long) As Long
-Public Declare Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
-Public Declare Function ReleaseDC Lib "user32" (ByVal hwnd As Long, ByVal hdc As Long) As Long
-#End If
 
 ' íËêîÇÃíËã`
 Public Const IDC_HAND = 32649
@@ -994,6 +967,7 @@ Public Sub ClearClipbord()
 On Error GoTo ErrHandle
     Dim objCb As New DataObject
     Call objCb.Clear
+    Call objCb.SetText("")
     Call objCb.PutInClipboard
 ErrHandle:
     Set objCb = Nothing
