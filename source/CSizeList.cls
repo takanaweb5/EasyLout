@@ -301,7 +301,7 @@ Private Sub spbChgSize_Change()
         Else
             lngIndex = 1
         End If
-        objColRows.Size(lngIndex) = objColRows.Size(lngIndex) + objColRows.PixelToSize(lngSgn)    '@
+        objColRows.Size(lngIndex) = objColRows.PixelToSize(objColRows.Pixel(lngIndex) + lngSgn)     '@
     Else
         '調整列(行)のサイズを変更
         If lngNo <> CLng(lblNo) Then
@@ -317,7 +317,7 @@ Private Sub spbChgSize_Change()
         End If
         
         '選択列(行)のサイズを変更
-        objColRows.Size = objColRows.Size + objColRows.PixelToSize(lngSgn)     '@
+        objColRows.Size = objColRows.PixelToSize(objColRows.Pixel + lngSgn)     '@
     End If
     
     Call frmSizeList.ReCalc

@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 '*****************************************************************************
@@ -30,9 +31,9 @@ Private Sub UserForm_Initialize()
         txtPixel2.Value = strArray(3)
     Else
         txtmm1.Value = 100
-        txtPixel1.Value = Round(Application.CentimetersToPoints(10) / 0.75)
+        txtPixel1.Value = Round(Application.CentimetersToPoints(10) / DPIRatio)
         txtmm2.Value = 100
-        txtPixel2.Value = Round(Application.CentimetersToPoints(10) / 0.75)
+        txtPixel2.Value = Round(Application.CentimetersToPoints(10) / DPIRatio)
     End If
     
     'ŒÄ‚ÑŒ³‚É’Ê’m‚·‚é

@@ -1,5 +1,6 @@
 Attribute VB_Name = "ElseTools"
 Option Explicit
+Option Private Module
 
 '罫線情報
 Public Type TBorder
@@ -36,8 +37,10 @@ Public blnFormLoad As Boolean
 
 Private clsUndoObject  As CUndoObject  'Undo情報
 Private lngProcessId As Long   'ヘルプのプロセスID
-Private hHelp        As Long   'ヘルプのハンドル
+Private hHelp        As LongPtr   'ヘルプのハンドル
 Private udtPlacement() As TPlacement
+
+Private objRepeatCmd As CommandBarControl
 
 '*****************************************************************************
 '[ 関数名 ]　ColRowChange
@@ -58,7 +61,7 @@ Private Sub ColRowChange()
         Exit Sub
     End If
     
-    strClipText = GetClipbordText()
+'    strClipText = GetClipbordText()
     
     With CommandBars("かんたんレイアウト").Controls(1)
         If .Caption = "行" Then
@@ -76,12 +79,12 @@ Private Sub ColRowChange()
         Next i
     End With
     
-    'クリップボードの復元
-    If strClipText = "" Then
-        Call ClearClipbord
-    Else
-        Call SetClipbordText(strClipText)
-    End If
+'    'クリップボードの復元
+'    If strClipText = "" Then
+'        Call ClearClipbord
+'    Else
+'        Call SetClipbordText(strClipText)
+'    End If
 End Sub
 
 '*****************************************************************************
@@ -96,7 +99,8 @@ Public Sub SetCommand(ByVal strGroup As String, ByRef objCmdBarBtn As CommandBar
     Dim strCommand As String
     Dim objRange   As Range
 '    Dim objMask    As IPictureDisp
-    
+    Dim objBtn As CommandBarButton
+         
     strCommand = objCmdBarBtn.Caption
     
     'ワークシ－トのコマンドを設定する
@@ -109,8 +113,10 @@ Public Sub SetCommand(ByVal strGroup As String, ByRef objCmdBarBtn As CommandBar
                 If objRange(i, "C") <> "" Then
                     .FaceId = objRange(i, "C")
                 Else
-                    If CopyIconFromHidden(strGroup & "_" & strCommand) = True Then
-                        Call .PasteFace
+                    If CopyIconFromHidden(strGroup & "_" & strCommand, objBtn) = True Then
+                        .Picture = objBtn.Picture
+                        .Mask = objBtn.Mask
+'                        Call .PasteFace
                     End If
 '                    Set objMask = Nothing
 '                    If CopyIconFromCell(objRange.Cells(i, "E")) = True Then
@@ -173,17 +179,16 @@ End Sub
 '[ 引  数 ]　コマンドの名前　例：列_縮小
 '[ 戻り値 ]　True:成功、False:失敗
 '*****************************************************************************
-Private Function CopyIconFromHidden(ByVal strCommand As String) As Boolean
+Private Function CopyIconFromHidden(ByVal strCommand As String, ByRef objBtn As CommandBarButton) As Boolean
 On Error GoTo ErrHandle
-    Dim objBtn As CommandBarButton
-
-    For Each objBtn In CommandBars("かんたんレイアウトアイコン").Controls
-        If objBtn.Caption = strCommand Then
-            Call objBtn.CopyFace
+    Dim objButton As CommandBarButton
+    For Each objButton In CommandBars("かんたんレイアウトアイコン").Controls
+        If objButton.Caption = strCommand Then
+            Set objBtn = objButton
             CopyIconFromHidden = True
             Exit Function
         End If
-    Next objBtn
+    Next
 ErrHandle:
 End Function
 
@@ -317,6 +322,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -437,6 +443,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -526,7 +533,13 @@ Private Sub ParseOneValueRange(ByRef objRange As Range, ByVal lngAlignment As Lo
     
     '行の数だけループ
     For i = lngStart To objRange.Rows.Count
-        objRange(i, 1).Value = strArray(j)
+        With objRange(i, 1)
+            If .NumberFormat <> "@" And StrConv(Left$(strArray(j), 1), vbNarrow) = "=" Then
+                .Value = "'" & strArray(j)
+            Else
+                .Value = strArray(j)
+            End If
+        End With
         j = j + 1
         If j > UBound(strArray) Then
             Exit For
@@ -538,7 +551,14 @@ Private Sub ParseOneValueRange(ByRef objRange As Range, ByVal lngAlignment As Lo
         For i = j To UBound(strArray)
             strLastCell = strLastCell & vbLf & strArray(i)
         Next
-        objRange(objRange.Rows.Count, 1).Value = strLastCell
+        
+        With objRange(objRange.Rows.Count, 1)
+            If .NumberFormat <> "@" And StrConv(Left$(strLastCell, 1), vbNarrow) = "=" Then
+                .Value = "'" & strLastCell
+            Else
+                .Value = strLastCell
+            End If
+        End With
     End If
 End Sub
     
@@ -629,6 +649,7 @@ On Error GoTo ErrHandle
         End If
     End If
     Call SetOnUndo
+    Call SetOnRepeat
     
     '貼り付けた文字列をクリップボードにコピー
     Call SetClipbordText(Replace$(strCopyText, vbLf, vbCrLf))
@@ -825,7 +846,10 @@ Private Sub MoveObject()
         Call UnSelect
         Exit Sub
     End If
-    
+
+    'IMEをオフにする
+    Call SetIMEOff
+
     '選択されているオブジェクトを判定
     Select Case CheckSelection()
     Case E_Range
@@ -833,6 +857,8 @@ Private Sub MoveObject()
     Case E_Shape
         Call MoveShape
     End Select
+    
+    Call Application.OnRepeat("", "")
 End Sub
     
 '*****************************************************************************
@@ -895,7 +921,9 @@ On Error GoTo ErrHandle
         Call MsgBox(strErrMsg, vbExclamation)
         Exit Sub
     End If
-
+    
+    'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
+    Call SetPixelInfo
     Call ShowMoveCellForm(enmModeType, objFromRange, objToRange)
 Exit Sub
 ErrHandle:
@@ -964,6 +992,7 @@ On Error GoTo ErrHandle
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If
+    Set objSelection = Selection
     
     '取消領域を選択させる
     With frmUnSelect
@@ -982,8 +1011,10 @@ On Error GoTo ErrHandle
         End If
         
         enmUnselectMode = .Mode
-        Set objSelection = Selection
-        Set objUnSelect = .SelectRange
+        Select Case (enmUnselectMode)
+        Case E_Unselect, E_Reverse, E_Intersect, E_Union
+            Set objUnSelect = .SelectRange
+        End Select
         Call Unload(frmUnSelect)
     End With
 
@@ -995,6 +1026,9 @@ On Error GoTo ErrHandle
         Set objRange = UnionRange(MinusRange(objSelection, objUnSelect), MinusRange(objUnSelect, objSelection))
     Case E_Intersect '絞り込み
         Set objRange = IntersectRange(objSelection, objUnSelect)
+        Set objRange = ReSelectRange(objSelection, objRange)
+    Case E_Merge    '結合セルのみ選択
+        Set objRange = ArrangeRange(GetMergeRange(objSelection))
         Set objRange = ReSelectRange(objSelection, objRange)
     Case E_Union     '追加
         Dim strAddress As String
@@ -1019,34 +1053,6 @@ ErrHandle:
         Call Unload(frmUnSelect)
     End If
 End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　ReSelectRange
-'[ 概　要 ]　新しい領域を、元の領域の選択ごとのエリアに分割する
-'　　　　　　例:ReSelectRange(Range("A1,A2,A3"),Range("A1:A2")).Address→"A1,A2"
-'[ 引　数 ]　objSelection:元の領域、objNewRange:新しい領域
-'[ 戻り値 ]  objNewRangeを元の領域の選択ごとのエリアに分割したもの
-'*****************************************************************************
-Private Function ReSelectRange(ByRef objSelection As Range, ByRef objNewRange As Range) As Range
-    Dim objTmpRange As Range
-    Dim i As Long
-    Dim strAddress As String
-    
-    For i = 1 To objSelection.Areas.Count
-        Set objTmpRange = IntersectRange(objSelection.Areas(i), objNewRange)
-        If Not (objTmpRange Is Nothing) Then
-            strAddress = strAddress & objTmpRange.Address(False, False) & ","
-        End If
-    Next i
-    
-    '末尾のカンマを削除
-    strAddress = Left$(strAddress, Len(strAddress) - 1)
-    If Len(strAddress) < 256 Then
-        Set ReSelectRange = Range(strAddress)
-    Else
-        Set ReSelectRange = objNewRange
-    End If
-End Function
 
 '*****************************************************************************
 '[ 関数名 ]　CheckMoveCell
@@ -1163,6 +1169,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1396,6 +1403,7 @@ On Error GoTo ErrHandle
     Call Range(strSelectAddress).Select
     Call SetOnUndo
     Application.DisplayAlerts = True
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -1447,14 +1455,14 @@ Private Sub ChangeTextboxToCell(ByRef objTextbox As Shape, ByRef objRange As Ran
     Call objRange.Merge
     
     'フォントと文字列の設定
-    With objTextbox.TextFrame.Characters
-        objRange(1, 1).Value = .Text
-        On Error Resume Next
-        objRange.Font.Name = .Font.Name
-        objRange.Font.Size = .Font.Size
-        objRange.Font.FontStyle = .Font.FontStyle
-        On Error GoTo 0
+    objRange(1, 1).Value = GetCharactersText(objTextbox.TextFrame)
+    On Error Resume Next
+    With objTextbox.TextFrame.Font
+        objRange.Font.Name = .Name
+        objRange.Font.Size = .Size
+        objRange.Font.FontStyle = .FontStyle
     End With
+    On Error GoTo 0
     
     '配置の設定
     With objTextbox.TextFrame
@@ -1596,6 +1604,7 @@ On Error GoTo ErrHandle
     '作成したテキストボックスを選択
     Call ActiveSheet.Shapes.Range(strTextboxes).Select
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1668,7 +1677,7 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
     
     '線の設定
     With objTextbox.Line
-        .Weight = 0.75
+        .Weight = DPIRatio
         .DashStyle = msoLineSolid
         .Style = msoLineSingle
         .ForeColor.RGB = 0
@@ -1787,6 +1796,29 @@ Public Sub SetOnUndo()
 
     Call clsUndoObject.SetOnUndo
     Call Application.OnRepeat("", "")
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　SetOnRepeat
+'[ 概  要 ]　ApplicationオブジェクトのOnRepeatイベントを設定
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Public Sub SetOnRepeat()
+    Set objRepeatCmd = CommandBars.ActionControl
+    If Not (objRepeatCmd Is Nothing) Then
+        Call Application.OnRepeat("繰り返し　" & CommandBars.ActionControl.Caption, "OnRepeat")
+    End If
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　OnRepeat
+'[ 概  要 ]　繰り返しクリック時
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub OnRepeat()
+    Call objRepeatCmd.Execute
 End Sub
 
 '*****************************************************************************
@@ -1976,21 +2008,59 @@ On Error GoTo ErrHandle
     
     Application.ScreenUpdating = False
     
+    Dim i As Long
+    Dim j As Long
+'    Dim t
+'    t = Timer
+    
     Call SaveUndoInfo(E_CellValue, objSelection)
+    On Error Resume Next
     For Each objCell In objWkRange
+        i = i + 1
         strText = objCell
         If strText <> "" Then '結合セルの左上以外を無視するため
             strConvText = StrConvert(strText, CommandBars.ActionControl.Parameter)
             If strConvText <> strText Then
-                objCell = strConvText
+'                objCell = strConvText
+                Call SetTextToCell(objCell, strConvText)
+                
+                'ステータスバーに進捗状況を表示
+                If i / objWkRange.Count * 12 <> j Then
+                    j = i / objWkRange.Count * 12
+                    Application.StatusBar = String(j, "■") & String(12 - j, "□")
+                End If
             End If
         End If
     Next
     
+'    MsgBox Timer - t
+    
     Call SetOnUndo
+    
+    Set objRepeatCmd = CommandBars.ActionControl
+    Call Application.OnRepeat("繰り返し " & objRepeatCmd.Caption, "OnRepeat")
+    Application.StatusBar = False
 Exit Sub
 ErrHandle:
+    Application.StatusBar = False
     Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[ 関数名 ]　SetTextToCell
+'[ 概  要 ]　設定するCell,設定する文字列
+'[ 引  数 ]　なし
+'[ 戻り値 ]　なし
+'*****************************************************************************
+Private Sub SetTextToCell(ByRef objCell As Range, ByVal strConvText As String)
+On Error GoTo ErrHandle
+    objCell = objCell.PrefixCharacter & strConvText
+    If objCell.HasFormula Then
+        objCell = "'" & strConvText
+    End If
+Exit Sub
+ErrHandle:
+    objCell = "'" & strConvText
 End Sub
 
 '*****************************************************************************
@@ -2057,12 +2127,12 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　SetEnabled
+'[ 関数名 ]　OnElseMenuClick
 '[ 概  要 ]　｢その他｣メニューを開く時に、各コマンドのEnabledの初期設定を行う
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub SetEnabled()
+Private Sub OnElseMenuClick()
     Dim objMenu          As CommandBarPopup
     Dim enmSelectionType As ESelectionType
     Dim objCommand       As Object
@@ -2071,6 +2141,8 @@ Private Sub SetEnabled()
     
     enmSelectionType = CheckSelection()
     Set objMenu = CommandBars.ActionControl
+    
+    'Menuがカスタマイズされていた場合の考慮
     For Each objCommand In objMenu.Controls
         objCommand.Enabled = True
     Next
@@ -2082,6 +2154,16 @@ Private Sub SetEnabled()
     objMenu.Controls("文字種の変換").Enabled = (enmSelectionType = E_Range)
     objMenu.Controls("選択領域の一部取消し").Enabled = (enmSelectionType = E_Range)
     objMenu.Controls("入力補助画面").Enabled = (enmSelectionType = E_Range)
+
+    '図形非表示が図形再表示になっていたら元に戻す
+    objMenu.Controls("図形再表示").Caption = "図形非表示"
+    If ActiveWorkbook Is Nothing Then
+        objMenu.Controls("図形非表示").Enabled = False
+    Else
+        If ActiveWorkbook.DisplayDrawingObjects <> xlDisplayShapes Then
+            objMenu.Controls("図形非表示").Caption = "図形再表示"
+        End If
+    End If
     On Error GoTo 0
 End Sub
 
@@ -2172,29 +2254,29 @@ On Error GoTo ErrHandle
 ErrHandle:
 End Sub
 
-'*****************************************************************************
-'[ 関数名 ]　SubClassProc
-'[ 概  要 ]　入力補助画面をマウスホイールでスクロールさせる
-'[ 引  数 ]　CallBack関数のそれ
-'[ 戻り値 ]　CallBack関数のそれ
-'*****************************************************************************
-Public Function SubClassProc(ByVal hWnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-On Error Resume Next
-    If Msg = WM_MOUSEWHEEL Then
-        If 0 < wParam Then
-            Call SendKeys("{UP}")
-            Call SendKeys("{UP}")
-'            frmEdit.txtEdit.CurLine = frmEdit.txtEdit.CurLine - 2
-        Else
-            Call SendKeys("{DOWN}")
-            Call SendKeys("{DOWN}")
-'            frmEdit.txtEdit.CurLine = frmEdit.txtEdit.CurLine + 2
-        End If
-    End If
-    
-    'デフォルトウィンドウプロシージャを呼び出す
-    SubClassProc = CallWindowProc(frmEdit.WndProc, hWnd, Msg, wParam, lParam)
-End Function
+''*****************************************************************************
+''[ 関数名 ]　SubClassProc
+''[ 概  要 ]　入力補助画面をマウスホイールでスクロールさせる
+''[ 引  数 ]　CallBack関数のそれ
+''[ 戻り値 ]　CallBack関数のそれ
+''*****************************************************************************
+'Public Function SubClassProc(ByVal hWnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+'On Error Resume Next
+'    If MSG = WM_MOUSEWHEEL Then
+'        If 0 < wParam Then
+'            Call SendKeys("{UP}")
+'            Call SendKeys("{UP}")
+''            frmEdit.txtEdit.CurLine = frmEdit.txtEdit.CurLine - 2
+'        Else
+'            Call SendKeys("{DOWN}")
+'            Call SendKeys("{DOWN}")
+''            frmEdit.txtEdit.CurLine = frmEdit.txtEdit.CurLine + 2
+'        End If
+'    End If
+'
+'    'デフォルトウィンドウプロシージャを呼び出す
+'    SubClassProc = CallWindowProc(frmEdit.WndProc, hWnd, MSG, wParam, lParam)
+'End Function
 
 ''*****************************************************************************
 ''[ 関数名 ]　LoadThisWorkbook

@@ -8,6 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+
 Private objRow    As Range   'äYìñÇÃçs
 
 '*****************************************************************************
@@ -61,9 +62,9 @@ End Property
 '*****************************************************************************
 Public Property Get Pixel(Optional ByVal i As Long = 0) As Long
     If i = 0 Then
-        Pixel = objRow.Height / 0.75
+        Pixel = objRow.Height / DPIRatio
     Else
-        Pixel = objRow.Rows(i).Height / 0.75
+        Pixel = objRow.Rows(i).Height / DPIRatio
     End If
 End Property
 

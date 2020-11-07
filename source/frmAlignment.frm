@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmAlignment 
    Caption         =   "‘I‘ð‚µ‚Ä‚­‚¾‚³‚¢"
-   ClientHeight    =   1635
+   ClientHeight    =   1632
    ClientLeft      =   48
    ClientTop       =   336
    ClientWidth     =   2928
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 Public Enum EAlignmentType

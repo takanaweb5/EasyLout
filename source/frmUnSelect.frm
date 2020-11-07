@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmUnSelect 
    Caption         =   "選択してください"
-   ClientHeight    =   2145
+   ClientHeight    =   2328
    ClientLeft      =   108
    ClientTop       =   336
    ClientWidth     =   4668
@@ -21,9 +21,11 @@ Public Enum EUnselectMode
     E_Reverse   '反転
     E_Union     '追加
     E_Intersect '絞り込み
+    E_Merge    '結合セルのみ選択
 End Enum
 
 Private lngReferenceStyle As Long
+Private strSelectBefore As String
 Private blnCheck As Boolean
 
 Private strLastSheet   As String '前回の領域の復元用
@@ -34,25 +36,78 @@ Private strLastAddress As String '前回の領域の復元用
 '[ 概  要 ]　RefEditを有効にさせる
 '*****************************************************************************
 Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    On Error Resume Next
     RefEdit.SetFocus
 End Sub
 Private Sub Frame_Click()
+    On Error Resume Next
     RefEdit.SetFocus
 End Sub
 Private Sub Frame_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    On Error Resume Next
     RefEdit.SetFocus
 End Sub
 Private Sub lblTitle_Click()
+    On Error Resume Next
     RefEdit.SetFocus
 End Sub
 Private Sub lblTitle_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    On Error Resume Next
     RefEdit.SetFocus
 End Sub
 Private Sub cmdOK_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    On Error Resume Next
     RefEdit.SetFocus
 End Sub
 Private Sub cmdCancel_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+    On Error Resume Next
     RefEdit.SetFocus
+End Sub
+
+'*****************************************************************************
+'[イベント]　RefEditで領域選択時
+'[ 概  要 ]　アドレスが255文字を超えた時の対応
+'*****************************************************************************
+Private Sub RefEdit_Change()
+    '[Ctrl]Keyが押下されていれば、選択領域を次々と追加している時
+    If GetKeyState(vbKeyControl) < 0 Then
+        'アドレスが255文字を超えてリセットされてしまった時
+        If strSelectBefore <> "" Then
+            If Range(RefEdit.Value).Areas.Count <= 1 And _
+               Range(strSelectBefore).Areas.Count > 1 Then
+                Call MsgBox("これ以上は選択出来ません", vbExclamation)
+                RefEdit.Value = strSelectBefore
+                Call cmdOK.SetFocus
+                Call RefEdit.SetFocus
+                Exit Sub
+            End If
+        End If
+    End If
+    strSelectBefore = RefEdit.Value
+End Sub
+
+''*****************************************************************************
+''[イベント]　RefEditで領域選択中にCtrlキーを離した時
+''[ 概  要 ]　アドレスが255文字を超えた時の対応
+''*****************************************************************************
+'Private Sub SetEnterEnabled()
+'    If RefEdit.Value = "" And Me.Mode <> E_Merge Then
+'        cmdOK.Enabled = False
+'    Else
+'        cmdOK.Enabled = True
+'    End If
+'End Sub
+
+'*****************************************************************************
+'[イベント]　RefEditで領域選択中にCtrlキーを離した時
+'[ 概  要 ]　アドレスが255文字を超えた時の対応
+'*****************************************************************************
+Private Sub RefEdit_KeyUp(KeyCode As Integer, ByVal Shift As Integer)
+    If KeyCode = vbKeyControl Then
+        RefEdit.Value = strSelectBefore
+        Call cmdOK.SetFocus
+        Call RefEdit.SetFocus
+    End If
 End Sub
 
 '*****************************************************************************
@@ -101,6 +156,21 @@ Private Sub chkUnion_Change()
 End Sub
 
 '*****************************************************************************
+'[イベント]　chkMerge_Click
+'[ 概  要 ]　結合セルのみチェック時
+'*****************************************************************************
+Private Sub chkMerge_Click()
+    If blnCheck = True Then
+        Exit Sub
+    End If
+    If chkMerge.Value = True Then
+        Call ChangeMode(E_Merge)
+    Else
+        Call ChangeMode(E_Unselect)
+    End If
+End Sub
+
+'*****************************************************************************
 '[ 関数名 ]　ChangeMode
 '[ 概  要 ]  ｢反転｣･｢絞り込み｣･｢取消し｣のモードを変更する
 '[ 引  数 ]　モードタイプ
@@ -116,30 +186,24 @@ Private Sub ChangeMode(ByVal enmModeType As EUnselectMode)
         lblTitle.Caption = "マウスで選択を絞り込みたい領域を選択してください"
     Case E_Union
         lblTitle.Caption = "マウスで選択を追加したい領域を選択してください"
+    Case E_Merge
+        lblTitle.Caption = "結合セルのみを選択します"
     End Select
     
     blnCheck = True
-    Select Case enmModeType
-    Case E_Unselect
-        chkReverse.Value = False
-        chkIntersect.Value = False
-        chkUnion.Value = False
-    Case E_Reverse
-        chkReverse.Value = True
-        chkIntersect.Value = False
-        chkUnion.Value = False
-    Case E_Intersect
-        chkReverse.Value = False
-        chkIntersect.Value = True
-        chkUnion.Value = False
-    Case E_Union
-        chkReverse.Value = False
-        chkIntersect.Value = False
-        chkUnion.Value = True
-    End Select
+    chkReverse.Value = (enmModeType = E_Reverse)
+    chkIntersect.Value = (enmModeType = E_Intersect)
+    chkUnion.Value = (enmModeType = E_Union)
+    chkMerge.Value = (enmModeType = E_Merge)
+ 
     blnCheck = False
     
-    RefEdit.SetFocus
+    If enmModeType = E_Merge Then
+        RefEdit.Enabled = False
+    Else
+        RefEdit.Enabled = True
+        Call RefEdit.SetFocus
+    End If
 End Sub
     
 '*****************************************************************************
@@ -147,11 +211,10 @@ End Sub
 '[ 概  要 ]　フォームロード時
 '*****************************************************************************
 Private Sub UserForm_Initialize()
-
     lngReferenceStyle = Application.ReferenceStyle
     Application.ReferenceStyle = xlA1
 
-    'オプションを隠す
+    'RefEditを隠す
     RefEdit.Top = RefEdit.Top + 100
     
     '呼び元に通知する
@@ -238,6 +301,8 @@ Public Property Get Mode() As EUnselectMode
         Mode = E_Intersect
     Case chkUnion.Value
         Mode = E_Union
+    Case chkMerge.Value
+        Mode = E_Merge
     Case Else
         Mode = E_Unselect
     End Select

@@ -1,5 +1,6 @@
 Attribute VB_Name = "RowChangeTools"
 Option Explicit
+Option Private Module
 
 Private Const MaxRowHeight = 409.5  '高さの最大サイズ
 
@@ -141,7 +142,7 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim lngPixel    As Long    '幅(単位:Pixel)
     For i = 1 To colAddress.Count
-        lngPixel = Range(colAddress(i)).Rows(1).Height / 0.75 + lngSize
+        lngPixel = Range(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
         If lngPixel < 0 Then
             Call MsgBox("これ以上縮小出来ません", vbExclamation)
             Exit Sub
@@ -165,7 +166,7 @@ On Error GoTo ErrHandle
     
     '同じ高さの塊ごとに高さを設定する
     For i = 1 To colAddress.Count
-        lngPixel = Range(colAddress(i)).Rows(1).Height / 0.75 + lngSize
+        lngPixel = Range(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
         Range(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
     Next i
     
@@ -174,6 +175,7 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     If blnDisplayPageBreaks = True Then
@@ -253,10 +255,10 @@ End Function
 Private Function GetSameHeightAddress(ByRef lngRow As Long, ByVal lngLastCell As Long) As String
     Dim lngPixel As Long
     Dim i As Long
-    lngPixel = Rows(lngRow).Height / 0.75
+    lngPixel = Rows(lngRow).Height / DPIRatio
     
     For i = lngRow + 1 To lngLastCell
-        If (Rows(i).Height / 0.75) <> lngPixel Then
+        If (Rows(i).Height / DPIRatio) <> lngPixel Then
             Exit For
         End If
     Next i
@@ -293,6 +295,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -318,9 +321,9 @@ Public Sub ChangeShapesHeight(ByRef objShapes As ShapeRange, ByVal lngSize As Lo
     
     '図形の数だけループ
     For Each objShape In objShapes
-        lngOldHeight = Round(objShape.Height / 0.75)
-        lngTop = Round(objShape.Top / 0.75)
-        lngBottom = Round((objShape.Top + objShape.Height) / 0.75)
+        lngOldHeight = Round(objShape.Height / DPIRatio)
+        lngTop = Round(objShape.Top / DPIRatio)
+        lngBottom = Round((objShape.Top + objShape.Height) / DPIRatio)
         
         '枠線にあわせるか
         If blnFitGrid = True Then
@@ -356,20 +359,20 @@ Public Sub ChangeShapesHeight(ByRef objShapes As ShapeRange, ByVal lngSize As Lo
         End If
     
         If lngSize > 0 And blnTopLeft = True Then
-            objShape.Top = (lngBottom - lngNewHeight) * 0.75
+            objShape.Top = (lngBottom - lngNewHeight) * DPIRatio
         End If
-        objShape.Height = lngNewHeight * 0.75
+        objShape.Height = lngNewHeight * DPIRatio
         
         'Excel2007のバグ対応
-        If Round(objShape.Height / 0.75) <> lngNewHeight Then
-            objShape.Height = (lngNewHeight + lngSize) * 0.75
+        If Round(objShape.Height / DPIRatio) <> lngNewHeight Then
+            objShape.Height = (lngNewHeight + lngSize) * DPIRatio
         End If
         
-        If Round(objShape.Height / 0.75) <> lngOldHeight Then
+        If Round(objShape.Height / DPIRatio) <> lngOldHeight Then
             If blnTopLeft = True Then
-                objShape.Top = (lngBottom - lngNewHeight) * 0.75
+                objShape.Top = (lngBottom - lngNewHeight) * DPIRatio
             Else
-                objShape.Top = lngTop * 0.75
+                objShape.Top = lngTop * DPIRatio
             End If
         End If
     Next objShape
@@ -386,13 +389,13 @@ Public Function GetTopGrid(ByVal lngPos As Long, ByRef objRow As Range) As Long
     Dim i      As Long
     Dim lngTop As Long
     
-    If lngPos <= Round(Rows(2).Top / 0.75) Then
+    If lngPos <= Round(Rows(2).Top / DPIRatio) Then
         GetTopGrid = 0
         Exit Function
     End If
     
     For i = objRow.Row To 1 Step -1
-        lngTop = Round(Rows(i).Top / 0.75)
+        lngTop = Round(Rows(i).Top / DPIRatio)
         If lngTop < lngPos Then
             GetTopGrid = lngTop
             Exit Function
@@ -412,15 +415,15 @@ Public Function GetBottomGrid(ByVal lngPos As Long, ByRef objRow As Range) As Lo
     Dim lngBottom As Long
     Dim lngMax    As Long
     
-    lngMax = Round((Rows(Rows.Count).Top + Rows(Rows.Count).Height) / 0.75)
+    lngMax = Round((Rows(Rows.Count).Top + Rows(Rows.Count).Height) / DPIRatio)
     
-    If lngPos >= Round(Rows(Rows.Count).Top / 0.75) Then
+    If lngPos >= Round(Rows(Rows.Count).Top / DPIRatio) Then
         GetBottomGrid = lngMax
         Exit Function
     End If
     
     For i = objRow.Row + 1 To Rows.Count
-        lngBottom = Round(Rows(i).Top / 0.75)
+        lngBottom = Round(Rows(i).Top / DPIRatio)
         If lngBottom > lngPos Then
             GetBottomGrid = lngBottom
             Exit Function
@@ -478,8 +481,8 @@ On Error GoTo ErrHandle
     k = objRange.Rows.Count
     
     '変更後のサイズ
-    lngPixel(1) = objRange.Rows(1).Height / 0.75 + lngSize '先頭行
-    lngPixel(2) = objRange.Rows(k).Height / 0.75 - lngSize '最終行
+    lngPixel(1) = objRange.Rows(1).Height / DPIRatio + lngSize '先頭行
+    lngPixel(2) = objRange.Rows(k).Height / DPIRatio - lngSize '最終行
     
     'サイズのチェック
     If lngPixel(1) < 0 Or lngPixel(2) < 0 Then
@@ -500,6 +503,7 @@ On Error GoTo ErrHandle
     objRange.Rows(1).RowHeight = PixelToHeight(lngPixel(1))
     objRange.Rows(k).RowHeight = PixelToHeight(lngPixel(2))
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -615,6 +619,7 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_RowSize, Range(strSelection), GetSameHeightAddresses(objSelection))
     objSelection.RowHeight = dblHeight / lngRowCount
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -645,6 +650,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -665,7 +671,7 @@ Public Sub DistributeShapesHeight(ByRef objShapeRange As ShapeRange)
         dblHeight = dblHeight + objShape.Height
     Next objShape
     With objShapeRange
-        .Height = Round(dblHeight / .Count / 0.75) * 0.75
+        .Height = Round(dblHeight / .Count / DPIRatio) * DPIRatio
     End With
 End Sub
 
@@ -685,7 +691,7 @@ Private Function GetHeight(ByRef objRange As Range) As Double
 '    Dim lngHalf    As Long
 '    Dim MaxHeight  As Double '高さの最大値
 '
-'    MaxHeight = 32767 * 0.75
+'    MaxHeight = 32767 * DPIRatio
 '    If objRange.Height < MaxHeight Then
 '        GetHeight = objRange.Height
 '    Else
@@ -768,6 +774,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -810,7 +817,7 @@ On Error GoTo ErrHandle
     End If
     
     '元の高さ
-    lngPixel = objRange.EntireRow.Height / 0.75
+    lngPixel = objRange.EntireRow.Height / DPIRatio
     
     '****************************************
     '分割数を選択させる
@@ -858,9 +865,9 @@ On Error GoTo ErrHandle
     '*************************************************
     '挿入行の１セル毎に罫線をコピーする
     If blnCheckInsert = True Then
-        Call CopyBorder("123", objRange.EntireRow, objNewRow) '上下左右
+        Call CopyBorder("上下左右", objRange.EntireRow, objNewRow)
     Else
-        Call CopyBorder("23", objRange.EntireRow, objNewRow)  '下左右
+        Call CopyBorder("下左右", objRange.EntireRow, objNewRow)
     End If
     
     '*************************************************
@@ -895,7 +902,7 @@ On Error GoTo ErrHandle
     '新しい高さに設定
     If blnCheckInsert = False Then
         If lngSplitCount = 2 Then
-            objRange.EntireRow.RowHeight = PixelToHeight(Int(lngPixel / 2 + 0.5))
+            objRange.EntireRow.RowHeight = PixelToHeight(Round(lngPixel / 2))
             objNewRow.EntireRow.RowHeight = PixelToHeight(Int(lngPixel / 2))
         Else
             With Range(objRange, objNewRow).EntireRow
@@ -930,6 +937,7 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Application.ScreenUpdating = True
+    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     If blnDisplayPageBreaks = True Then
@@ -1062,7 +1070,7 @@ On Error GoTo ErrHandle
     Call SetPlacement
     
     '消去される行の高さを保存
-    lngPixel = objRange.Height / 0.75
+    lngPixel = objRange.Height / DPIRatio
     
     If blnHidden = True Then
         '非表示
@@ -1071,7 +1079,7 @@ On Error GoTo ErrHandle
         '下の罫線をコピーする
         With objRange
             If .Row > 1 Then
-                Call CopyBorder("2", .Rows(.Rows.Count), .Rows(0))
+                Call CopyBorder("下", .Rows(.Rows.Count), .Rows(0))
             End If
         End With
         
@@ -1085,10 +1093,10 @@ On Error GoTo ErrHandle
     Dim lngWkPixel  As Long
     Select Case enmSelectType
     Case E_Front, E_Back
-        objRow(0).RowHeight = WorksheetFunction.Min(MaxRowHeight, PixelToHeight(objRow(0).Height / 0.75 + lngPixel))
+        objRow(0).RowHeight = WorksheetFunction.Min(MaxRowHeight, PixelToHeight(objRow(0).Height / DPIRatio + lngPixel))
     Case E_Middle
-        objRow(0).RowHeight = WorksheetFunction.Min(MaxRowHeight, PixelToHeight(objRow(0).Height / 0.75 + Int(lngPixel / 2 + 0.5)))
-        objRow(1).RowHeight = WorksheetFunction.Min(MaxRowHeight, PixelToHeight(objRow(1).Height / 0.75 + Int(lngPixel / 2)))
+        objRow(0).RowHeight = WorksheetFunction.Min(MaxRowHeight, PixelToHeight(objRow(0).Height / DPIRatio + Int(lngPixel / 2 + 0.5)))
+        objRow(1).RowHeight = WorksheetFunction.Min(MaxRowHeight, PixelToHeight(objRow(1).Height / DPIRatio + Int(lngPixel / 2)))
     End Select
     
     '****************************************
@@ -1102,6 +1110,7 @@ On Error GoTo ErrHandle
     End Select
     Call ResetPlacement
     Call SetOnUndo
+    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1111,13 +1120,13 @@ End Sub
 '*****************************************************************************
 '[ 関数名 ]　CopyBorder
 '[ 概  要 ]　罫線をコピーする
-'[ 引  数 ]　罫線のタイプ(複数指定可):1:上、2:下、3:縦罫線
+'[ 引  数 ]　罫線のタイプ(複数指定可):上下左右
 '[ 引  数 ]　objFromRow：コピ－元の行、objToRow：コピー先の行
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub CopyBorder(ByVal strBorderType As String, ByRef objFromRow As Range, ByRef objToRow As Range)
     Dim i          As Long
-    Dim udtBorder(0 To 3) As TBorder '罫線の種類(上・下・左･右)
+    Dim udtBorder(0 To 3) As TBorder '罫線の種類(上下左右)
     Dim lngLast    As Long
     
     Call ActiveSheet.UsedRange '最後のセルを修正する Undo出来なくなります
@@ -1136,38 +1145,32 @@ Private Sub CopyBorder(ByVal strBorderType As String, ByRef objFromRow As Range,
     For i = 1 To lngLast
         '罫線の種類を保存
         With objFromRow.Columns(i)
-            '上の罫線が対象か？
-            If InStr(1, strBorderType, "1") <> 0 Then
+            If InStr(1, strBorderType, "上") <> 0 Then
                 udtBorder(0) = GetBorder(.Borders(xlEdgeTop))
             End If
-            
-            '下の罫線が対象か？
-            If InStr(1, strBorderType, "2") <> 0 Then
+            If InStr(1, strBorderType, "下") <> 0 Then
                 udtBorder(1) = GetBorder(.Borders(xlEdgeBottom))
             End If
-            
-            '横の罫線が対象か？
-            If InStr(1, strBorderType, "3") <> 0 Then
+            If InStr(1, strBorderType, "左") <> 0 Then
                 udtBorder(2) = GetBorder(.Borders(xlEdgeLeft))
+            End If
+            If InStr(1, strBorderType, "右") <> 0 Then
                 udtBorder(3) = GetBorder(.Borders(xlEdgeRight))
             End If
         End With
         
         '罫線を書く
         With objToRow.Columns(i)
-            '上の罫線が対象か？
-            If InStr(1, strBorderType, "1") <> 0 Then
+            If InStr(1, strBorderType, "上") <> 0 Then
                 Call SetBorder(udtBorder(0), .Borders(xlEdgeTop))
             End If
-            
-            '下の罫線が対象か？
-            If InStr(1, strBorderType, "2") <> 0 Then
+            If InStr(1, strBorderType, "下") <> 0 Then
                 Call SetBorder(udtBorder(1), .Borders(xlEdgeBottom))
             End If
-            
-            '横の罫線が対象か？
-            If InStr(1, strBorderType, "3") <> 0 Then
+            If InStr(1, strBorderType, "左") <> 0 Then
                 Call SetBorder(udtBorder(2), .Borders(xlEdgeLeft))
+            End If
+            If InStr(1, strBorderType, "右") <> 0 Then
                 Call SetBorder(udtBorder(3), .Borders(xlEdgeRight))
             End If
         End With
@@ -1262,6 +1265,7 @@ On Error GoTo ErrHandle
     
     Call frmSizeList.Initialize(E_ROW)
     Call frmSizeList.Show
+    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1357,16 +1361,16 @@ On Error GoTo ErrHandle
     '****************************************
     If lngUpDown < 0 Then
         '上に移動する
-        Call CopyBorder("2", objWkRange.Rows(2), objWkRange.Rows(1))
+        Call CopyBorder("下", objWkRange.Rows(2), objWkRange.Rows(1))
         Call objWkRange.Rows(2).Delete(xlUp)
-        Call CopyBorder("23", objWkRange.Rows(lngRowCount - 1), objWkRange.Rows(lngRowCount))
+        Call CopyBorder("下左右", objWkRange.Rows(lngRowCount - 1), objWkRange.Rows(lngRowCount))
         Call MergeRows(1, objWkRange.Rows(lngRowCount - 1), objWkRange.Rows(lngRowCount))
     Else
         '下に移動する
-        Call CopyBorder("2", objWkRange.Rows(lngRowCount), objWkRange.Rows(lngRowCount - 1))
+        Call CopyBorder("下", objWkRange.Rows(lngRowCount), objWkRange.Rows(lngRowCount - 1))
         Call objWkRange.Rows(lngRowCount).Delete(xlUp)
         Call objWkRange.Rows(2).Insert(xlDown)
-        Call CopyBorder("23", objWkRange.Rows(1), objWkRange.Rows(2))
+        Call CopyBorder("下左右", objWkRange.Rows(1), objWkRange.Rows(2))
         Call MergeRows(1, objWkRange.Rows(1), objWkRange.Rows(2))
     End If
     
@@ -1374,6 +1378,7 @@ On Error GoTo ErrHandle
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
@@ -1401,7 +1406,7 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    Set objSelection = IntersectRange(Selection, Range(Cells(1, 1), Cells.SpecialCells(xlCellTypeLastCell)))
+    Set objSelection = IntersectRange(Selection, GetUsedRange())
     If objSelection Is Nothing Then
         Exit Sub
     End If
@@ -1455,12 +1460,14 @@ On Error GoTo ErrHandle
     If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
     Else
         Call SetOnUndo
+        Call SetOnRepeat
         Exit Sub
     End If
     
     '動作が非常に遅くなるための対応
     If objSelection.Rows.Count > 100 Then
         Call SetOnUndo
+        Call SetOnRepeat
         Exit Sub
     End If
     
@@ -1499,6 +1506,7 @@ On Error GoTo ErrHandle
     
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
+    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1523,7 +1531,7 @@ Private Function GetFitRow(ByRef objRow As Range, ByRef objWorkRow As Range) As 
     If Not (objValueCells Is Nothing) Then
         For Each objCell In objValueCells
             '列の幅をコピーする
-            dblColumnWidth = WorksheetFunction.Min(PixelToWidth(objRow.Columns(objCell.Column).MergeArea.Width / 0.75), 255)
+            dblColumnWidth = WorksheetFunction.Min(PixelToWidth(objRow.Columns(objCell.Column).MergeArea.Width / DPIRatio), 255)
             With objCell
                 If .ColumnWidth <> dblColumnWidth Then
                     .ColumnWidth = dblColumnWidth
@@ -1546,5 +1554,5 @@ End Function
 '[ 戻り値 ]　Height
 '*****************************************************************************
 Public Function PixelToHeight(ByVal lngPixel As Long) As Double
-    PixelToHeight = lngPixel * 0.75
+    PixelToHeight = lngPixel * DPIRatio
 End Function
