@@ -23,9 +23,22 @@ Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As Lon
 Public Declare PtrSafe Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As LongPtr, ByVal b As Long) As Long
 Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As LongPtr, ByVal himc As LongPtr) As Long
 Public Declare PtrSafe Function ReleaseCapture Lib "user32.dll" () As Long
-Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hdc As LongPtr, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
 Public Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As Long
-Public Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hdc As LongPtr) As Long
+Public Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+Public Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As LongPtr) As Long
+Public Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
+Public Declare PtrSafe Function IsClipboardFormatAvailable Lib "user32" (ByVal wFormat As Long) As Long
+Public Declare PtrSafe Function RegisterClipboardFormat Lib "user32" Alias "RegisterClipboardFormatA" (ByVal lpString As String) As Long
+Public Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
+Public Declare PtrSafe Function SetClipboardData Lib "user32" (ByVal wFormat As Long, ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Function GetClipboardData Lib "user32" (ByVal wFormat As Long) As LongPtr
+Public Declare PtrSafe Function GlobalAlloc Lib "kernel32" (ByVal uFlags As Long, ByVal dwBytes As Long) As LongPtr
+Public Declare PtrSafe Function GlobalFree Lib "kernel32" (ByVal hMem As Long) As Long
+Public Declare PtrSafe Function GlobalSize Lib "kernel32" (ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Function GlobalLock Lib "kernel32" (ByVal hMem As LongPtr) As LongPtr
+Public Declare PtrSafe Function GlobalUnlock Lib "kernel32" (ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As LongPtr)
 
 ' 定数の定義
 Public Const IDC_HAND = 32649
@@ -52,7 +65,9 @@ Public Const MAXROWCOLCNT = 1000
 Public Const LOGPIXELSX = 88
 Public Const LOGPIXELSY = 90
 
-Public DPIRatio As Double
+Public Const REGKEY = "EasyLout "
+
+'Public DPIRatio As Double
 
 '選択タイプ
 Public Enum ESelectionType
@@ -582,35 +597,34 @@ Public Function GetNearlyRange(ByRef objShape As Shape) As Range
     Set GetNearlyRange = Range(objTopLeft, objBottomRight)
 End Function
 
-'*****************************************************************************
-'[ 関数名 ]　GetCopyRangeAddress
-'[ 概  要 ]　Copy対象のRangeのAddressを取得
-'[ 引  数 ]　なし
-'[ 戻り値 ]　例：[Book1]Sheet1!$A$1:$B$1
-'*****************************************************************************
-Public Function GetCopyRangeAddress() As String
-On Error GoTo ErrHandle
-    Application.DisplayAlerts = False
-    
-    Dim objWorksheet As Worksheet
-    Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
-    With objWorksheet.Pictures.Paste(Link:=True)
-        GetCopyRangeAddress = .Formula
-        Call .Delete
-    End With
-    
-    GetCopyRangeAddress = GetMergeAddress(GetCopyRangeAddress)
-    
-    Application.DisplayAlerts = True
-Exit Function
-ErrHandle:
-    Application.DisplayAlerts = True
-    Dim strMsg As String
-    strMsg = "コピー元のセルの取得に失敗しました。以下の点を確認してください。" & vbCrLf
-    strMsg = strMsg & "複数の範囲をコピーして実行できません。" & vbCrLf
-    strMsg = strMsg & "ファイルのパスが長すぎると実行できません。"
-    Call Err.Raise(Err.Number, Err.Source, strMsg)
-End Function
+''*****************************************************************************
+''[ 概  要 ]　Copy対象のRangeのAddressを取得
+''[ 引  数 ]　なし
+''[ 戻り値 ]　例：[Book1]Sheet1!$A$1:$B$1
+''*****************************************************************************
+'Public Function GetCopyRangeAddress() As String
+'On Error GoTo ErrHandle
+'    Application.DisplayAlerts = False
+'
+'    Dim objWorksheet As Worksheet
+'    Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
+'    With objWorksheet.Pictures.Paste(Link:=True)
+'        GetCopyRangeAddress = .Formula
+'        Call .Delete
+'    End With
+'
+'    GetCopyRangeAddress = GetMergeAddress(GetCopyRangeAddress)
+'
+'    Application.DisplayAlerts = True
+'Exit Function
+'ErrHandle:
+'    Application.DisplayAlerts = True
+'    Dim strMsg As String
+'    strMsg = "コピー元のセルの取得に失敗しました。以下の点を確認してください。" & vbCrLf
+'    strMsg = strMsg & "複数の範囲をコピーして実行できません。" & vbCrLf
+'    strMsg = strMsg & "ファイルのパスが長すぎると実行できません。"
+'    Call Err.Raise(Err.Number, Err.Source, strMsg)
+'End Function
 
 '*****************************************************************************
 '[ 関数名 ]　GetCharactersText
@@ -618,24 +632,24 @@ End Function
 '[ 引  数 ]　TextFrameオブジェクト
 '[ 戻り値 ]　中身の文字列
 '*****************************************************************************
-Public Function GetCharactersText(ByRef objTextFrame As TextFrame) As String
-    Dim i As Long
-    Dim strText  As String
-    
-    GetCharactersText = ""
-    If objTextFrame.Characters.Text = "" Then
-        Exit Function
-    End If
-
-    'Characters.Textは255文字以上は返さないため、それ以上の文字数の時の対応を行う
-    For i = 1 To 100000 Step 250
-        strText = objTextFrame.Characters(i).Text
-        GetCharactersText = GetCharactersText & Left$(strText, 250)
-        If Len(strText) <= 250 Then
-            Exit Function
-        End If
-    Next
-End Function
+'Public Function GetCharactersText(ByRef objTextFrame As TextFrame) As String
+'    Dim i As Long
+'    Dim strText  As String
+'
+'    GetCharactersText = ""
+'    If objTextFrame.Characters.Text = "" Then
+'        Exit Function
+'    End If
+'
+'    'Characters.Textは255文字以上は返さないため、それ以上の文字数の時の対応を行う
+'    For i = 1 To 100000 Step 250
+'        strText = objTextFrame.Characters(i).Text
+'        GetCharactersText = GetCharactersText & Left$(strText, 250)
+'        If Len(strText) <= 250 Then
+'            Exit Function
+'        End If
+'    Next
+'End Function
 
 '*****************************************************************************
 '[ 関数名 ]　CheckDupRange
@@ -748,6 +762,8 @@ Public Function StrConvert(ByVal strText As String, ByVal strCommand As String) 
         StrConvert = StrConvWideOnlyKana(StrConvert)
     Case "Trim" '前後の空白を削除
         StrConvert = Trim(StrConvert)
+    Case "RTrim" '末尾の空白を削除
+        StrConvert = RTrim(StrConvert)
     End Select
 End Function
 
@@ -859,12 +875,19 @@ Public Function IsBorderMerged(ByRef objRange As Range) As Boolean
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　IsOnlyCell
-'[ 概  要 ]　Rangeが(結合された)単一のセルかどうか
-'[ 引  数 ]　判定するRange
-'[ 戻り値 ]　True:単一のセル、False:複数のセル
+'[概要] Rangeが(結合された)単一のセルかどうか
+'[引数] 判定するRange
+'[戻値] True:単一のセル、False:複数のセル
 '*****************************************************************************
 Public Function IsOnlyCell(ByRef objRange As Range) As Boolean
+    If objRange.Areas.Count > 1 Then
+        Exit Function
+    End If
+    If objRange.Count = 1 Then
+        IsOnlyCell = True
+        Exit Function
+    End If
+    
     IsOnlyCell = (objRange.Address = objRange(1, 1).MergeArea.Address)
 End Function
 
@@ -994,52 +1017,6 @@ Public Sub DeleteSheet(ByRef objSheet As Worksheet)
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　ClearBook
-'[ 概  要 ]　Workbookをクリアする
-'[ 引  数 ]　Workbook
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Public Sub ClearBook(ByRef objWorkbook As Workbook)
-    '名前オブジェクトをすべて削除する
-    Call DeleteNames(ThisWorkbook)
-    'スタイルをすべて削除する
-    Call DeleteStyles(ThisWorkbook)
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　DeleteNames
-'[ 概  要 ]　名前オブジェクトを削除する
-'[ 引  数 ]　Workbook
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub DeleteNames(ByRef objWorkbook As Workbook)
-    Dim objName     As Name
-    For Each objName In objWorkbook.Names
-        Select Case objName.MacroType
-        'EXCEL2019の謎の事象対応(TEXTJOIN関数等を使えば勝手に名前が定義されるが削除すると例外になるので回避)
-        Case xlFunction, xlCommand, xlNotXLM
-        Case Else
-            Call objName.Delete
-        End Select
-    Next objName
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　DeleteStyles
-'[ 概  要 ]　スタイルを削除する
-'[ 引  数 ]　Workbook
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Public Sub DeleteStyles(ByRef objWorkbook As Workbook)
-    Dim objStyle  As Style
-    For Each objStyle In objWorkbook.Styles
-        If objStyle.BuiltIn = False Then
-            Call objStyle.Delete
-        End If
-    Next objStyle
-End Sub
-
-'*****************************************************************************
 '[ 関数名 ]　SetIMEOff
 '[ 概  要 ]　ＩＭＥをオフにする
 '[ 引  数 ]　なし
@@ -1057,15 +1034,110 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　SetDPIRatio
-'[ 概  要 ]　DPIの変換率を設定する ※72(ExcelのデフォルトのDPI)/画面のDPI
-'[ 引  数 ]　Workbook
+'[ 概  要 ]　DPIの変換率を取得する ※72(ExcelのデフォルトのDPI)/画面のDPI
+'[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub SetDPIRatio()
+Public Function DPIRatio() As Double
+    DPIRatio = 72 / GetDPI()
+End Function
+
+'*****************************************************************************
+'[ 概  要 ]　DPIを取得する
+'[ 引  数 ]　なし
+'[ 戻り値 ]　DPI ※標準は96
+'*****************************************************************************
+Public Function GetDPI() As Long
     Dim DC As LongPtr
     DC = GetDC(0)
-    DPIRatio = 72 / GetDeviceCaps(DC, LOGPIXELSX)
+    GetDPI = GetDeviceCaps(DC, LOGPIXELSX)
     Call ReleaseDC(0, DC)
-End Sub
+End Function
+
+'*****************************************************************************
+'[概要] コピー対象のRangeを取得する
+'[引数] なし
+'[戻値] コピー対象のRange
+'*****************************************************************************
+Public Function GetCopyRange() As Range
+    If OpenClipboard(0) = 0 Then Exit Function
+    Dim hMem As LongPtr
+    hMem = GetClipboardData(RegisterClipboardFormat("Link"))
+    If hMem = 0 Then
+        Call CloseClipboard
+        Exit Function
+    End If
+     
+On Error GoTo ErrHandle
+    Dim size As Long
+    Dim p As LongPtr
+    size = GlobalSize(hMem)
+    p = GlobalLock(hMem)
+    ReDim Data(1 To size) As Byte
+    Call CopyMemory(Data(1), ByVal p, size)
+    Call GlobalUnlock(hMem)
+    Call CloseClipboard
+    hMem = 0
+    
+    Dim strData As String
+    Dim i As Long
+    For i = 1 To size
+        If Data(i) = 0 Then
+            Data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
+        End If
+    Next i
+    strData = StrConv(Data, vbUnicode)
+    
+    Dim objRegExp As Object
+    Set objRegExp = CreateObject("VBScript.RegExp")
+    objRegExp.Global = False
+    objRegExp.Pattern = "Excel\/.*\[(.+)\](.+)\/(.+)\/\/$"
+    If Not objRegExp.Test(strData) Then Exit Function
+    With objRegExp.Execute(strData)(0)
+        Dim strRange As String
+        strRange = Application.ConvertFormula(.SubMatches(2), xlR1C1, xlA1)
+        Set GetCopyRange = Workbooks(.SubMatches(0)).Worksheets(.SubMatches(1)).Range(strRange)
+    End With
+    Application.CutCopyMode = False
+    Exit Function
+ErrHandle:
+    If hMem <> 0 Then Call CloseClipboard
+End Function
+
+'*****************************************************************************
+'[概要] 拡張子の取得
+'[引数] ファイルパス
+'[戻値] 拡張子(大文字)
+'*****************************************************************************
+Public Function GetFileExtension(ByVal strFilename As String) As String
+    With CreateObject("Scripting.FileSystemObject")
+        GetFileExtension = UCase(.GetExtensionName(strFilename))
+    End With
+End Function
+
+'*****************************************************************************
+'[概要] テンポラリのCommandBarControlを取得する
+'[引数] Controlを識別するID（リボンコントロールのID）
+'[戻値] CommandBarControl
+'*****************************************************************************
+Public Function GetTmpControl(ByVal strId As String) As CommandBarControl
+    Set GetTmpControl = CommandBars.FindControl(, , strId & ThisWorkbook.Name)
+End Function
+
+'*****************************************************************************
+'[概要] Undoボタンの情報を取得する
+'[引数] なし
+'[戻値] UndoボタンのTooltipText
+'*****************************************************************************
+Public Function GetUndoStr() As String
+    With CommandBars.FindControl(, 128) 'Undoボタン
+        If .Enabled Then
+            If .ListCount = 1 Then
+                'Undoが1種類の時のUndoコマンド
+                GetUndoStr = Trim(.List(1))
+            End If
+        End If
+    End With
+End Function
+
 

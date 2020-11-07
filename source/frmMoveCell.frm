@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 Public Enum EModeType
@@ -33,7 +32,7 @@ Private Enum EDirection
 End Enum
 
 Private Type TShape
-    ID          As Long
+    Id          As Long
     TopRow      As Long
     Top         As Double
     LeftColumn  As Long
@@ -60,16 +59,14 @@ Private strToRange   As String '移動先
 Private objFromSheet As Worksheet '元の領域
 Private objTextbox   As Shape  '移動先を視覚的に表現する
 Private lngDisplayObjects As Long
-Private blnSameSheet As Boolean
 Private lngZoom      As Long
 
 '*****************************************************************************
-'[ 関数名 ]　Initialize
-'[ 概  要 ]  初期設定情報を設定
-'[ 引  数 ]　enmType:作業タイプ
-'            objFromRange:移動(コピー元)の領域
-'            objToRange:選択中の領域
-'[ 戻り値 ]  なし
+'[概要] 初期設定情報を設定
+'[引数] enmType:作業タイプ
+'       objFromRange:移動(コピー元)の領域
+'       objToRange:選択中の領域
+'[戻値] なし
 '*****************************************************************************
 Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, ByRef objToRange As Range)
     
@@ -83,25 +80,28 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
         strToRange = GetToRange(objFromRange, objToRange).Address
     End If
     
-    'コピー元とコピー先が同じシートかどうか
-    blnSameSheet = CheckSameSheet(objFromRange.Worksheet, objToRange.Worksheet)
-    
     '移動(コピー)先のシートをActivateにする
     Call objToRange.Worksheet.Activate
     
     '元と先のシートが同一の時、コピー元のセルを選択することで可視できるようにする
-    If blnSameSheet = True Then
-        Call Range(strFromRange).Select
-    Else
-        Call Range(strToRange).Select
-    End If
+     Call Range(strFromRange).Select
+'    If blnSameSheet = True Then
+'        Call Range(strFromRange).Select
+'    Else
+'        Call Range(strToRange).Select
+'    End If
     
     'テキストボックス作成
     ActiveWorkbook.DisplayDrawingObjects = xlDisplayShapes
     With Range(strToRange)
         Set objTextbox = ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, .Left, .Top, .Width, .Height)
     End With
-    
+    With objTextbox.TextFrame2.TextRange.Font
+        .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
+        .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
+        .Name = ActiveWorkbook.Styles("Normal").Font.Name
+        .size = ActiveWorkbook.Styles("Normal").Font.size
+    End With
     'テキストボックスの背景を変更
     With objTextbox.Fill
         .Visible = msoTrue
@@ -136,13 +136,13 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
         End If
     End If
     
-    'チェックボタンの制御
-    If blnSameSheet = False Then
-        chkExchange.Enabled = False
-        chkCopy.Enabled = False
-        chkExchange.Enabled = False
-        chkCutInsert.Enabled = False
-    End If
+'    'チェックボタンの制御
+'    If blnSameSheet = False Then
+'        chkExchange.Enabled = False
+'        chkCopy.Enabled = False
+'        chkExchange.Enabled = False
+'        chkCutInsert.Enabled = False
+'    End If
     
     'チェックボックスを設定
     Call ChangeMode
@@ -223,11 +223,12 @@ On Error GoTo ErrHandle
     'アンドゥ用に元の状態を保存する
     Select Case enmModeType
     Case E_Copy
-        If blnSameSheet = True Then
-            Call SaveUndoInfo(E_CopyCell, FromRange)
-        Else
-            Call SaveUndoInfo(E_CopyCell, ToRange)
-        End If
+         Call SaveUndoInfo(E_CopyCell, FromRange)
+'        If blnSameSheet = True Then
+'            Call SaveUndoInfo(E_CopyCell, FromRange)
+'        Else
+'            Call SaveUndoInfo(E_CopyCell, ToRange)
+'        End If
     Case E_Move, E_Exchange, E_CutInsert
         Call SaveUndoInfo(E_MoveCell, FromRange)
     End Select
@@ -246,7 +247,8 @@ On Error GoTo ErrHandle
     
     '図形を移動・コピーする
     If blnCopyObjectsWithCells = True Then
-        If chkOnlyValue.Value = False And blnSameSheet = True Then
+        If chkOnlyValue.Value = False Then
+'        If chkOnlyValue.Value = False And blnSameSheet = True Then
             If ActiveSheet.Shapes.Count > 0 And lngDisplayObjects <> xlHide Then
                 Select Case enmModeType
                 Case E_Move, E_Copy
@@ -585,7 +587,7 @@ Private Function SelectShapes(ByRef objRange As Range) As ShapeRange
            udtRange.Top <= udtShape.Top And _
            udtShape.Top + udtShape.Height <= udtRange.Top + udtRange.Height Then
             i = i + 1
-            lngIDArray(i) = objShape.ID
+            lngIDArray(i) = objShape.Id
         End If
     Next objShape
 
@@ -611,7 +613,7 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
     For Each objShape In objShapes
         With objShape
             i = i + 1
-            udtShapes(i).ID = .ID
+            udtShapes(i).Id = .Id
             udtShapes(i).Placement = .Placement
             udtShapes(i).TopRow = .TopLeftCell.Row - objFromRange.Row + 1
             udtShapes(i).LeftColumn = .TopLeftCell.Column - objFromRange.Column + 1
@@ -628,10 +630,10 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
         If udtShapes(i).Placement <> xlFreeFloating Then
             If blnCopy Then
                 '複写する
-                Call SetRect(GetShapeFromID(udtShapes(i).ID).Duplicate, objToRange, udtShapes(i))
+                Call SetRect(GetShapeFromID(udtShapes(i).Id).Duplicate, objToRange, udtShapes(i))
             Else
                 '移動する
-                Call SetRect(GetShapeFromID(udtShapes(i).ID), objToRange, udtShapes(i))
+                Call SetRect(GetShapeFromID(udtShapes(i).Id), objToRange, udtShapes(i))
             End If
         End If
     Next i
@@ -1083,19 +1085,19 @@ End Function
 '*****************************************************************************
 Private Sub EditTextbox()
 On Error GoTo ErrHandle
-    If blnSameSheet Then
-        Select Case enmModeType
-        Case E_Copy, E_Exchange
-            If Not (IntersectRange(FromRange, ToRange) Is Nothing) Then
-                Select Case enmModeType
-                Case E_Copy
-                    Call Err.Raise(C_CheckErrMsg, , "元の領域にはコピーできません")
-                Case E_Exchange
-                    Call Err.Raise(C_CheckErrMsg, , "元の領域とは入替えできません")
-                End Select
-            End If
-        End Select
-    End If
+'    If blnSameSheet Then
+    Select Case enmModeType
+    Case E_Copy, E_Exchange
+        If Not (IntersectRange(FromRange, ToRange) Is Nothing) Then
+            Select Case enmModeType
+            Case E_Copy
+                Call Err.Raise(C_CheckErrMsg, , "元の領域にはコピーできません")
+            Case E_Exchange
+                Call Err.Raise(C_CheckErrMsg, , "元の領域とは入替えできません")
+            End Select
+        End If
+    End Select
+'    End If
 
     Select Case enmModeType
     Case E_Move, E_Copy, E_Exchange
@@ -1127,7 +1129,6 @@ ErrHandle:
         Call Err.Raise(Err.Number, Err.Source, Err.Description)
     End If
 End Sub
-
 
 '*****************************************************************************
 '[ 関数名 ]　CheckCutInsertRange

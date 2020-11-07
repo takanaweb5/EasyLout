@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmMoveShape 
    Caption         =   "図形の移動"
-   ClientHeight    =   2670
+   ClientHeight    =   2676
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   4812
@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 Private Type TRect
@@ -42,7 +41,7 @@ Private objDummy       As Shape
 '[ 概  要 ]　フォームロード時
 '*****************************************************************************
 Private Sub UserForm_Initialize()
-    Dim i         As Long
+    Dim i  As Long
     
     '呼び元に通知する
     blnFormLoad = True
@@ -68,33 +67,35 @@ Private Sub UserForm_Initialize()
             .BeginGroup = False
             .Caption = "上下に等間隔で整列(&V)"
         End With
-        With .Add(, 408)
+        With .Add()
             .BeginGroup = True
+            .FaceId = 408
             .Caption = "横方向に連結(&J)"
         End With
-        With .Add(, 465)
+        With .Add()
             .BeginGroup = False
+            .FaceId = 465
             .Caption = "縦方向に連結(&K)"
         End With
-        With .Add(, 542)
+        With .Add()
             .BeginGroup = True
             .FaceId = 2067
             .Caption = "幅を揃える(&W)"
         End With
-        With .Add(, 541)
+        With .Add()
             .BeginGroup = False
             .FaceId = 2068
             .Caption = "高さを揃える(&E)"
         End With
-        With .Add(, 549)
+        With .Add()
             .BeginGroup = True
             .FaceId = 550
-            .Caption = "グリッドに合せる(&G)"
+            .Caption = "枠線に合せる(&G)"
         End With
     End With
 
     For i = 1 To objTmpBar.Controls.Count
-        objTmpBar.Controls(i).OnAction = "OnPopupClick"
+        objTmpBar.Controls(i).onAction = "OnPopupClick"
         objTmpBar.Controls(i).Tag = i
     Next i
     
@@ -117,17 +118,8 @@ Private Sub UserForm_Initialize()
         objTmpBar.Controls(8).Enabled = False  '上下に整列
     End Select
 
-    '「グリッドにあわせる」をチェックするか判定
-    If CommandBars.ActionControl.Caption = "図形をグリッドに合せる" Then
-        chkGrid.Value = True
-    Else
-        If objTmpBar.FindControl(, 549).State = True Then
-            chkGrid.Value = True
-        Else
-            chkGrid.Value = False
-        End If
-    End If
-    objTmpBar.FindControl(, 549).State = False
+    '「グリッドにあわせる」のチェック
+    chkGrid.Value = CommandBars.GetPressedMso("SnapToGrid")
 End Sub
 
 '*****************************************************************************
@@ -232,34 +224,34 @@ End Sub
 '[イベント]　MouseDown
 '[ 概  要 ]　右クリックでポップアップメニューを表示する
 '*****************************************************************************
-Private Sub UserForm_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub UserForm_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     If Button = 2 Then
         Call objTmpBar.ShowPopup
     End If
 End Sub
-Private Sub cmdOK_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub cmdOK_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub cmdCancel_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub cmdCancel_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub chkGrid_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub chkGrid_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub cmdAlign_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub cmdAlign_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub fraKeyCapture_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub fraKeyCapture_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub lblLabel1_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub lblLabel1_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub lblLabel2_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub lblLabel2_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
-Private Sub lblLabel3_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-    Call UserForm_MouseDown(Button, Shift, X, Y)
+Private Sub lblLabel3_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
+    Call UserForm_MouseDown(Button, Shift, x, y)
 End Sub
 
 '*****************************************************************************
@@ -561,72 +553,6 @@ On Error GoTo ErrHandle
     End With
 ErrHandle:
 '    Call objShapeRange.Select
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　ConnectShapesH
-'[ 概  要 ]　図形を左右に連結する
-'[ 引  数 ]　objShapes:図形
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub ConnectShapesH(ByRef objShapes As ShapeRange)
-    Dim i     As Long
-    
-    ReDim udtSortArray(1 To objShapes.Count) As TSortArray
-    For i = 1 To objShapes.Count
-        With udtSortArray(i)
-            .Key1 = objShapes(i).Left / DPIRatio
-            .Key2 = objShapes(i).Width / DPIRatio
-            .Key3 = i
-        End With
-    Next
-
-    'Let,Widthの順でソートする
-    Call SortArray(udtSortArray())
-
-    Dim lngTopLeft    As Long
-    lngTopLeft = udtSortArray(1).Key1
-    
-    For i = 2 To objShapes.Count
-        If udtSortArray(i).Key1 > udtSortArray(i - 1).Key1 Then
-            lngTopLeft = lngTopLeft + udtSortArray(i - 1).Key2
-        End If
-        
-        objShapes(udtSortArray(i).Key3).Left = lngTopLeft * DPIRatio
-    Next
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　ConnectShapesV
-'[ 概  要 ]　図形を上下に連結する
-'[ 引  数 ]　objShapes:図形
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub ConnectShapesV(ByRef objShapes As ShapeRange)
-    Dim i     As Long
-    
-    ReDim udtSortArray(1 To objShapes.Count) As TSortArray
-    For i = 1 To objShapes.Count
-        With udtSortArray(i)
-            .Key1 = objShapes(i).Top / DPIRatio
-            .Key2 = objShapes(i).Height / DPIRatio
-            .Key3 = i
-        End With
-    Next
-
-    'Top,Heightの順でソートする
-    Call SortArray(udtSortArray())
-
-    Dim lngTopLeft    As Long
-    lngTopLeft = udtSortArray(1).Key1
-    
-    For i = 2 To objShapes.Count
-        If udtSortArray(i).Key1 > udtSortArray(i - 1).Key1 Then
-            lngTopLeft = lngTopLeft + udtSortArray(i - 1).Key2
-        End If
-        
-        objShapes(udtSortArray(i).Key3).Top = lngTopLeft * DPIRatio
-    Next
 End Sub
 
 '*****************************************************************************

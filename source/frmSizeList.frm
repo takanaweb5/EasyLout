@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 'タイプ
@@ -99,24 +98,15 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub SetSizeInfoLabel()
-    Dim strArray() As String
+    Select Case Me.Tag
+    Case E_Col
+        udtSizeInfo.Millimeters = GetSetting(REGKEY, "SizeInfo", "Width_mm", 0)
+        udtSizeInfo.Pixel = GetSetting(REGKEY, "SizeInfo", "Width_Pixel", 0)
+    Case E_ROW
+        udtSizeInfo.Millimeters = GetSetting(REGKEY, "SizeInfo", "Height_mm", 0)
+        udtSizeInfo.Pixel = GetSetting(REGKEY, "SizeInfo", "Height_Pixel", 0)
+    End Select
     
-    strArray = Split(CommandBars.ActionControl.Tag, ",")
-    If UBound(strArray) = 3 Then
-        Select Case Me.Tag
-        Case E_Col
-            If IsNumeric(strArray(0)) And IsNumeric(strArray(1)) Then
-                udtSizeInfo.Millimeters = strArray(0)
-                udtSizeInfo.Pixel = strArray(1)
-            End If
-        Case E_ROW
-            If IsNumeric(strArray(2)) And IsNumeric(strArray(3)) Then
-                udtSizeInfo.Millimeters = strArray(2)
-                udtSizeInfo.Pixel = strArray(3)
-            End If
-        End Select
-    End If
-        
     If udtSizeInfo.Millimeters = 0 Then
         udtSizeInfo.Millimeters = 100
         udtSizeInfo.Pixel = Application.CentimetersToPoints(10) / DPIRatio

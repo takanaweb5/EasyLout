@@ -4,7 +4,7 @@ Option Private Module
 
 Private Type TFont  '標準スタイルのフォントの情報
     Name        As String
-    Size        As Long
+    size        As Long
     Bold        As Boolean
     Italic      As Boolean
 End Type
@@ -17,15 +17,15 @@ Private Const MaxColumnWidth = 255  '幅の最大サイズ
 '*****************************************************************************
 '[ 関数名 ]　ChangeWidth
 '[ 概  要 ]　幅の変更
-'[ 引  数 ]　なし
+'[ 引  数 ]　lngSize:変更サイズ(単位：ピクセル)
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub ChangeWidth()
+Private Sub ChangeWidth(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-    Dim lngSize As Long
+'    Dim lngSize As Long
     
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    lngSize = CommandBars.ActionControl.Parameter
+'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -45,15 +45,15 @@ End Sub
 '*****************************************************************************
 '[ 関数名 ]　MoveVerticalBorder
 '[ 概  要 ]　列の境界線を左右に移動する
-'[ 引  数 ]　なし
+'[ 引  数 ]　lngSize:変更サイズ(単位：ピクセル)
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveVerticalBorder()
+Private Sub MoveVerticalBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-    Dim lngSize As Long
+'    Dim lngSize As Long
     
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    lngSize = CommandBars.ActionControl.Parameter
+'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -66,20 +66,6 @@ On Error GoTo ErrHandle
 '        Call MoveShape(lngSize)
         Exit Sub
     End Select
-Exit Sub
-ErrHandle:
-    Call MsgBox(Err.Description, vbExclamation)
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　MoveColumnsBorder
-'[ 概  要 ]　列の境界のセルを左右に移動する
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub MoveColumnsBorder()
-On Error GoTo ErrHandle
-    Call MoveCellBorder(CommandBars.ActionControl.Parameter)
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -201,7 +187,7 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 
     ActiveWindow.View = lngWindowView
 Exit Sub
@@ -292,7 +278,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -497,7 +483,7 @@ On Error GoTo ErrHandle
     objRange.Columns(1).ColumnWidth = PixelToWidth(lngPixel(1))
     objRange.Columns(k).ColumnWidth = PixelToWidth(lngPixel(2))
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -614,7 +600,7 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(objSelection))
     objSelection.ColumnWidth = PixelToWidth(dblWidth / DPIRatio / lngColCount)
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -645,7 +631,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -769,7 +755,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -818,6 +804,8 @@ On Error GoTo ErrHandle
     '分割数を選択させる
     '****************************************
     With frmSplitCount
+        Call .SetChkLabel(True)
+        
         'フォームを表示
         Call .Show
     
@@ -1118,7 +1106,7 @@ End Sub
 '            objFromCol：コピ－元の列、objToCol：コピー先の列
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub CopyBorder(ByVal strBorderType As String, ByRef objFromCol As Range, ByRef objToCol As Range)
+Public Sub CopyBorder(ByVal strBorderType As String, ByRef objFromCol As Range, ByRef objToCol As Range)
     Dim i As Long
     Dim j As Long
     Dim udtBorder(0 To 3) As TBorder '罫線の種類(上下左右)
@@ -1186,7 +1174,7 @@ End Sub
 '            objTopRow：結合の先頭列、objBottomRow：結合の右端列
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MergeCols(ByVal lngType As Long, ByRef objTopCol As Range, ByRef objRightCol As Range)
+Private Sub MergeCols(ByVal lngtype As Long, ByRef objTopCol As Range, ByRef objRightCol As Range)
     Dim i          As Long
     Dim lngLast    As Long
     Dim objRange As Range
@@ -1208,7 +1196,7 @@ Private Sub MergeCols(ByVal lngType As Long, ByRef objTopCol As Range, ByRef obj
         With objRightCol.Cells(i, 1)
             '右端の列のセルが結合セルか
             If .MergeArea.Count = 1 Then
-                Set objRange = GetMergeColRange(lngType, objTopCol.Cells(i, 1), .Cells)
+                Set objRange = GetMergeColRange(lngtype, objTopCol.Cells(i, 1), .Cells)
                 If Not (objRange Is Nothing) Then
                     Call objRange.Merge
                 End If
@@ -1224,10 +1212,10 @@ End Sub
 '            objBaseCell:先頭列のセル、objTergetCell:対象の列のセル
 '[ 戻り値 ]　結合する領域(Nothing:結合しない時)
 '*****************************************************************************
-Private Function GetMergeColRange(ByVal lngType As Long, _
+Public Function GetMergeColRange(ByVal lngtype As Long, _
                                   ByRef objBaseCell As Range, _
                                   ByRef objTergetCell As Range) As Range
-    Select Case lngType
+    Select Case lngtype
     Case 1 '先頭列から最終の列まで横方向に結合する
     Case 2 '先頭列が結合セルの時、先頭列から最終の列まで横方向に結合する
         If objBaseCell.MergeArea.Count = 1 Then
@@ -1244,7 +1232,7 @@ Private Function GetMergeColRange(ByVal lngType As Long, _
         End If
     End Select
     
-    Select Case lngType
+    Select Case lngtype
     Case 1, 2, 3
         Set GetMergeColRange = Range(objBaseCell.MergeArea, objTergetCell)
     Case 4
@@ -1274,12 +1262,12 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　MoveCellBorder
+'[ 関数名 ]　MoveColumnsBorder
 '[ 概  要 ]　列の境界のセルを左右に移動する
 '[ 引  数 ]　-1:左に移動、1:右に移動
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveCellBorder(ByVal lngLeftRight As Long)
+Private Sub MoveColumnsBorder(ByVal lngLeftRight As Long)
 On Error GoTo ErrHandle
     Dim i            As Long
     Dim objSelection As Range
@@ -1380,7 +1368,7 @@ On Error GoTo ErrHandle
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
@@ -1450,7 +1438,7 @@ On Error GoTo ErrHandle
         Call objSelection.Columns.AutoFit
         
         Call SetOnUndo
-        Call SetOnRepeat
+'        Call SetOnRepeat
     Exit Sub
     End If
 
@@ -1491,7 +1479,7 @@ On Error GoTo ErrHandle
     End If
     
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1683,13 +1671,13 @@ On Error GoTo ErrHandle
     
     '標準スタイルのフォントが変更されたか判定
     With ActiveWorkbook.Styles("Normal").Font
-        If udtFont.Name = .Name And udtFont.Size = .Size And _
+        If udtFont.Name = .Name And udtFont.size = .size And _
            udtFont.Bold = .Bold And udtFont.Italic = .Italic Then
             Exit Sub
         Else
             'フォント情報を保存する
             udtFont.Name = .Name
-            udtFont.Size = .Size
+            udtFont.size = .size
             udtFont.Bold = .Bold
             udtFont.Italic = .Italic
         End If
@@ -1706,8 +1694,8 @@ On Error GoTo ErrHandle
         If .Name <> udtFont.Name Then
             .Name = udtFont.Name
         End If
-        If .Size <> udtFont.Size Then
-            .Size = udtFont.Size
+        If .size <> udtFont.size Then
+            .size = udtFont.size
         End If
         If .Bold <> udtFont.Bold Then
             .Bold = udtFont.Bold
@@ -1720,10 +1708,10 @@ On Error GoTo ErrHandle
     
     'サイズ情報を保存する
     With ThisWorkbook.Worksheets("Commands")
-        .Range("K:K").ColumnWidth = 1
-        .Range("L:L").ColumnWidth = 2
-        x1 = .Range("K:K").Width / DPIRatio
-        x2 = .Range("L:L").Width / DPIRatio
+        .Range("O:O").ColumnWidth = 1
+        .Range("P:P").ColumnWidth = 2
+        x1 = .Range("O:O").Width / DPIRatio
+        x2 = .Range("P:P").Width / DPIRatio
     End With
     
     Call objWorkbook.Activate

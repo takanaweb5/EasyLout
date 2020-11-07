@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSplitCount 
    Caption         =   "選択してください"
-   ClientHeight    =   1605
+   ClientHeight    =   1608
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   4248
@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 '*****************************************************************************
@@ -23,12 +22,6 @@ Option Explicit
 Private Sub UserForm_Initialize()
     '呼び元に通知する
     blnFormLoad = True
-    
-    If CommandBars.ActionControl.TooltipText = "行を分割" Then
-        chkInsert.Caption = "元の高さと同じ高さの行を挿入する"
-    Else
-        chkInsert.Caption = "元の幅と同じ幅の列を挿入する"
-    End If
 End Sub
 
 '*****************************************************************************
@@ -55,6 +48,18 @@ Private Sub txtCount_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift
             Call SpbCount.SetFocus
         End If
     End Select
+End Sub
+
+'*****************************************************************************
+'[概要] ラベルを編集する
+'[引数] True:列選択時、False:行選択時
+'*****************************************************************************
+Public Sub SetChkLabel(ByVal blnColumn As Boolean)
+    If blnColumn Then
+        chkInsert.Caption = "元の幅と同じ幅の列を挿入する"
+    Else
+        chkInsert.Caption = "元の高さと同じ高さの行を挿入する"
+    End If
 End Sub
 
 '*****************************************************************************

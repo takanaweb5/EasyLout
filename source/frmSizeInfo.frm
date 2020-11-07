@@ -21,19 +21,23 @@ Option Explicit
 '[ 概  要 ]　フォームロード時
 '*****************************************************************************
 Private Sub UserForm_Initialize()
-    Dim strArray() As String
+    Dim lngArray(1 To 4) As Long
     
-    strArray = Split(CommandBars.ActionControl.Tag, ",")
-    If UBound(strArray) = 3 Then
-        txtmm1.Value = strArray(0)
-        txtPixel1.Value = strArray(1)
-        txtmm2.Value = strArray(2)
-        txtPixel2.Value = strArray(3)
-    Else
+    lngArray(1) = GetSetting(REGKEY, "SizeInfo", "Width_mm", 0)
+    lngArray(2) = GetSetting(REGKEY, "SizeInfo", "Width_Pixel", 0)
+    lngArray(3) = GetSetting(REGKEY, "SizeInfo", "Height_mm", 0)
+    lngArray(4) = GetSetting(REGKEY, "SizeInfo", "Height_Pixel", 0)
+    
+    If lngArray(1) = 0 Or lngArray(2) = 0 Or lngArray(3) = 0 Or lngArray(4) = 0 Then
         txtmm1.Value = 100
         txtPixel1.Value = Round(Application.CentimetersToPoints(10) / DPIRatio)
         txtmm2.Value = 100
         txtPixel2.Value = Round(Application.CentimetersToPoints(10) / DPIRatio)
+    Else
+        txtmm1.Value = lngArray(1)
+        txtPixel1.Value = lngArray(2)
+        txtmm2.Value = lngArray(3)
+        txtPixel2.Value = lngArray(4)
     End If
     
     '呼び元に通知する
@@ -57,8 +61,10 @@ Private Sub cmdOK_Click()
     Me.Hide
     
     'サイズ情報の保存
-    CommandBars.ActionControl.Tag = CLng(txtmm1) & "," & CLng(txtPixel1) & "," & _
-                                    CLng(txtmm2) & "," & CLng(txtPixel2)
+    Call SaveSetting(REGKEY, "SizeInfo", "Width_mm", CLng(txtmm1.Value))
+    Call SaveSetting(REGKEY, "SizeInfo", "Width_Pixel", CLng(txtPixel1.Value))
+    Call SaveSetting(REGKEY, "SizeInfo", "Height_mm", CLng(txtmm2.Value))
+    Call SaveSetting(REGKEY, "SizeInfo", "Height_Pixel", CLng(txtPixel2.Value))
 End Sub
 
 '*****************************************************************************
@@ -139,7 +145,7 @@ End Sub
 '*****************************************************************************
 Private Sub txt_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
     Select Case (KeyCode)
-    Case vbKey0 To vbKey9
+    Case vbKey0 To vbKey9, vbKeyNumpad0 To vbKeyNumpad9
     Case vbKeyLeft, vbKeyRight, vbKeyDelete, vbKeyBack
     Case vbKeyReturn, vbKeyEscape, vbKeyTab
     Case Else

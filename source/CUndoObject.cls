@@ -34,7 +34,7 @@ End Enum
 
 Private Type TShapes  'Shape(Comment以外)
     Type     As Long
-    ID       As Long
+    Id       As Long
     Name     As String
     Top      As Double
     Height   As Double
@@ -56,7 +56,7 @@ End Type
 
 Private Type TRangeSize  '幅か高さ
     Address  As String
-    Size     As Double 'Width or Height
+    size     As Double 'Width or Height
 End Type
 
 Private Type TUndoInfo  'Undo情報
@@ -239,7 +239,7 @@ On Error GoTo ErrHandle
         '図形の数だけループ
         For i = 1 To objObject.Count
             With udtUndoInfo(bytNo)
-                If .SelectShapes(i) <> objObject(i).ID Then
+                If .SelectShapes(i) <> objObject(i).Id Then
                     Exit Function
                 End If
             End With
@@ -258,17 +258,10 @@ End Function
 '[ 戻り値 ]　Undo数
 '*****************************************************************************
 Private Function GetUndoCount() As Long
-    'Undo情報の取得のため、Undoボタン作成
-    With CommandBars.Add(Position:=msoBarPopup, Temporary:=True)
-        With .Controls.Add(, 128) 'Undoボタン
-            If .Enabled = True Then
-                GetUndoCount = .ListCount
-            Else
-                GetUndoCount = 0
-            End If
-        End With
-        
-        Call .Delete
+    With CommandBars.FindControl(, 128) 'Undoボタン
+        If .Enabled Then
+            GetUndoCount = .ListCount
+        End If
     End With
 End Function
 
@@ -360,9 +353,6 @@ On Error GoTo ErrHandle
     With udtUndoInfo(bytNo)
         Call DeleteSheet(.UndoSheet)
         Call objWorksheet.Cells.Copy(.UndoSheet.Cells)
-        
-        'Excel2013用のおまじない（ないとクリップボードが汚される）
-        DoEvents
     End With
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
 Exit Sub
@@ -385,9 +375,9 @@ Private Sub BackupRangeSize(ByRef colSelection As Variant)
             .RangeSize(i).Address = colSelection(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
-                .RangeSize(i).Size = Range(colSelection(i)).Columns(1).ColumnWidth
+                .RangeSize(i).size = Range(colSelection(i)).Columns(1).ColumnWidth
             Case E_SplitRow, E_EraseRow, E_RowSize, E_RowSize2
-                .RangeSize(i).Size = Range(colSelection(i)).Rows(1).RowHeight
+                .RangeSize(i).size = Range(colSelection(i)).Rows(1).RowHeight
             End Select
         Next i
         .RangeCount = colSelection.Count
@@ -424,8 +414,8 @@ Private Sub BackupShapeSize(ByRef objSelection As ShapeRange)
         With objSelection(j)
             If .Type <> msoComment Then
                 i = i + 1
-                udtUndoInfo(bytNo).SelectShapes(i) = .ID
-                udtUndoInfo(bytNo).Shapes(i).ID = .ID
+                udtUndoInfo(bytNo).SelectShapes(i) = .Id
+                udtUndoInfo(bytNo).Shapes(i).Id = .Id
                 udtUndoInfo(bytNo).Shapes(i).Name = .Name
                 udtUndoInfo(bytNo).Shapes(i).Type = .Type
                 udtUndoInfo(bytNo).Shapes(i).Rotation = .Rotation
@@ -576,12 +566,12 @@ Public Sub ExecUndo()
         '追加されたテキストボックスを削除
         Call DeleteNewShapes
     Case E_TextToCell
+        'テキストボックスを復元する
+        Call RecoverTextbox
         'セルを復元
         Call RecoverSheet
         'コメントを復元
         Call RecoverComments
-        'テキストボックスを復元する
-        Call RecoverTextbox
     Case E_ShapeSize, E_ShapeSize2
         '図形のサイズを復元する
         Call RecoverShapeSize
@@ -692,7 +682,7 @@ Private Sub DeleteNewShapes()
         If objShape.Type <> msoComment Then
             blnHit = False
             For i = 1 To udtUndoInfo(bytNo).ShapeCount
-                If objShape.ID = udtUndoInfo(bytNo).Shapes(i).ID Then
+                If objShape.Id = udtUndoInfo(bytNo).Shapes(i).Id Then
                     blnHit = True
                     Exit For
                 End If
@@ -720,9 +710,9 @@ Private Sub RecoverRangeSize()
         With udtUndoInfo(bytNo).RangeSize(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
-                objWorksheet.Range(.Address).ColumnWidth = .Size
+                objWorksheet.Range(.Address).ColumnWidth = .size
             Case E_SplitRow, E_EraseRow, E_RowSize, E_RowSize2
-                objWorksheet.Range(.Address).RowHeight = .Size
+                objWorksheet.Range(.Address).RowHeight = .size
             End Select
         End With
     Next i
@@ -744,7 +734,7 @@ Private Sub RecoverShapeSize()
     For Each objShape In objWorksheet.Shapes
         For i = 1 To udtUndoInfo(bytNo).ShapeCount
             With udtUndoInfo(bytNo).Shapes(i)
-                If .ID = objShape.ID Then
+                If .Id = objShape.Id Then
                     objShape.Height = .Height
                     objShape.Width = .Width
                     objShape.Top = .Top

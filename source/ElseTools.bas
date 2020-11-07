@@ -40,157 +40,7 @@ Private lngProcessId As Long   'ヘルプのプロセスID
 Private hHelp        As LongPtr   'ヘルプのハンドル
 Private udtPlacement() As TPlacement
 
-Private objRepeatCmd As CommandBarControl
-
-'*****************************************************************************
-'[ 関数名 ]　ColRowChange
-'[ 概  要 ]　行列切替え
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub ColRowChange()
-    Dim i As Long
-    Dim strClipText As String
-    
-    Call SetKeys
-    
-    'Ctlr + Shift が押下されていれば
-    If GetKeyState(vbKeyControl) < 0 Or GetKeyState(vbKeyShift) < 0 Then
-        'オプション設定画面を表示
-        Call SetOption
-        Exit Sub
-    End If
-    
-'    strClipText = GetClipbordText()
-    
-    With CommandBars("かんたんレイアウト").Controls(1)
-        If .Caption = "行" Then
-            .Caption = "列"
-        Else
-            .Caption = "行"
-        End If
-    End With
-    
-    Application.ScreenUpdating = False
-    On Error Resume Next
-    With CommandBars("かんたんレイアウト").Controls
-        For i = 2 To .Count
-            Call SetCommand(.Item(1).Caption, .Item(i))
-        Next i
-    End With
-    
-'    'クリップボードの復元
-'    If strClipText = "" Then
-'        Call ClearClipbord
-'    Else
-'        Call SetClipbordText(strClipText)
-'    End If
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　SetCommand
-'[ 概  要 ]　コマンドバーボタンにアイコン･コマンド･TooltipTextを設定
-'[ 引  数 ]　strGroup : "行" or "列" or "その他"
-'            objCmdBarBtn : コマンドを切替えるボタン
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Public Sub SetCommand(ByVal strGroup As String, ByRef objCmdBarBtn As CommandBarButton)
-    Dim i As Long
-    Dim strCommand As String
-    Dim objRange   As Range
-'    Dim objMask    As IPictureDisp
-    Dim objBtn As CommandBarButton
-         
-    strCommand = objCmdBarBtn.Caption
-    
-    'ワークシ－トのコマンドを設定する
-    Set objRange = ThisWorkbook.Worksheets("Commands").Cells(1, "A").CurrentRegion
-
-    For i = 2 To objRange.Rows.Count
-        If objRange(i, "A") = strGroup And objRange(i, "B") = strCommand Then
-            With objCmdBarBtn
-                'アイコンの設定
-                If objRange(i, "C") <> "" Then
-                    .FaceId = objRange(i, "C")
-                Else
-                    If CopyIconFromHidden(strGroup & "_" & strCommand, objBtn) = True Then
-                        .Picture = objBtn.Picture
-                        .Mask = objBtn.Mask
-'                        Call .PasteFace
-                    End If
-'                    Set objMask = Nothing
-'                    If CopyIconFromCell(objRange.Cells(i, "E")) = True Then
-'                        Call .PasteFace
-'                        Set objMask = .Picture
-'                    End If
-'                    If CopyIconFromCell(objRange.Cells(i, "D")) = True Then
-'                        Call .PasteFace
-'                        If Not (objMask Is Nothing) Then
-'                            .Mask = objMask
-'                        End If
-'                    End If
-'                    .Picture = objRange.Parent.OLEObjects(strPrefix & .Caption).Object.Picture
-                End If
-                
-                'コマンドの設定
-                If objRange(i, "F") = .ID Then
-                    .OnAction = ""
-                Else
-                    .OnAction = objRange(i, "G")
-                    .Parameter = objRange(i, "H")
-                End If
-                
-                'ヘルプの設定
-                If Val(Application.Version) >= 12 Then
-                    .TooltipText = Replace$(objRange(i, "I"), vbLf, "  ")
-                Else
-                    .TooltipText = objRange(i, "I")
-                End If
-
-'                .Tag = .Caption 'サイズ一覧の情報の保存にTagを使用するので注意すること
-            End With
-                    
-            Exit Sub
-        End If
-    Next i
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　CopyIconFromCell
-'[ 概  要 ]　引数のセルに含まれるアイコンをクリップボードにコピーする
-'[ 引  数 ]　アイコンを含むセル
-'[ 戻り値 ]　True:成功、False:失敗
-'*****************************************************************************
-'Private Function CopyIconFromCell(ByRef objCell As Range) As Boolean
-'    Dim objShape As Shape
-'    For Each objShape In objCell.Worksheet.Shapes
-'        If objCell.Top = objShape.Top And _
-'           objCell.Left = objShape.Left Then
-'            Call objShape.CopyPicture(xlScreen, xlBitmap)
-'            CopyIconFromCell = True
-'            Exit Function
-'        End If
-'    Next objShape
-'End Function
-
-'*****************************************************************************
-'[ 関数名 ]　CopyIconFromHidden
-'[ 概  要 ]　かんたんレイアウトアイコンのアイコンをクリップボードにコピーする
-'[ 引  数 ]　コマンドの名前　例：列_縮小
-'[ 戻り値 ]　True:成功、False:失敗
-'*****************************************************************************
-Private Function CopyIconFromHidden(ByVal strCommand As String, ByRef objBtn As CommandBarButton) As Boolean
-On Error GoTo ErrHandle
-    Dim objButton As CommandBarButton
-    For Each objButton In CommandBars("かんたんレイアウトアイコン").Controls
-        If objButton.Caption = strCommand Then
-            Set objBtn = objButton
-            CopyIconFromHidden = True
-            Exit Function
-        End If
-    Next
-ErrHandle:
-End Function
+Private objRepeatCmd As IRibbonControl
 
 '*****************************************************************************
 '[ 関数名 ]　OpenHelp
@@ -201,7 +51,6 @@ End Function
 Public Sub OpenHelp()
     Call OpenHelpPage("Introduction.htm")
 End Sub
-
 '*****************************************************************************
 '[ 関数名 ]　OpenHelpPage
 '[ 概  要 ]　ヘルプファイルの特定のページを開く
@@ -239,6 +88,27 @@ On Error GoTo ErrHandle
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] オンラインヘルプを開く
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub OpenOnlineHelp()
+    Const URL = "http://takana.web5.jp/EasyLout?ref=ap"
+    With CreateObject("Wscript.Shell")
+        Call .Run(URL)
+    End With
+End Sub
+
+'*****************************************************************************
+'[概要] バージョンを表示する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ShowVersion()
+    Call MsgBox("かんたんレイアウト" & vbLf & "  Ver 4.0")
 End Sub
 
 '*****************************************************************************
@@ -322,7 +192,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -443,7 +313,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -586,7 +456,7 @@ End Sub
 '*****************************************************************************
 Private Sub PasteText()
 On Error GoTo ErrHandle
-    Dim strCopyRange  As String
+    Dim objCopyRange  As Range
     Dim objSelection  As Range
     Dim strCopyText   As String
     Dim blnOnlyCell   As Boolean
@@ -605,14 +475,14 @@ On Error GoTo ErrHandle
         Exit Sub
     Case xlCopy
         On Error Resume Next
-        strCopyRange = GetCopyRangeAddress()
+        Set objCopyRange = GetCopyRange()
         On Error GoTo 0
-        If strCopyRange <> "" Then
-            blnOnlyCell = IsOnlyCell(Range(strCopyRange))
+        If Not (objCopyRange Is Nothing) Then
+            blnOnlyCell = IsOnlyCell(objCopyRange)
             If blnOnlyCell Then
-                strCopyText = GetCellText(Range(strCopyRange).Cells(1, 1))
+                strCopyText = GetCellText(objCopyRange.Cells(1, 1))
             Else
-                strCopyText = MakeCopyText(strCopyRange)
+                strCopyText = MakeCopyText(objCopyRange)
             End If
         Else
             strCopyText = MakeCopyText()
@@ -633,8 +503,8 @@ On Error GoTo ErrHandle
     If blnOnlyCell = False And blnAllCell = False Then
         Set objSelection = GetPasteRange(strCopyText, objSelection)
     End If
-    Call objSelection.Parent.Activate
-    Call objSelection.Select
+    
+    Application.ScreenUpdating = False
     
     'アンドゥ用に元の状態を保存する
     Call SaveUndoInfo(E_PasteValue, objSelection)
@@ -649,23 +519,25 @@ On Error GoTo ErrHandle
         End If
     End If
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
     
     '貼り付けた文字列をクリップボードにコピー
     Call SetClipbordText(Replace$(strCopyText, vbLf, vbCrLf))
+    
+    Call objSelection.Parent.Activate
+    Call objSelection.Select
 ErrHandle:
 End Sub
    
 '*****************************************************************************
-'[ 関数名 ]　MakeCopyText
-'[ 概  要 ]　コピー対象の文字列を作成する
-'[ 引  数 ]　Copy中の領域
-'[ 戻り値 ]　なし
+'[概要] コピー対象の文字列を作成する
+'[引数] Copy中の領域
+'[戻値] なし
 '*****************************************************************************
-Private Function MakeCopyText(Optional ByVal strCopyRange As String = "") As String
+Private Function MakeCopyText(Optional ByVal objCopyRange As Range = Nothing) As String
 On Error GoTo ErrHandle
-    If strCopyRange <> "" Then
-        MakeCopyText = GetRangeText(Range(strCopyRange))
+    If Not (objCopyRange Is Nothing) Then
+        MakeCopyText = GetRangeText(objCopyRange)
         Exit Function
     End If
     
@@ -783,7 +655,7 @@ Private Function CheckPasteMode(ByVal strCopyText As String, ByRef objSelection 
     '行方向に結合のない単一セル
     If objSelection.Rows.Count = 1 Then
         '行の高さがだいたい2行以上の時
-        If objSelection.RowHeight > (objSelection.Font.Size + 2) * 2 Then
+        If objSelection.RowHeight > (objSelection.Font.size + 2) * 2 Then
             CheckPasteMode = True
             Exit Function
         End If
@@ -835,39 +707,20 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　MoveObject
-'[ 概  要 ]　Range選択時：結合セルを含む領域を移動する
-'　　　　　　Shape選択時：図形を移動またはサイズ変更する
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub MoveObject()
-    If GetKeyState(vbKeyControl) < 0 Then
-        Call UnSelect
-        Exit Sub
-    End If
-
-    'IMEをオフにする
-    Call SetIMEOff
-
-    '選択されているオブジェクトを判定
-    Select Case CheckSelection()
-    Case E_Range
-        Call MoveCell
-    Case E_Shape
-        Call MoveShape
-    End Select
-    
-    Call Application.OnRepeat("", "")
-End Sub
-    
-'*****************************************************************************
 '[ 関数名 ]　MoveCell
 '[ 概  要 ]　結合セルを含む領域を移動する
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub MoveCell()
+    '選択されているオブジェクトを判定
+    If CheckSelection() <> E_Range Then
+        Exit Sub
+    End If
+    
+    'IMEをオフにする
+    Call SetIMEOff
+
 On Error GoTo ErrHandle
     Dim enmModeType  As EModeType
     Dim objToRange   As Range
@@ -891,11 +744,16 @@ On Error GoTo ErrHandle
     'コピー元のRangeを設定する
     Select Case lngCutCopyMode
     Case xlCopy, xlCut
-        Dim strFromRange As String
-        strFromRange = GetCopyRangeAddress()
-        If strFromRange <> "" Then
-            Set objFromRange = Range(strFromRange)
-        Else
+        Set objFromRange = GetCopyRange()
+        If objFromRange Is Nothing Then
+            Exit Sub
+        End If
+
+        'コピー元とコピー先が同じシートかどうか
+        Dim blnSameSheet As Boolean
+        blnSameSheet = CheckSameSheet(objFromRange.Worksheet, objToRange.Worksheet)
+        If Not blnSameSheet Then
+            Call MsgBox("他のシートからコピーする時は、[見たまま貼付け]コマンドを使用してください", vbExclamation)
             Exit Sub
         End If
     Case Else
@@ -925,6 +783,8 @@ On Error GoTo ErrHandle
     'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
     Call SetPixelInfo
     Call ShowMoveCellForm(enmModeType, objFromRange, objToRange)
+    
+    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1097,29 +957,43 @@ End Function
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub MoveShape()
+    If GetKeyState(vbKeyControl) < 0 And GetKeyState(vbKeyShift) < 0 Then
+        Call UnSelect
+        Exit Sub
+    End If
+
+    '選択されているオブジェクトを判定
+    If CheckSelection() <> E_Shape Then
+        Call MsgBox("図形が選択されていません")
+        Exit Sub
+    End If
+    
+    'IMEをオフにする
+    Call SetIMEOff
+
 On Error GoTo ErrHandle
     'フォームを表示
     Call frmMoveShape.Show
+    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     If blnFormLoad = True Then
         Call Unload(frmMoveShape)
     End If
     Call MsgBox(Err.Description, vbExclamation)
+    Call Application.OnRepeat("", "")
 End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　FitShapes
 '[ 概  要 ]  選択された図形を枠線にあわせる
-'[ 引  数 ]　なし
+'[ 引  数 ]　True:四方を枠線に合わせる、False:左上の位置を枠線に移動
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub FitShapes()
+Private Sub FitShapes(ByVal blnSizeChg As Boolean)
 On Error GoTo ErrHandle
-    Dim blnOK      As Boolean
-    Dim blnSizeChg As Boolean 'サイズを変更するかどうか
     Dim i          As Long
-    
+
     '図形が選択されているか判定
     Select Case (CheckSelection())
     Case E_Range
@@ -1128,48 +1002,21 @@ On Error GoTo ErrHandle
     Case E_Other
         Exit Sub
     End Select
-    
-    '****************************************
-    'タイプを選択させる
-    '****************************************
-    Dim enmSizeType As EFitType  '選択されたタイプ
-    With frmFitShapes
-        'フォームを表示
-        Call .Show
 
-        'キャンセル時
-        If blnFormLoad = False Then
-            Exit Sub
-        End If
-
-        enmSizeType = .SelectType
-        Call Unload(frmFitShapes)
-    End With
-    
-    Select Case enmSizeType
-    Case E_Default
-        blnSizeChg = True
-    Case E_TopLeft
-        blnSizeChg = False
-    Case E_Another
-        Call MoveShape
-        Exit Sub
-    End Select
-    
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ShapeSize, Selection.ShapeRange)
-    
+
     '回転している図形をグループ化する
     Dim objGroups As ShapeRange
     Set objGroups = GroupSelection(Selection.ShapeRange)
-    
+
     Call FitShapesGrid(objGroups, blnSizeChg)
-    
+
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1223,7 +1070,7 @@ Public Function GroupSelection(ByRef objShapes As ShapeRange) As ShapeRange
     '図形の数だけループ
     For i = 1 To objShapes.Count
         Set objShape = objShapes(i)
-        lngIDArray(i) = objShape.ID
+        lngIDArray(i) = objShape.Id
         
         Select Case objShape.Rotation
         Case 90, 270, 180
@@ -1243,10 +1090,10 @@ Public Function GroupSelection(ByRef objShapes As ShapeRange) As ShapeRange
                 '透明にする
                 .Fill.Visible = msoFalse
                 .Line.Visible = msoFalse
-                With GetShapeRangeFromID(Array(.ID, objShape.ID)).Group
+                With GetShapeRangeFromID(Array(.Id, objShape.Id)).Group
                     .AlternativeText = "EL_TemporaryGroup" & i
                     .Placement = btePlacement
-                    lngIDArray(i) = .ID
+                    lngIDArray(i) = .Id
                 End With
             End With
         End If
@@ -1271,7 +1118,7 @@ Public Function UnGroupSelection(ByRef objGroups As ShapeRange) As ShapeRange
     '図形の数だけループ
     For i = 1 To objGroups.Count
         Set objShape = objGroups(i)
-        lngIDArray(i) = objShape.ID
+        lngIDArray(i) = objShape.Id
         
         If Left$(objShape.AlternativeText, 17) = "EL_TemporaryGroup" Then
             blnRotation(i) = True
@@ -1286,13 +1133,118 @@ Public Function UnGroupSelection(ByRef objGroups As ShapeRange) As ShapeRange
             With objShape.Ungroup
                 .Item(1).Placement = btePlacement
                 Call .Item(2).Delete
-                lngIDArray(i) = .Item(1).ID
+                lngIDArray(i) = .Item(1).Id
             End With
         End If
     Next i
     
     Set UnGroupSelection = GetShapeRangeFromID(lngIDArray)
 End Function
+
+'*****************************************************************************
+'[概要] 図形を連結する
+'[引数] True:図形を水平に連結する、False:図形を垂直に連結する
+'[戻値] なし
+'*****************************************************************************
+Public Sub ConnectShapes(ByVal blnHorizontal As Boolean)
+On Error GoTo ErrHandle
+    Dim i          As Long
+
+    '図形が選択されているか判定
+    Select Case (CheckSelection())
+    Case E_Range
+        Call MsgBox("図形が選択されていません", vbExclamation)
+        Exit Sub
+    Case E_Other
+        Exit Sub
+    End Select
+
+    Application.ScreenUpdating = False
+    'アンドゥ用に元のサイズを保存する
+    Call SaveUndoInfo(E_ShapeSize, Selection.ShapeRange)
+
+    '回転している図形をグループ化する
+    Dim objGroups As ShapeRange
+    Set objGroups = GroupSelection(Selection.ShapeRange)
+
+    If blnHorizontal Then
+        Call ConnectShapesH(objGroups)
+    Else
+        Call ConnectShapesV(objGroups)
+    End If
+
+    '回転している図形のグループ化を解除し元の図形を選択する
+    Call UnGroupSelection(objGroups).Select
+    Call SetOnUndo
+'    Call SetOnRepeat
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] 図形を左右に連結する
+'[引数] objShapes:図形
+'[戻値] なし
+'*****************************************************************************
+Public Sub ConnectShapesH(ByRef objShapes As ShapeRange)
+    Dim i     As Long
+    
+    ReDim udtSortArray(1 To objShapes.Count) As TSortArray
+    For i = 1 To objShapes.Count
+        With udtSortArray(i)
+            .Key1 = objShapes(i).Left / DPIRatio
+            .Key2 = objShapes(i).Width / DPIRatio
+            .Key3 = i
+        End With
+    Next
+
+    'Let,Widthの順でソートする
+    Call SortArray(udtSortArray())
+
+    Dim lngTopLeft    As Long
+    lngTopLeft = udtSortArray(1).Key1
+    
+    For i = 2 To objShapes.Count
+        If udtSortArray(i).Key1 > udtSortArray(i - 1).Key1 Then
+            lngTopLeft = lngTopLeft + udtSortArray(i - 1).Key2
+        End If
+        
+        objShapes(udtSortArray(i).Key3).Left = lngTopLeft * DPIRatio
+    Next
+End Sub
+
+'*****************************************************************************
+'[概要] 図形を上下に連結する
+'[引数] objShapes:図形
+'[戻値] なし
+'*****************************************************************************
+Public Sub ConnectShapesV(ByRef objShapes As ShapeRange)
+    Dim i     As Long
+    
+    ReDim udtSortArray(1 To objShapes.Count) As TSortArray
+    For i = 1 To objShapes.Count
+        With udtSortArray(i)
+            .Key1 = objShapes(i).Top / DPIRatio
+            .Key2 = objShapes(i).Height / DPIRatio
+            .Key3 = i
+        End With
+    Next
+
+    'Top,Heightの順でソートする
+    Call SortArray(udtSortArray())
+
+    Dim lngTopLeft    As Long
+    lngTopLeft = udtSortArray(1).Key1
+    
+    For i = 2 To objShapes.Count
+        If udtSortArray(i).Key1 > udtSortArray(i - 1).Key1 Then
+            lngTopLeft = lngTopLeft + udtSortArray(i - 1).Key2
+        End If
+        
+        objShapes(udtSortArray(i).Key3).Top = lngTopLeft * DPIRatio
+    Next
+End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　ChangeTextboxesToCells
@@ -1324,7 +1276,7 @@ On Error GoTo ErrHandle
     '図形の数だけループ
     For i = 1 To objSelection.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
         Set objTextbox = objSelection(i)
-        lngIDArray(i) = objTextbox.ID
+        lngIDArray(i) = objTextbox.Id
         'テキストボックスだけが選択されているか判定
         If CheckTextbox(objTextbox) = False Then
             Call MsgBox("テキストボックス以外は選択しないで下さい", vbExclamation)
@@ -1403,7 +1355,7 @@ On Error GoTo ErrHandle
     Call Range(strSelectAddress).Select
     Call SetOnUndo
     Application.DisplayAlerts = True
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -1454,56 +1406,71 @@ Private Sub ChangeTextboxToCell(ByRef objTextbox As Shape, ByRef objRange As Ran
     Call objRange.UnMerge
     Call objRange.Merge
     
-    'フォントと文字列の設定
-    objRange(1, 1).Value = GetCharactersText(objTextbox.TextFrame)
-    On Error Resume Next
-    With objTextbox.TextFrame.Font
-        objRange.Font.Name = .Name
-        objRange.Font.Size = .Size
-        objRange.Font.FontStyle = .FontStyle
-    End With
-    On Error GoTo 0
+    '文字列の設定
+    objRange(1, 1).Value = objTextbox.TextFrame2.TextRange.Text
     
-    '配置の設定
-    With objTextbox.TextFrame
-        On Error Resume Next
-        If .Orientation = msoTextOrientationVertical Then
-            objRange.Orientation = xlVertical       '縦書き
-        End If
-        On Error GoTo 0
-        
-        '横位置設定
-        On Error Resume Next
-        Select Case .HorizontalAlignment
-        Case xlHAlignLeft
-            objRange.HorizontalAlignment = xlLeft
-        Case xlHAlignCenter
-            objRange.HorizontalAlignment = xlCenter
-        Case xlHAlignRight
-            objRange.HorizontalAlignment = xlRight
-        Case xlHAlignDistributed
-            objRange.HorizontalAlignment = xlDistributed
-        Case xlHAlignJustify
-            objRange.HorizontalAlignment = xlJustify
-        End Select
-        On Error GoTo 0
-        
-        '縦位置設定
-        On Error Resume Next
-        Select Case .VerticalAlignment
-        Case xlVAlignTop
-            objRange.VerticalAlignment = xlTop
-        Case xlVAlignCenter
-            objRange.VerticalAlignment = xlCenter
-        Case xlVAlignBottom
-            objRange.VerticalAlignment = xlBottom
-        Case xlVAlignDistributed
-            objRange.VerticalAlignment = xlDistributed
-        Case xlVAlignJustify
-            objRange.VerticalAlignment = xlJustify
-        End Select
-        On Error GoTo 0
-    End With
+    '縦書き or 横書き
+    Select Case objTextbox.TextFrame2.Orientation
+    Case msoTextOrientationDownward
+        objRange.Orientation = xlDownward
+    Case msoTextOrientationUpward
+        objRange.Orientation = xlUpward
+    Case msoTextOrientationHorizontalRotatedFarEast, _
+         msoTextOrientationVerticalFarEast, _
+         msoTextOrientationVertical
+        objRange.Orientation = xlVertical '縦書き
+    Case Else
+        objRange.Orientation = xlHorizontal
+    End Select
+
+'    On Error Resume Next
+'    With objTextbox.TextFrame.Font
+'        objRange.Font.Name = .Name
+'        objRange.Font.size = .size
+'        objRange.Font.FontStyle = .FontStyle
+'    End With
+'    On Error GoTo 0
+    
+'    '配置の設定
+'    With objTextbox.TextFrame
+'        On Error Resume Next
+'        If .Orientation = msoTextOrientationVertical Then
+'            objRange.Orientation = xlVertical       '縦書き
+'        End If
+'        On Error GoTo 0
+'
+'        '横位置設定
+'        On Error Resume Next
+'        Select Case .HorizontalAlignment
+'        Case xlHAlignLeft
+'            objRange.HorizontalAlignment = xlLeft
+'        Case xlHAlignCenter
+'            objRange.HorizontalAlignment = xlCenter
+'        Case xlHAlignRight
+'            objRange.HorizontalAlignment = xlRight
+'        Case xlHAlignDistributed
+'            objRange.HorizontalAlignment = xlDistributed
+'        Case xlHAlignJustify
+'            objRange.HorizontalAlignment = xlJustify
+'        End Select
+'        On Error GoTo 0
+'
+'        '縦位置設定
+'        On Error Resume Next
+'        Select Case .VerticalAlignment
+'        Case xlVAlignTop
+'            objRange.VerticalAlignment = xlTop
+'        Case xlVAlignCenter
+'            objRange.VerticalAlignment = xlCenter
+'        Case xlVAlignBottom
+'            objRange.VerticalAlignment = xlBottom
+'        Case xlVAlignDistributed
+'            objRange.VerticalAlignment = xlDistributed
+'        Case xlVAlignJustify
+'            objRange.VerticalAlignment = xlJustify
+'        End Select
+'        On Error GoTo 0
+'    End With
 
     '罫線の設定
     If objTextbox.Line.Visible <> msoFalse Then
@@ -1604,17 +1571,16 @@ On Error GoTo ErrHandle
     '作成したテキストボックスを選択
     Call ActiveSheet.Shapes.Range(strTextboxes).Select
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　ChangeCellToTextbox
-'[ 概  要 ]　セルをテキストボックスに変換する
-'[ 引  数 ]　セル
-'[ 戻り値 ]　テキストボックス
+'[概要] セルをテキストボックスに変換する
+'[引数] セル
+'[戻値] テキストボックス
 '*****************************************************************************
 Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
     Dim objTextbox As Shape
@@ -1628,52 +1594,69 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
     Set objCell = objRange(1, 1)
     
     'フォントと文字列の設定
-    objTextbox.DrawingObject.Formula = objCell.Address
-    objTextbox.DrawingObject.Formula = ""
-    If Val(Application.Version) >= 12 Then
-        With objTextbox.TextFrame.Characters
-            If .Text <> "" Then
-                .Font.Name = objCell.Font.Name
-                .Font.Size = objCell.Font.Size
-                .Font.FontStyle = objCell.Font.FontStyle
-            End If
-        End With
-    End If
+    With objTextbox.TextFrame2.TextRange.Font
+        .NameComplexScript = objCell.Font.Name
+        .NameFarEast = objCell.Font.Name
+        .Name = objCell.Font.Name
+        .size = objCell.Font.size
+    End With
+    With objTextbox.TextFrame2.TextRange
+        .Text = objCell.Value
+    End With
     
     '配置の設定
-    With objTextbox.TextFrame
-        If objCell.Orientation = xlVertical Then
-            .Orientation = msoTextOrientationVertical     '縦書き
-        End If
-        
-        '横位置設定
-        Select Case objCell.HorizontalAlignment
-        Case xlLeft
-            .HorizontalAlignment = xlHAlignLeft
-        Case xlCenter
-            .HorizontalAlignment = xlHAlignCenter
-        Case xlRight
-            .HorizontalAlignment = xlHAlignRight
-        Case xlDistributed
-            .HorizontalAlignment = xlHAlignDistributed
-        Case xlJustify
-            .HorizontalAlignment = xlHAlignJustify
-        End Select
-        
-        '縦位置設定
-        Select Case objCell.VerticalAlignment
-        Case xlTop
-            .VerticalAlignment = xlVAlignTop
-        Case xlCenter
-            .VerticalAlignment = xlVAlignCenter
-        Case xlBottom
-            .VerticalAlignment = xlVAlignBottom
-        Case xlDistributed
-            .VerticalAlignment = xlVAlignDistributed
-        Case xlJustify
-            .VerticalAlignment = xlVAlignJustify
+    With objTextbox.TextFrame2
+        Select Case objCell.Orientation
+        Case xlDownward, xlUpward, xlVertical, 90, -90
+            .Orientation = msoTextOrientationVerticalFarEast '縦書き
         End Select
     End With
+    
+    If objCell.Orientation = xlVertical Then '縦書き
+        With objTextbox.TextFrame
+            '横位置設定
+            Select Case objCell.HorizontalAlignment
+            Case xlLeft, xlJustify
+                .VerticalAlignment = xlVAlignBottom
+            Case xlRight
+                .VerticalAlignment = xlVAlignTop
+            Case Else
+                .VerticalAlignment = xlHAlignCenter
+            End Select
+            '縦位置設定
+            Select Case objCell.VerticalAlignment
+            Case xlJustify, xlTop
+                .HorizontalAlignment = xlHAlignLeft
+            Case xlBottom
+                .HorizontalAlignment = xlHAlignRight
+            Case Else
+                .HorizontalAlignment = xlVAlignCenter
+            End Select
+        End With
+    Else '横書き
+        With objTextbox.TextFrame2.TextRange.ParagraphFormat
+            '横位置設定
+            Select Case objCell.HorizontalAlignment
+            Case xlGeneral, xlLeft, xlJustify
+                .Alignment = msoAlignLeft
+            Case xlRight
+                .Alignment = msoAlignRight
+            Case Else
+                .Alignment = msoAlignCenter
+            End Select
+        End With
+        With objTextbox.TextFrame2
+            '縦位置設定
+            Select Case objCell.VerticalAlignment
+            Case xlJustify, xlTop
+                .VerticalAnchor = msoAnchorTop
+            Case xlBottom
+                .VerticalAnchor = msoAnchorBottom
+            Case Else
+                .VerticalAnchor = msoAnchorMiddle
+            End Select
+        End With
+    End If
     
     '線の設定
     With objTextbox.Line
@@ -1703,24 +1686,31 @@ End Function
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub HideShapes()
+Public Sub HideShapes(ByVal blnHide As Boolean)
     If ActiveWorkbook Is Nothing Then
         Exit Sub
     End If
     
     With ActiveWorkbook
-        If .DisplayDrawingObjects = xlDisplayShapes Then
-            If MsgBox("ワークブック内のすべての図形を非表示にします" & vbLf & _
-                      "実行すれば、図形の編集が出来なくなります" & vbLf & _
-                      "よろしいですか？" & vbLf & _
-                      "※再度表示するには、もう一度クリックして下さい" & vbLf & _
-                      "※「Ctrl+6」を押下してもExcelの標準機能で同様の操作が行えます" _
-                      , vbOKCancel + vbQuestion) = vbOK Then
-                .DisplayDrawingObjects = xlHide
-            End If
+        If blnHide Then
+            .DisplayDrawingObjects = xlHide
         Else
-            .DisplayDrawingObjects = xlDisplayShapes
+            .DisplayDrawingObjects = xlAll
         End If
+        
+'        If .DisplayDrawingObjects = xlDisplayShapes Then
+'            If MsgBox("ワークブック内のすべての図形を非表示にします" & vbLf & _
+'                      "実行すれば、図形の編集が出来なくなります" & vbLf & _
+'                      "よろしいですか？" & vbLf & _
+'                      "※再度表示するには、もう一度クリックして下さい" & vbLf & _
+'                      "※「Ctrl+6」を押下してもExcelの標準機能で同様の操作が行えます" _
+'                      , vbOKCancel + vbQuestion) = vbOK Then
+'                .DisplayDrawingObjects = xlHide
+'            End If
+'            .DisplayDrawingObjects = xlHide
+'        Else
+'            .DisplayDrawingObjects = xlDisplayShapes
+'        End If
     End With
 End Sub
 
@@ -1804,12 +1794,12 @@ End Sub
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub SetOnRepeat()
-    Set objRepeatCmd = CommandBars.ActionControl
-    If Not (objRepeatCmd Is Nothing) Then
-        Call Application.OnRepeat("繰り返し　" & CommandBars.ActionControl.Caption, "OnRepeat")
-    End If
-End Sub
+'Public Sub SetOnRepeat()
+'    Set objRepeatCmd = CommandBars.ActionControl
+'    If Not (objRepeatCmd Is Nothing) Then
+'        Call Application.OnRepeat("繰り返し　" & CommandBars.ActionControl.Caption, "OnRepeat")
+'    End If
+'End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　OnRepeat
@@ -1926,7 +1916,7 @@ Public Function GetShapeRangeFromID(ByRef lngID As Variant) As ShapeRange
     ReDim lngArray(LBound(lngID) To UBound(lngID)) As Variant
     
     For j = 1 To ActiveSheet.Shapes.Count
-        lngShapeID = ActiveSheet.Shapes(j).ID
+        lngShapeID = ActiveSheet.Shapes(j).Id
         For i = LBound(lngID) To UBound(lngID)
             If lngShapeID = lngID(i) Then
                 lngArray(i) = j
@@ -1949,7 +1939,7 @@ Public Function GetShapeFromID(ByVal lngID As Long) As Shape
     Dim lngIndex As Long
         
     For j = 1 To ActiveSheet.Shapes.Count
-        If ActiveSheet.Shapes(j).ID = lngID Then
+        If ActiveSheet.Shapes(j).Id = lngID Then
             lngIndex = j
             Exit For
         End If
@@ -1981,10 +1971,10 @@ End Sub
 '*****************************************************************************
 '[ 関数名 ]　ConvertStr
 '[ 概  要 ]　文字種の変換
-'[ 引  数 ]　なし
+'[ 引  数 ]　変換種類
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub ConvertStr()
+Private Sub ConvertStr(ByVal strCommand As String)
 On Error GoTo ErrHandle
     Dim objSelection As Range
     Dim objWkRange   As Range
@@ -2019,7 +2009,7 @@ On Error GoTo ErrHandle
         i = i + 1
         strText = objCell
         If strText <> "" Then '結合セルの左上以外を無視するため
-            strConvText = StrConvert(strText, CommandBars.ActionControl.Parameter)
+            strConvText = StrConvert(strText, strCommand)
             If strConvText <> strText Then
 '                objCell = strConvText
                 Call SetTextToCell(objCell, strConvText)
@@ -2040,6 +2030,7 @@ On Error GoTo ErrHandle
     Set objRepeatCmd = CommandBars.ActionControl
     Call Application.OnRepeat("繰り返し " & objRepeatCmd.Caption, "OnRepeat")
     Application.StatusBar = False
+    Call objSelection.Select
 Exit Sub
 ErrHandle:
     Application.StatusBar = False
@@ -2077,7 +2068,7 @@ On Error GoTo ErrHandle
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If
-
+    
     'デフォルト値の設定
     If udtEditInfo.Width = 0 Then
         frmEdit.StartUpPosition = 2 '画面の中央
@@ -2125,6 +2116,63 @@ Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
+
+'*****************************************************************************
+'[概要] 選択されたセル上の図形を選択する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub SelectShapes()
+On Error GoTo ErrHandle
+    If ActiveWorkbook.DisplayDrawingObjects = xlHide Then
+        Exit Sub
+    End If
+    
+    If CheckSelection() <> E_Range Then
+        Exit Sub
+    End If
+    
+    If ActiveSheet.Shapes.Count = 0 Then
+        Exit Sub
+    End If
+    
+    ReDim lngArray(1 To ActiveSheet.Shapes.Count)
+    Dim i As Long
+    Dim j As Long
+    For i = 1 To ActiveSheet.Shapes.Count
+        'コメントの図形は対象外とする
+        If ActiveSheet.Shapes(i).Type <> msoComment Then
+            If IsInclude(Selection, ActiveSheet.Shapes(i)) Then
+                j = j + 1
+                lngArray(j) = i
+            End If
+        End If
+    Next
+    
+    '対象の図形がない時は、図形選択モードにする
+    If j = 0 Then
+        On Error Resume Next
+        Call CommandBars.ExecuteMso("ObjectsSelect")
+        Exit Sub
+    End If
+    
+    ReDim Preserve lngArray(1 To j)
+    Call ActiveSheet.Shapes.Range(lngArray).Select
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] 図形がRangeエリアに含まれるかどうか判定
+'[引数] Rangeエリア、判定する図形
+'[戻値] なし
+'*****************************************************************************
+Private Function IsInclude(ByRef objRange As Range, ByRef objShape As Shape) As Boolean
+    With objShape
+        IsInclude = (MinusRange(Range(.TopLeftCell, .BottomRightCell), objRange) Is Nothing)
+    End With
+End Function
 
 '*****************************************************************************
 '[ 関数名 ]　OnElseMenuClick
@@ -2222,11 +2270,10 @@ On Error GoTo ErrHandle
     Dim strOption As String
     Dim blnKeys(1 To 4) As Boolean
     
-    strOption = CommandBars("かんたんレイアウト").Controls(1).Tag
-    blnKeys(1) = Not (InStr(1, strOption, "{S+F2}") = 0)
-    blnKeys(2) = Not (InStr(1, strOption, "{C+S+C}") = 0)
-    blnKeys(3) = Not (InStr(1, strOption, "{C+S+V}") = 0)
-    blnKeys(4) = Not (InStr(1, strOption, "{BS}") = 0)
+    blnKeys(1) = GetSetting(REGKEY, "KEY", "OpenEdit", True)
+    blnKeys(2) = GetSetting(REGKEY, "KEY", "CopyText", True)
+    blnKeys(3) = GetSetting(REGKEY, "KEY", "PasteText", True)
+    blnKeys(4) = GetSetting(REGKEY, "KEY", "BackSpace", True)
     
     If blnKeys(1) = True Then
         Call Application.OnKey("+{F2}", "OpenEdit")
@@ -2251,44 +2298,76 @@ On Error GoTo ErrHandle
     Else
         Call Application.OnKey("{BS}")
     End If
+
+    Call Application.OnKey("^6", "ToggleHideShapes")
 ErrHandle:
 End Sub
 
-''*****************************************************************************
-''[ 関数名 ]　SubClassProc
-''[ 概  要 ]　入力補助画面をマウスホイールでスクロールさせる
-''[ 引  数 ]　CallBack関数のそれ
-''[ 戻り値 ]　CallBack関数のそれ
-''*****************************************************************************
-'Public Function SubClassProc(ByVal hWnd As Long, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-'On Error Resume Next
-'    If MSG = WM_MOUSEWHEEL Then
-'        If 0 < wParam Then
-'            Call SendKeys("{UP}")
-'            Call SendKeys("{UP}")
-''            frmEdit.txtEdit.CurLine = frmEdit.txtEdit.CurLine - 2
-'        Else
-'            Call SendKeys("{DOWN}")
-'            Call SendKeys("{DOWN}")
-''            frmEdit.txtEdit.CurLine = frmEdit.txtEdit.CurLine + 2
-'        End If
-'    End If
-'
-'    'デフォルトウィンドウプロシージャを呼び出す
-'    SubClassProc = CallWindowProc(frmEdit.WndProc, hWnd, MSG, wParam, lParam)
-'End Function
+'*****************************************************************************
+'[概要] 見たまま貼付け
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Public Sub PasteAppearance()
+    '選択されているオブジェクトを判定
+    If CheckSelection() <> E_Range Then
+        Exit Sub
+    End If
+    
+    If Application.CutCopyMode <> xlCopy Then
+        Call MsgBox("セルをコピーしてから実行して下さい", vbExclamation)
+        Exit Sub
+    End If
+    
+    'IMEをオフにする
+    Call SetIMEOff
 
-''*****************************************************************************
-''[ 関数名 ]　LoadThisWorkbook
-''[ 概  要 ]　Open時に高速化のため、ThisWorkbookをロードさせる
-''[ 引  数 ]　なし
-''[ 戻り値 ]　なし
-''*****************************************************************************
-'Public Sub LoadThisWorkbook()
-'On Error Resume Next
-'    Application.StatusBar = "開いています  かんたんレイアウト"
-'    With ThisWorkbook.Styles("Normal").Font
-''        .Size = 11
-'    End With
-'    Application.StatusBar = False
-'End Sub
+On Error GoTo ErrHandle
+    Dim objFromRange   As Range
+    Dim objToRange As Range
+    Dim lngCutCopyMode As Long
+    
+    'コピー元のRangeを設定する
+    Set objFromRange = GetCopyRange()
+    If objFromRange Is Nothing Then
+        Call MsgBox("セルをコピーしてから実行して下さい", vbExclamation)
+        Exit Sub
+    End If
+    
+    'コピー先のRangeを設定する
+    Set objToRange = Selection(1)
+    
+    'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
+    Call SetPixelInfo
+    Call ShowCopyCellForm(objFromRange, objToRange)
+    
+    Call Application.OnRepeat("", "")
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] 結合セルを含む領域を移動する
+'[引数] objFromRange:移動(コピー元)の領域
+'       objToRange:選択中の領域
+'[戻値]なし
+'*****************************************************************************
+Private Sub ShowCopyCellForm(ByRef objFromRange As Range, ByRef objToRange As Range)
+    Dim blnCopyObjectsWithCells  As Boolean
+    blnCopyObjectsWithCells = Application.CopyObjectsWithCells
+On Error GoTo ErrHandle
+    'フォームを表示
+    With frmCopyCell
+        Call .Initialize(objFromRange, objToRange)
+        Call .Show
+    End With
+    Application.CopyObjectsWithCells = blnCopyObjectsWithCells
+Exit Sub
+ErrHandle:
+    Application.CopyObjectsWithCells = blnCopyObjectsWithCells
+    If blnFormLoad = True Then
+        Call Unload(frmCopyCell)
+    End If
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub

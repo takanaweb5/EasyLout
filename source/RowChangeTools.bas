@@ -7,15 +7,15 @@ Private Const MaxRowHeight = 409.5  '高さの最大サイズ
 '*****************************************************************************
 '[ 関数名 ]　ChangeHeight
 '[ 概  要 ]　高さの変更
-'[ 引  数 ]　なし
+'[ 引  数 ]　lngSize:変更サイズ(単位：ピクセル)
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub ChangeHeight()
+Private Sub ChangeHeight(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-    Dim lngSize As Long
+'    Dim lngSize As Long
     
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    lngSize = CommandBars.ActionControl.Parameter
+'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -35,15 +35,15 @@ End Sub
 '*****************************************************************************
 '[ 関数名 ]　MoveHorizonBorder
 '[ 概  要 ]　行の境界線を上下に移動する
-'[ 引  数 ]　なし
+'[ 引  数 ]　lngSize:変更サイズ(単位：ピクセル)
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveHorizonBorder()
+Private Sub MoveHorizonBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-    Dim lngSize As Long
+'    Dim lngSize As Long
     
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    lngSize = CommandBars.ActionControl.Parameter
+'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -56,20 +56,6 @@ On Error GoTo ErrHandle
 '        Call MoveShape(lngSize)
         Exit Sub
     End Select
-Exit Sub
-ErrHandle:
-    Call MsgBox(Err.Description, vbExclamation)
-End Sub
-
-'*****************************************************************************
-'[ 関数名 ]　MoveRowsBorder
-'[ 概  要 ]　行の境界のセルを上下に移動する
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub MoveRowsBorder()
-On Error GoTo ErrHandle
-    Call MoveCellBorder(CommandBars.ActionControl.Parameter)
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -175,7 +161,7 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     If blnDisplayPageBreaks = True Then
@@ -295,7 +281,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -503,7 +489,7 @@ On Error GoTo ErrHandle
     objRange.Rows(1).RowHeight = PixelToHeight(lngPixel(1))
     objRange.Rows(k).RowHeight = PixelToHeight(lngPixel(2))
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -619,7 +605,7 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_RowSize, Range(strSelection), GetSameHeightAddresses(objSelection))
     objSelection.RowHeight = dblHeight / lngRowCount
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -650,7 +636,7 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -774,7 +760,7 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -823,6 +809,8 @@ On Error GoTo ErrHandle
     '分割数を選択させる
     '****************************************
     With frmSplitCount
+        Call .SetChkLabel(False)
+
         'フォームを表示
         Call .Show
     
@@ -1184,7 +1172,7 @@ End Sub
 '            objTopRow：結合の先頭行、objBottomRow：結合の底の行
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MergeRows(ByVal lngType As Long, ByRef objTopRow As Range, ByRef objBottomRow As Range)
+Private Sub MergeRows(ByVal lngtype As Long, ByRef objTopRow As Range, ByRef objBottomRow As Range)
     Dim i          As Long
     Dim lngLast    As Long
     Dim objRange As Range
@@ -1206,7 +1194,7 @@ Private Sub MergeRows(ByVal lngType As Long, ByRef objTopRow As Range, ByRef obj
         With objBottomRow.Cells(1, i)
             '底の行のセルが結合セルか
             If .MergeArea.Count = 1 Then
-                Set objRange = GetMergeRowRange(lngType, objTopRow.Cells(1, i), .Cells)
+                Set objRange = GetMergeRowRange(lngtype, objTopRow.Cells(1, i), .Cells)
                 If Not (objRange Is Nothing) Then
                     Call objRange.Merge
                 End If
@@ -1222,10 +1210,10 @@ End Sub
 '            objBaseCell:先頭行のセル、objTergetCell:対象の行のセル
 '[ 戻り値 ]　結合する領域(Nothing:結合しない時)
 '*****************************************************************************
-Private Function GetMergeRowRange(ByVal lngType As Long, _
+Private Function GetMergeRowRange(ByVal lngtype As Long, _
                                   ByRef objBaseCell As Range, _
                                   ByRef objTergetCell As Range) As Range
-    Select Case lngType
+    Select Case lngtype
     Case 1 '先頭行から最終の行まで縦方向に結合する
     Case 2 '先頭行が結合セルの時、先頭行から最終の行まで縦方向に結合する
         If objBaseCell.MergeArea.Count = 1 Then
@@ -1242,7 +1230,7 @@ Private Function GetMergeRowRange(ByVal lngType As Long, _
         End If
     End Select
     
-    Select Case lngType
+    Select Case lngtype
     Case 1, 2, 3
         Set GetMergeRowRange = Range(objBaseCell.MergeArea, objTergetCell)
     Case 4
@@ -1272,12 +1260,12 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　MoveCellBorder
+'[ 関数名 ]　MoveRowsBorder
 '[ 概  要 ]　行の境界のセルを上下に移動する
 '[ 引  数 ]　-1:上に移動、1:下に移動
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveCellBorder(ByVal lngUpDown As Long)
+Private Sub MoveRowsBorder(ByVal lngUpDown As Long)
 On Error GoTo ErrHandle
     Dim i            As Long
     Dim objSelection As Range
@@ -1378,7 +1366,7 @@ On Error GoTo ErrHandle
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
@@ -1460,14 +1448,14 @@ On Error GoTo ErrHandle
     If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
     Else
         Call SetOnUndo
-        Call SetOnRepeat
+'        Call SetOnRepeat
         Exit Sub
     End If
     
     '動作が非常に遅くなるための対応
     If objSelection.Rows.Count > 100 Then
         Call SetOnUndo
-        Call SetOnRepeat
+'        Call SetOnRepeat
         Exit Sub
     End If
     
@@ -1479,7 +1467,7 @@ On Error GoTo ErrHandle
     Call DeleteSheet(objWorksheet)
     With objWorksheet
         .Columns.ColumnWidth = 255
-        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.Size = 1
+        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.size = 1
         Call objSelection.Copy(.Cells(1, 1))
     End With
     
@@ -1506,7 +1494,7 @@ On Error GoTo ErrHandle
     
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
-    Call SetOnRepeat
+'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)

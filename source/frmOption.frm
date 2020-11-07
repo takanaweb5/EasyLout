@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 '*****************************************************************************
@@ -21,12 +20,10 @@ Option Explicit
 '[ 概  要 ]　フォームロード時
 '*****************************************************************************
 Private Sub UserForm_Initialize()
-    Dim strOption As String
-    strOption = CommandBars("かんたんレイアウト").Controls(1).Tag
-    chkCheck1 = Not (InStr(1, strOption, "{S+F2}") = 0)
-    chkCheck2 = Not (InStr(1, strOption, "{C+S+C}") = 0)
-    chkCheck3 = Not (InStr(1, strOption, "{C+S+V}") = 0)
-    chkCheck4 = Not (InStr(1, strOption, "{BS}") = 0)
+    chkCheck1 = GetSetting(REGKEY, "KEY", "OpenEdit", True)
+    chkCheck2 = GetSetting(REGKEY, "KEY", "CopyText", True)
+    chkCheck3 = GetSetting(REGKEY, "KEY", "PasteText", True)
+    chkCheck4 = GetSetting(REGKEY, "KEY", "BackSpace", True)
 End Sub
 
 '*****************************************************************************
@@ -34,22 +31,10 @@ End Sub
 '[ 概  要 ]　ＯＫボタン押下時
 '*****************************************************************************
 Private Sub cmdOK_Click()
-    Dim strOption As String
-    
-    If chkCheck1 = True Then
-        strOption = strOption & "{S+F2}"
-    End If
-    If chkCheck2 = True Then
-        strOption = strOption & "{C+S+C}"
-    End If
-    If chkCheck3 = True Then
-        strOption = strOption & "{C+S+V}"
-    End If
-    If chkCheck4 = True Then
-        strOption = strOption & "{BS}"
-    End If
-    CommandBars("かんたんレイアウト").Controls(1).Tag = strOption
-    
+    Call SaveSetting(REGKEY, "KEY", "OpenEdit", chkCheck1)
+    Call SaveSetting(REGKEY, "KEY", "CopyText", chkCheck2)
+    Call SaveSetting(REGKEY, "KEY", "PasteText", chkCheck3)
+    Call SaveSetting(REGKEY, "KEY", "BackSpace", chkCheck4)
     Call Unload(Me)
 End Sub
 

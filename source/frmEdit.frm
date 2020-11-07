@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmEdit 
    Caption         =   "かんたんレイアウト"
-   ClientHeight    =   3828
+   ClientHeight    =   3972
    ClientLeft      =   48
    ClientTop       =   228
-   ClientWidth     =   7368
+   ClientWidth     =   7464
    OleObjectBlob   =   "frmEdit.frx":0000
    StartUpPosition =   2  '画面の中央
 End
@@ -20,7 +20,12 @@ Private hwnd       As LongPtr
 'Private OrgWndProc As Long
 Private blnZoomed  As Boolean
 Private objTmpBar  As CommandBar
-Private dblAnchor  As Double
+Private dblAnchor1T  As Double
+Private dblAnchor1L  As Double
+Private dblAnchor2B  As Double
+Private dblAnchor2R  As Double
+Private dblAnchor3T  As Double
+Private dblAnchor3L  As Double
 
 '*****************************************************************************
 '[イベント]　UserForm_Initialize
@@ -31,19 +36,20 @@ Private Sub UserForm_Initialize()
     Dim i        As Long
     
     Set imgGrip.Picture = Nothing
-    dblAnchor = Me.Height - cmdCancel.Top
+    dblAnchor1T = Me.Height - cmdCancel.Top
+    dblAnchor1L = Me.Width - cmdCancel.Left
+    dblAnchor2B = Me.Height - txtEdit.Height
+    dblAnchor2R = Me.Width - txtEdit.Width
+    dblAnchor3T = Me.Height - imgGrip.Top
+    dblAnchor3L = Me.Width - imgGrip.Height
     
     '********************************************
     'ウィンドウのサイズを変更出来るように変更
     '********************************************
     hwnd = FindWindow("ThunderDFrame", Me.Caption)
     lngStyle = GetWindowLong(hwnd, GWL_STYLE)
-    If ActiveCell.HasFormula = True Then
-        Call SetWindowLong(hwnd, GWL_STYLE, lngStyle Or WS_THICKFRAME)
-    Else
-        Call SetWindowLong(hwnd, GWL_STYLE, lngStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX)
-    End If
-    
+    Call SetWindowLong(hwnd, GWL_STYLE, lngStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX)
+
 '    '********************************************
 '    'サブクラス化してマウスホイールを有効にする
 '    '********************************************
@@ -53,25 +59,16 @@ Private Sub UserForm_Initialize()
     'フォームの初期状態を設定
     '********************************************
     With txtEdit
-        If ActiveCell.HasFormula = True Then
-            .MultiLine = False
-            .WordWrap = False
-            .ScrollBars = fmScrollBarsNone
-            .SelectionMargin = False
-            .Text = ActiveCell.Formula
-            chkWordWrap.Enabled = False
+        .MultiLine = True
+        .WordWrap = False
+        .ScrollBars = fmScrollBarsBoth
+        .SelectionMargin = True
+        If IsOnlyCell(Selection) Then
+            .Text = ActiveCell.Value
         Else
-            .MultiLine = True
-            .WordWrap = False
-            .ScrollBars = fmScrollBarsBoth
-            .SelectionMargin = True
-            If IsOnlyCell(Selection) Then
-                .Text = ActiveCell.Value
-            Else
-                .Text = GetRangeText(Selection)
-            End If
-            chkWordWrap = .WordWrap
+            .Text = GetRangeText(Selection)
         End If
+        chkWordWrap = .WordWrap
     End With
     
     '********************************************
@@ -130,7 +127,7 @@ Private Sub UserForm_Initialize()
     End With
 
     For i = 1 To objTmpBar.Controls.Count
-        objTmpBar.Controls(i).OnAction = "OnPopupClick2"
+        objTmpBar.Controls(i).onAction = "OnPopupClick2"
         objTmpBar.Controls(i).Tag = i
     Next i
 End Sub
@@ -177,18 +174,20 @@ On Error GoTo ErrHandle
     '改行のCRLF→LF
     strText = Replace$(txtEdit.Text, vbCr, "")
     
-    If ActiveCell.HasFormula Or IsOnlyCell(Selection) Then
+    If IsOnlyCell(Selection) And Selection.MergeCells Then
         Call SaveUndoInfo(E_CellValue, ActiveCell.MergeArea)
         ActiveCell.Value = Replace$(strText, vbTab, "")
+        Set objNewSelection = Selection
     Else
         Set objOldSelection = Selection
         Set objNewSelection = GetPasteRange(strText, Selection)
         Call SaveUndoInfo(E_CellValue, objOldSelection)
         Call objOldSelection.ClearContents
-        Call objNewSelection.Select
         Call PasteTabText(strText, objNewSelection)
     End If
+    Call objNewSelection.Select
     Call SetOnUndo
+    Call objNewSelection.Select
 ErrHandle:
     blnZoomed = IsZoomed(hwnd)
     Me.Hide
@@ -213,7 +212,7 @@ End Sub
 '*****************************************************************************
 Private Sub SpbSize_Change()
     txtSize.Text = CStr(SpbSize.Value)
-    txtEdit.Font.Size = SpbSize.Value
+    txtEdit.Font.size = SpbSize.Value
 End Sub
 
 '*****************************************************************************
@@ -263,25 +262,22 @@ End Sub
 '[ 概  要 ]　フォームのサイズ変更時
 '*****************************************************************************
 Private Sub UserForm_Resize()
-    If Me.Width < 360 Then
-        Me.Width = 360
-    End If
-    If Me.Height < 65 Or ActiveCell.HasFormula = True Then
-        Me.Height = 65
+    If Me.Width < 365 Then
+        Me.Width = 365
     End If
     
-    cmdCancel.Top = Me.Height - dblAnchor
-    cmdCancel.Left = Me.Width - cmdCancel.Width - 12
+    cmdCancel.Top = Me.Height - dblAnchor1T
+    cmdCancel.Left = Me.Width - dblAnchor1L
     cmdOK.Top = cmdCancel.Top
     cmdOK.Left = cmdCancel.Left - 10 - cmdOK.Width
-    txtEdit.Width = Me.Width - 6
-    txtEdit.Height = cmdCancel.Top - 6
+    txtEdit.Width = Me.Width - dblAnchor2R
+    txtEdit.Height = Me.Height - dblAnchor2B
     frmFontSize.Top = cmdCancel.Top
     SpbSize.Top = cmdCancel.Top
     chkWordWrap.Top = cmdCancel.Top + 1
     
-    imgGrip.Top = cmdCancel.Top + cmdCancel.Height - 4
-    imgGrip.Left = cmdCancel.Left + cmdCancel.Width - 2
+    imgGrip.Top = Me.Height - dblAnchor3T
+    imgGrip.Left = Me.Width - dblAnchor3L
 End Sub
 
 '*****************************************************************************
@@ -315,7 +311,7 @@ End Sub
 '[イベント]　txtEdit_MouseUp
 '[ 概  要 ]　右クリックメニューを表示する
 '*****************************************************************************
-Private Sub txtEdit_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub txtEdit_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     If Button = 2 Then '右ボタン
         objTmpBar.Controls(1).Enabled = Me.CanUndo
         objTmpBar.Controls(2).Enabled = Me.CanRedo
@@ -341,7 +337,7 @@ End Sub
 '[イベント]　imgGrip_MouseDown
 '[ 概  要 ]　フォームの右下でフォームのサイズを変更出来るようにする
 '*****************************************************************************
-Private Sub imgGrip_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub imgGrip_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     Call ReleaseCapture
     Call SendMessage(hwnd, WM_SYSCOMMAND, SC_SIZE Or 8, 0)
 End Sub
