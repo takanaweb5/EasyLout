@@ -26,10 +26,10 @@ End Sub
 '[ äT  óv ]Å@óÒÇÃïù
 '[ à¯  êî ]Å@óÒÇÃî‘çÜ
 '*****************************************************************************
-Public Property Get size(Optional ByVal i As Long = 1) As Double
-    size = objColumn.Columns(i).ColumnWidth
+Public Property Get Size(Optional ByVal i As Long = 1) As Double
+    Size = objColumn.Columns(i).ColumnWidth
 End Property
-Public Property Let size(Optional ByVal i As Long = 1, ByVal Value As Double)
+Public Property Let Size(Optional ByVal i As Long = 1, ByVal Value As Double)
     objColumn.Columns(i).ColumnWidth = Value
 End Property
 

@@ -26,10 +26,10 @@ End Sub
 '[ 概  要 ]　行の高さ
 '[ 引  数 ]　行の番号
 '*****************************************************************************
-Public Property Get size(Optional ByVal i As Long = 1) As Double
-    size = objRow.Rows(i).RowHeight
+Public Property Get Size(Optional ByVal i As Long = 1) As Double
+    Size = objRow.Rows(i).RowHeight
 End Property
-Public Property Let size(Optional ByVal i As Long = 1, ByVal Value As Double)
+Public Property Let Size(Optional ByVal i As Long = 1, ByVal Value As Double)
     objRow.Rows(i).RowHeight = Value
 End Property
 

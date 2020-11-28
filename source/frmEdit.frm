@@ -16,7 +16,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-Private hwnd       As LongPtr
+Private hWnd       As LongPtr
 'Private OrgWndProc As Long
 Private blnZoomed  As Boolean
 Private objTmpBar  As CommandBar
@@ -46,9 +46,9 @@ Private Sub UserForm_Initialize()
     '********************************************
     'ウィンドウのサイズを変更出来るように変更
     '********************************************
-    hwnd = FindWindow("ThunderDFrame", Me.Caption)
-    lngStyle = GetWindowLong(hwnd, GWL_STYLE)
-    Call SetWindowLong(hwnd, GWL_STYLE, lngStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX)
+    hWnd = FindWindow("ThunderDFrame", Me.Caption)
+    lngStyle = GetWindowLong(hWnd, GWL_STYLE)
+    Call SetWindowLong(hWnd, GWL_STYLE, lngStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX)
 
 '    '********************************************
 '    'サブクラス化してマウスホイールを有効にする
@@ -154,12 +154,12 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     '×ボタンでフォームを閉じる時、フォームを破棄させない
     If CloseMode = vbFormControlMenu Then
         Cancel = True
-        blnZoomed = IsZoomed(hwnd)
+        blnZoomed = IsZoomed(hWnd)
         Me.Hide
     End If
     
     'ウィンドウのサイズを元に戻す
-    Call ShowWindow(hwnd, SW_SHOWNORMAL)
+    Call ShowWindow(hWnd, SW_SHOWNORMAL)
 End Sub
 '*****************************************************************************
 '[イベント]　cmdOK_Click
@@ -189,10 +189,10 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Call objNewSelection.Select
 ErrHandle:
-    blnZoomed = IsZoomed(hwnd)
+    blnZoomed = IsZoomed(hWnd)
     Me.Hide
     'ウィンドウのサイズを元に戻す
-    Call ShowWindow(hwnd, SW_SHOWNORMAL)
+    Call ShowWindow(hWnd, SW_SHOWNORMAL)
 End Sub
 
 '*****************************************************************************
@@ -200,10 +200,10 @@ End Sub
 '[ 概  要 ]　キャンセルボタン押下時
 '*****************************************************************************
 Private Sub cmdCancel_Click()
-    blnZoomed = IsZoomed(hwnd)
+    blnZoomed = IsZoomed(hWnd)
     Me.Hide
     'ウィンドウのサイズを元に戻す
-    Call ShowWindow(hwnd, SW_SHOWNORMAL)
+    Call ShowWindow(hWnd, SW_SHOWNORMAL)
 End Sub
 
 '*****************************************************************************
@@ -212,7 +212,7 @@ End Sub
 '*****************************************************************************
 Private Sub SpbSize_Change()
     txtSize.Text = CStr(SpbSize.Value)
-    txtEdit.Font.size = SpbSize.Value
+    txtEdit.Font.Size = SpbSize.Value
 End Sub
 
 '*****************************************************************************
@@ -339,7 +339,7 @@ End Sub
 '*****************************************************************************
 Private Sub imgGrip_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     Call ReleaseCapture
-    Call SendMessage(hwnd, WM_SYSCOMMAND, SC_SIZE Or 8, 0)
+    Call SendMessage(hWnd, WM_SYSCOMMAND, SC_SIZE Or 8, 0)
 End Sub
 
 '*****************************************************************************
@@ -423,7 +423,7 @@ End Property
 Public Property Let Zoomed(ByVal Value As Boolean)
     'ウィンドウサイズを最大化する
     If ActiveCell.HasFormula = False And Value = True Then
-        Call ShowWindow(hwnd, SW_MAXIMIZE)
+        Call ShowWindow(hWnd, SW_MAXIMIZE)
         Me.Hide
     End If
 End Property

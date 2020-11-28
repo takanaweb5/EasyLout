@@ -90,7 +90,12 @@ Private Sub UserForm_Initialize()
         With .Add()
             .BeginGroup = True
             .FaceId = 550
-            .Caption = "˜gü‚É‡‚¹‚é(&G)"
+            .Caption = "l•û‚ğ˜gü‚É‡‚¹‚é(&G)"
+        End With
+        With .Add()
+            .BeginGroup = False
+            .FaceId = 573
+            .Caption = "¶ã‚ğ˜gü‚ÉˆÚ“®‚·‚é(&V)"
         End With
     End With
 
@@ -548,7 +553,9 @@ On Error GoTo ErrHandle
         Case 12
             Call DistributeShapesHeight(objShapeRange)
         Case 13
-            Call FitShapesGrid(objShapeRange)
+            Call FitShapesGrid(objShapeRange, True)
+        Case 14
+            Call FitShapesGrid(objShapeRange, False)
         End Select
     End With
 ErrHandle:

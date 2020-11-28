@@ -25,6 +25,7 @@ End Type
 'Private blnCheck As Boolean
 
 Private FEnableEvents As Boolean
+Private FMove As Boolean
 Private FBlockCount As Long
 Private FWidthRatio() As Double
 Private FBackupDstColWidth() As Double
@@ -41,9 +42,12 @@ Private lngZoom      As Long
 '[概要] 初期設定情報を設定
 '[引数] objFromRange:コピー元の領域
 '       objToRange:貼付け先のセル
+'       blnMove:True=移動する
 '[戻値] なし
 '*****************************************************************************
-Public Sub Initialize(ByRef objFromRange As Range, ByRef objToRange As Range)
+Public Sub Initialize(ByRef objFromRange As Range, ByRef objToRange As Range, ByVal blnMove As Boolean)
+    chkIgnore.ControlTipText = "通常は､デフォルトのまま実行ください(コピー元をEXCEL方眼と判定した時にチェックされます)"
+    FMove = blnMove
     
     lngDisplayObjects = ActiveWorkbook.DisplayDrawingObjects
     FEnableEvents = False
@@ -89,11 +93,11 @@ Private Sub MakeTextBox()
             .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
             .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
             .Name = ActiveWorkbook.Styles("Normal").Font.Name
-            .size = ActiveWorkbook.Styles("Normal").Font.size
+            .Size = ActiveWorkbook.Styles("Normal").Font.Size
         End With
         With objTextbox(FBlockCount + 1).TextFrame2.TextRange.Font.Fill
             .Visible = msoTrue
-            .ForeColor.RGB = RGB(255, 0, 0) '赤
+            .ForeColor.Rgb = Rgb(255, 0, 0) '赤
             .Transparency = 0
         End With
         'テキストボックスの罫線なし
@@ -119,11 +123,11 @@ Private Sub MakeTextBox()
             .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
             .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
             .Name = ActiveWorkbook.Styles("Normal").Font.Name
-            .size = ActiveWorkbook.Styles("Normal").Font.size
+            .Size = ActiveWorkbook.Styles("Normal").Font.Size
         End With
         With objTextbox(i).TextFrame2.TextRange.Font.Fill
             .Visible = msoTrue
-            .ForeColor.RGB = RGB(0, 0, 0)
+            .ForeColor.Rgb = Rgb(0, 0, 0)
             .Transparency = 0
         End With
         With objTextbox(i).TextFrame2
@@ -136,12 +140,12 @@ Private Sub MakeTextBox()
             .MarginBottom = 0
         End With
         With objTextbox(i).Fill
-            .ForeColor.RGB = RGB(218, 231, 245)
+            .ForeColor.Rgb = Rgb(218, 231, 245)
             .Transparency = 0
         End With
         With objTextbox(i).Line
             .Visible = msoTrue
-            .ForeColor.RGB = RGB(0, 0, 0)
+            .ForeColor.Rgb = Rgb(0, 0, 0)
             .Weight = 0.75
             .Transparency = 0
         End With
@@ -162,7 +166,7 @@ Private Sub MakeTextBox()
         .Transparency = 0#
         .Visible = msoTrue
         .ForeColor.SchemeColor = 64
-        .BackColor.RGB = RGB(255, 255, 255)
+        .BackColor.Rgb = Rgb(255, 255, 255)
         .Pattern = msoPattern50Percent
     End With
     
@@ -437,7 +441,7 @@ Private Sub SplitCol(ByRef objRange As Range, ByVal SplitCount As Long)
     Dim i As Long
     
     '選択列の右側に1列挿入
-    Call objRange.Columns(2).Insert
+    Call objRange.Columns(2).Insert(xlShiftToRight, xlFormatFromLeftOrAbove)
     
     '新しい列
     Set objNewCol = objRange.Columns(2)
@@ -490,6 +494,10 @@ End Sub
 '*****************************************************************************
 Private Sub chkIgnore_Click()
     If Not FEnableEvents Then Exit Sub
+    
+    If chkWidth.Value Then
+        chkWidth.Value = False
+    End If
     
     Dim i As Long
     For i = LBound(objTextbox) To UBound(objTextbox)
@@ -607,7 +615,11 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元の状態を保存する
-    Call SaveUndoInfo(E_CopyCell, FDstRange)
+    If FMove Then
+        Call SaveUndoInfo(E_CopyCell, FSrcRange)
+    Else
+        Call SaveUndoInfo(E_CopyCell, FDstRange)
+    End If
 
     '幅を再復元する
     If chkWidth.Value Then
@@ -675,6 +687,15 @@ Private Sub CopyCell()
     '領域をワークシートにコピーする
     Set objWkRange = CopyToWkSheet()
 
+    '移動時はコピー元をクリアする
+    If FMove Then
+        With FSrcRange
+            .ClearContents
+            .UnMerge
+            .Borders.LineStyle = xlNone
+        End With
+    End If
+    
     Dim objRange As Range
     Dim lngOffset As Long
     lngOffset = FDstRange.Column - FSrcRange.Column
@@ -848,9 +869,11 @@ On Error GoTo ErrHandle
     If CheckBorder() = True Then
         Call Err.Raise(C_CheckErrMsg, , "結合されたセルの一部を変更することはできません")
     End If
-    With objTextbox(FBlockCount + 1).TextFrame.Characters
-        .Text = ""
-    End With
+    If FDstRange.Rows.Count > 1 And chkWidth.Value = False Then
+        With objTextbox(FBlockCount + 1).TextFrame.Characters
+            .Text = ""
+        End With
+    End If
     cmdOK.Enabled = True  'OKボタンを使用可にする
 Exit Sub
 ErrHandle:
@@ -873,7 +896,11 @@ End Sub
 '*****************************************************************************
 Private Function CheckBorder() As Boolean
     Dim objChkRange As Range
-    Set objChkRange = MinusRange(ArrangeRange(FDstRange), FDstRange)
+    If FMove Then
+        Set objChkRange = MinusRange(ArrangeRange(FDstRange), UnionRange(FSrcRange, FDstRange))
+    Else
+        Set objChkRange = MinusRange(ArrangeRange(FDstRange), FDstRange)
+    End If
     CheckBorder = Not (objChkRange Is Nothing)
 End Function
 

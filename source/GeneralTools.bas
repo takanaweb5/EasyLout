@@ -2,13 +2,13 @@ Attribute VB_Name = "GeneralTools"
 Option Explicit
 Option Private Module
 
-Public Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
-Public Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As Long
-Public Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-Public Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal nCmdShow As Long) As Long
-Public Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
-Public Declare PtrSafe Function IsZoomed Lib "user32" (ByVal hwnd As LongPtr) As Long
-Public Declare PtrSafe Function GetSystemMenu Lib "user32" (ByVal hwnd As LongPtr, ByVal bRevert As Long) As LongPtr
+Public Declare PtrSafe Sub Sleep Lib "Kernel32" (ByVal dwMilliseconds As Long)
+Public Declare PtrSafe Function GetWindowLong Lib "User32" Alias "GetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function SetWindowLong Lib "User32" Alias "SetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Public Declare PtrSafe Function ShowWindow Lib "User32" (ByVal hWnd As LongPtr, ByVal nCmdShow As Long) As Long
+Public Declare PtrSafe Function FindWindow Lib "User32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
+Public Declare PtrSafe Function IsZoomed Lib "User32" (ByVal hWnd As LongPtr) As Long
+Public Declare PtrSafe Function GetSystemMenu Lib "User32" (ByVal hWnd As LongPtr, ByVal bRevert As Long) As LongPtr
 Public Declare PtrSafe Function EnableMenuItem Lib "user32.dll" (ByVal hMenu As LongPtr, ByVal uIDEnableItem As Long, ByVal uEnable As Long) As Long
 Public Declare PtrSafe Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As LongPtr
 Public Declare PtrSafe Function GetExitCodeProcess Lib "kernel32.dll" (ByVal hProcess As LongPtr, lpExitCode As Long) As Long
@@ -16,29 +16,29 @@ Public Declare PtrSafe Function GetExitCodeProcess Lib "kernel32.dll" (ByVal hPr
 'Public Declare PtrSafe Function TerminateProcess Lib "KERNEL32.DLL" (ByVal hProcess As Longptr, ByVal uExitCode As Long) As Long
 Public Declare PtrSafe Function LoadCursor Lib "user32.dll" Alias "LoadCursorA" (ByVal hInstance As LongPtr, ByVal lpCursorName As Long) As LongPtr
 Public Declare PtrSafe Function SetCursor Lib "user32.dll" (ByVal hCursor As LongPtr) As LongPtr
-Public Declare PtrSafe Function GetKeyState Lib "user32" (ByVal lngVirtKey As Long) As Integer
+Public Declare PtrSafe Function GetKeyState Lib "User32" (ByVal lngVirtKey As Long) As Integer
 'Public Declare PtrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Longptr, ByVal hwnd As Longptr, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As LongPtr, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As LongPtr) As LongPtr
+Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hWnd As LongPtr, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hWnd As LongPtr) As LongPtr
 Public Declare PtrSafe Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As LongPtr, ByVal b As Long) As Long
-Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As LongPtr, ByVal himc As LongPtr) As Long
+Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hWnd As LongPtr, ByVal himc As LongPtr) As Long
 Public Declare PtrSafe Function ReleaseCapture Lib "user32.dll" () As Long
-Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
-Public Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As Long
-Public Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
-Public Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As LongPtr) As Long
-Public Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
-Public Declare PtrSafe Function IsClipboardFormatAvailable Lib "user32" (ByVal wFormat As Long) As Long
-Public Declare PtrSafe Function RegisterClipboardFormat Lib "user32" Alias "RegisterClipboardFormatA" (ByVal lpString As String) As Long
-Public Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
-Public Declare PtrSafe Function SetClipboardData Lib "user32" (ByVal wFormat As Long, ByVal hMem As LongPtr) As Long
-Public Declare PtrSafe Function GetClipboardData Lib "user32" (ByVal wFormat As Long) As LongPtr
-Public Declare PtrSafe Function GlobalAlloc Lib "kernel32" (ByVal uFlags As Long, ByVal dwBytes As Long) As LongPtr
-Public Declare PtrSafe Function GlobalFree Lib "kernel32" (ByVal hMem As Long) As Long
-Public Declare PtrSafe Function GlobalSize Lib "kernel32" (ByVal hMem As LongPtr) As Long
-Public Declare PtrSafe Function GlobalLock Lib "kernel32" (ByVal hMem As LongPtr) As LongPtr
-Public Declare PtrSafe Function GlobalUnlock Lib "kernel32" (ByVal hMem As LongPtr) As Long
-Public Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As LongPtr)
+Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDc As LongPtr, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function GetDC Lib "User32" (ByVal hWnd As LongPtr) As Long
+Public Declare PtrSafe Function ReleaseDC Lib "User32" (ByVal hWnd As LongPtr, ByVal hDc As LongPtr) As Long
+Public Declare PtrSafe Function OpenClipboard Lib "User32" (ByVal hWnd As LongPtr) As Long
+Public Declare PtrSafe Function CloseClipboard Lib "User32" () As Long
+Public Declare PtrSafe Function IsClipboardFormatAvailable Lib "User32" (ByVal wFormat As Long) As Long
+Public Declare PtrSafe Function RegisterClipboardFormat Lib "User32" Alias "RegisterClipboardFormatA" (ByVal lpString As String) As Long
+Public Declare PtrSafe Function EmptyClipboard Lib "User32" () As Long
+Public Declare PtrSafe Function SetClipboardData Lib "User32" (ByVal wFormat As Long, ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Function GetClipboardData Lib "User32" (ByVal wFormat As Long) As LongPtr
+Public Declare PtrSafe Function GlobalAlloc Lib "Kernel32" (ByVal uFlags As Long, ByVal dwBytes As Long) As LongPtr
+Public Declare PtrSafe Function GlobalFree Lib "Kernel32" (ByVal hMem As Long) As Long
+Public Declare PtrSafe Function GlobalSize Lib "Kernel32" (ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Function GlobalLock Lib "Kernel32" (ByVal hMem As LongPtr) As LongPtr
+Public Declare PtrSafe Function GlobalUnlock Lib "Kernel32" (ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Sub CopyMemory Lib "Kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As LongPtr)
 
 ' 定数の定義
 Public Const IDC_HAND = 32649
@@ -66,6 +66,7 @@ Public Const LOGPIXELSX = 88
 Public Const LOGPIXELSY = 90
 
 Public Const REGKEY = "EasyLout "
+Public Const DEFAULTFONT = "ＭＳ ゴシック"
 
 'Public DPIRatio As Double
 
@@ -178,12 +179,12 @@ Public Function GetCellText(ByRef objCell As Range) As String
 On Error GoTo ErrHandle
     Select Case objCell.NumberFormat
     Case "General", "@"
-        GetCellText = RTrim$(objCell.Value)
+        GetCellText = Rtrim$(objCell.Value)
         Exit Function
     End Select
                 
     If objCell.Text <> WorksheetFunction.Rept("#", Len(objCell.Text)) Then
-        GetCellText = RTrim$(objCell.Text)
+        GetCellText = Rtrim$(objCell.Text)
         Exit Function
     End If
 
@@ -197,7 +198,7 @@ On Error GoTo ErrHandle
         Exit Function
     End If
 ErrHandle:
-    GetCellText = RTrim$(objCell.Value)
+    GetCellText = Rtrim$(objCell.Value)
 End Function
 
 '*****************************************************************************
@@ -763,7 +764,7 @@ Public Function StrConvert(ByVal strText As String, ByVal strCommand As String) 
     Case "Trim" '前後の空白を削除
         StrConvert = Trim(StrConvert)
     Case "RTrim" '末尾の空白を削除
-        StrConvert = RTrim(StrConvert)
+        StrConvert = Rtrim(StrConvert)
     End Select
 End Function
 
@@ -1025,11 +1026,11 @@ End Sub
 Public Sub SetIMEOff()
 On Error GoTo ErrHandle
     Dim hIME As LongPtr
-    hIME = ImmGetContext(Application.hwnd)
+    hIME = ImmGetContext(Application.hWnd)
     Call ImmSetOpenStatus(hIME, 0)
 ErrHandle:
     If hIME <> 0 Then
-        Call ImmReleaseContext(Application.hwnd, hIME)
+        Call ImmReleaseContext(Application.hWnd, hIME)
     End If
 End Sub
 
@@ -1069,24 +1070,24 @@ Public Function GetCopyRange() As Range
     End If
      
 On Error GoTo ErrHandle
-    Dim size As Long
+    Dim Size As Long
     Dim p As LongPtr
-    size = GlobalSize(hMem)
+    Size = GlobalSize(hMem)
     p = GlobalLock(hMem)
-    ReDim Data(1 To size) As Byte
-    Call CopyMemory(Data(1), ByVal p, size)
+    ReDim data(1 To Size) As Byte
+    Call CopyMemory(data(1), ByVal p, Size)
     Call GlobalUnlock(hMem)
     Call CloseClipboard
     hMem = 0
     
     Dim strData As String
     Dim i As Long
-    For i = 1 To size
-        If Data(i) = 0 Then
-            Data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
+    For i = 1 To Size
+        If data(i) = 0 Then
+            data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
         End If
     Next i
-    strData = StrConv(Data, vbUnicode)
+    strData = StrConv(data, vbUnicode)
     
     Dim objRegExp As Object
     Set objRegExp = CreateObject("VBScript.RegExp")
@@ -1140,4 +1141,34 @@ Public Function GetUndoStr() As String
     End With
 End Function
 
+'*****************************************************************************
+'[概要] 255字以上のアドレスでも取得できるようにする
+'[引数] Range
+'[戻値] 255字以上に対応したアドレス
+'*****************************************************************************
+Public Function GetAddress(ByRef objAreas As Range) As String
+    Dim objRange As Range
+    For Each objRange In objAreas.Areas
+        If GetAddress = "" Then
+            GetAddress = objRange.Address(0, 0)
+        Else
+            GetAddress = GetAddress & "," & objRange.Address(0, 0)
+        End If
+    Next
+End Function
+
+'*****************************************************************************
+'[概要] 255字以上に対応したアドレスのRangeを取得
+'[引数] 255字以上に対応したアドレス
+'[戻値] Range
+'*****************************************************************************
+Public Function GetRange(ByVal strAddress As String) As Range
+    Dim AddressList As Variant
+    AddressList = Split(strAddress, ",")
+    Set GetRange = Range(AddressList(0))
+    Dim i As Long
+    For i = 1 To UBound(AddressList)
+        Set GetRange = UnionRange(GetRange, Range(AddressList(i)))
+    Next
+End Function
 

@@ -2,13 +2,15 @@ Attribute VB_Name = "Organize"
 Option Explicit
 Option Private Module
 
+Private FCount As Long
+
 '*****************************************************************************
 '[概要] 標準フォントの変更
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
 Private Sub ChangeNormalFont()
-    ActiveWorkbook.Styles("Normal").Font.Name = "ＭＳ ゴシック"
+    ActiveWorkbook.Styles("Normal").Font.Name = GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT)
 End Sub
 
 '*****************************************************************************
@@ -109,14 +111,6 @@ Private Sub SelectErrFormula()
 End Sub
 
 '*****************************************************************************
-'[概要] 条件付き書式が同一のものを統合
-'[引数] なし
-'[戻値] なし
-'*****************************************************************************
-Private Sub MergeFormatConditions()
-    Call MsgBox("MergeFormatConditions 工事中")
-End Sub
-'*****************************************************************************
 '[概要] 数式がエラーになっている条件付き書式を削除
 '[引数] なし
 '[戻値] なし
@@ -124,6 +118,7 @@ End Sub
 Private Sub DeleteErrFormatConditions()
     Call MsgBox("DeleteErrFormatConditions 工事中")
 End Sub
+
 '*****************************************************************************
 '[概要] ユーザ定義スタイルをすべて削除
 '[引数] なし
@@ -131,26 +126,37 @@ End Sub
 '*****************************************************************************
 Private Sub DeleteUserStyles()
     '件数のカウント
-    Dim lngCnt As Long
     Dim objStyle  As Style
+    FCount = 0
     For Each objStyle In ActiveWorkbook.Styles
         If objStyle.BuiltIn = False Then
-            lngCnt = lngCnt + 1
+            FCount = FCount + 1
         End If
     Next
-    If lngCnt = 0 Then
+    If FCount = 0 Then
         Call MsgBox("ユーザ定義のスタイルはありません")
         Exit Sub
     End If
 
+    'ホームタブ(スタイル)を表示させる
+    Call GetRibbonUI.ActivateTabMso("TabHome")
+    
+    'タブを切り替えるため、タイマーを使用
+    Call Application.OnTime(Now(), "DeleteUserStyles2")
+End Sub
+Private Sub DeleteUserStyles2()
+    DoEvents
+    
     Dim strMsg As String
-    strMsg = lngCnt & " 件 のユーザ定義スタイルが見つかりました" & vbLf
+    strMsg = FCount & " 件 のユーザ定義スタイルが見つかりました" & vbLf
     strMsg = strMsg & "削除しますか？"
     Select Case MsgBox(strMsg, vbYesNo)
     Case vbYes
         Call DeleteStyles(ActiveWorkbook)
     End Select
 End Sub
+
+
 '*****************************************************************************
 '[概要] ユーザ定義の名前をすべて削除
 '[引数] なし
@@ -166,7 +172,8 @@ Private Sub DeleteNameObjects()
         Case xlFunction, xlCommand, xlNotXLM
         Case Else
             If (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
-               (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") Then
+               (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") And _
+               objName.Visible Then
                 lngCnt = lngCnt + 1
             End If
         End Select
@@ -388,7 +395,8 @@ Private Sub DeleteNames(ByRef objWorkbook As Workbook)
         Case xlFunction, xlCommand, xlNotXLM
         Case Else
             If (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
-               (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") Then
+               (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") And _
+               objName.Visible Then
                 Call objName.Delete
             End If
         End Select

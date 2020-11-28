@@ -3,17 +3,17 @@ Option Explicit
 Option Private Module
 
 Private Type PICTDESC_BMP
-    size    As Long
+    Size    As Long
     Type    As Long
     hBitmap As LongPtr
     hPal    As LongPtr
 End Type
 
 Private Type Guid
-    Data1 As Long
-    Data2 As Integer
-    Data3 As Integer
-    Data4(7) As Byte
+    data1 As Long
+    data2 As Integer
+    data3 As Integer
+    data4(7) As Byte
 End Type
 
 Private Declare PtrSafe Function CreateStreamOnHGlobal Lib "ole32" (ByVal hGlobal As LongPtr, ByVal fDeleteOnRelease As Long, ppstm As Any) As Long
@@ -85,10 +85,10 @@ Sub loadImage(imageID As String, ByRef returnedVal)
   returnedVal = imageID
 End Sub
 
-''*****************************************************************************
-''[イベント] getVisible
-''*****************************************************************************
-Sub getVisible(control As IRibbonControl, ByRef returnedVal)
+'*****************************************************************************
+'[イベント] getVisible
+'*****************************************************************************
+Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
 '    returnedVal = (GetValue(control.Id, "Visible") = 1)
     returnedVal = True
 End Sub
@@ -96,93 +96,137 @@ End Sub
 '*****************************************************************************
 '[イベント] getEnabled
 '*****************************************************************************
-Sub getEnabled(control As IRibbonControl, ByRef returnedVal)
-    Select Case control.Id
+Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
+    Select Case Control.ID
     Case "B311", "B312"
         returnedVal = (CheckSelection() = E_Shape)
     Case "B313", "B314", "B315", "B316"
         returnedVal = CommandBars.GetEnabledMso("ObjectsAlignTop")
+    Case "B321" 'セルをテキストボックスに変換
+        returnedVal = (CheckSelection() = E_Range)
+    Case "B322" 'テキストボックスをセルに変換
+        returnedVal = (CheckSelection() = E_Shape)
+    Case "B323" 'コメントをテキストボックスに変換
+        returnedVal = IsCommnetSelect
+    Case "B324" 'テキストボックスをコメントに戻す
+        returnedVal = IsSelectCommentTextbox
+    Case "B325" 'コメントを入力規則に変換
+        returnedVal = IsCommnetSelect
+    Case "B326" '入力規則をコメントに変換
+        returnedVal = Not (GetInputRules(True) Is Nothing)
     Case Else
-      returnedVal = True
+        returnedVal = True
     End Select
 End Sub
 
 '*****************************************************************************
+'[概要] コメントが選択されているかどうか
+'[引数] なし
+'[戻値] True:コメントが選択されている
+'*****************************************************************************
+Private Function IsCommnetSelect() As Boolean
+    Select Case CheckSelection()
+    Case E_Range
+        IsCommnetSelect = Not (GetComments Is Nothing)
+    Case E_Shape
+        IsCommnetSelect = (Selection.ShapeRange.Type = msoComment)
+    End Select
+End Function
+
+'*****************************************************************************
 '[イベント] getShowLabel
 '*****************************************************************************
-Sub getShowLabel(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = (GetValue(control.Id, "ShowLabel") = 1)
+Sub getShowLabel(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = (GetValue(Control.ID, "ShowLabel") = 1)
 End Sub
 
 '*****************************************************************************
 '[イベント] getLabel
 '*****************************************************************************
-Sub getLabel(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = GetValue(control.Id, "Label")
+Sub getLabel(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = GetValue(Control.ID, "Label")
+    
+    Select Case Control.ID
+    Case "B5311"
+        returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
+    End Select
 End Sub
 
 '*****************************************************************************
 '[イベント] getScreentip
 '*****************************************************************************
-Sub getScreentip(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = GetValue(control.Id, "Screentip")
+Sub getScreentip(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = GetValue(Control.ID, "Screentip")
+    
+    Select Case Control.ID
+    Case "B5311"
+        returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
+    End Select
 End Sub
-
 '*****************************************************************************
 '[イベント] getSupertip
 '*****************************************************************************
-Sub getSupertip(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = GetValue(control.Id, "Supertip")
+Sub getSupertip(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = GetValue(Control.ID, "Supertip")
+
+    Select Case Control.ID
+    Case "B5311"
+        returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
+    End Select
 End Sub
 
 '*****************************************************************************
 '[イベント] getShowImage
 '*****************************************************************************
-Sub getShowImage(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = (GetValue(control.Id, "ShowImage") = 1)
+Sub getShowImage(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = (GetValue(Control.ID, "ShowImage") = 1)
 End Sub
 
 '*****************************************************************************
 '[イベント] getImage
 '*****************************************************************************
-Sub getImage(control As IRibbonControl, ByRef returnedVal)
-    Dim str As String
-    str = GetValue(control.Id, "ImageMso")
-    If str <> "" Then
-        returnedVal = str
+Sub getImage(Control As IRibbonControl, ByRef returnedVal)
+    Dim Str As String
+    Str = GetValue(Control.ID, "ImageMso")
+    If Str <> "" Then
+        returnedVal = Str
         Exit Sub
     End If
     
-    str = GetValue(control.Id, "ImageFile")
-    If str <> "" Then
-        Set returnedVal = GetImageFromResource(str)
+    Str = GetValue(Control.ID, "ImageFile")
+    If Str <> "" Then
+        Set returnedVal = GetImageFromResource(Str)
     End If
 End Sub
 
 '*****************************************************************************
 '[イベント] getSize
 '*****************************************************************************
-Sub getSize(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = GetValue(control.Id, "ButtonSize")
+Sub getSize(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = GetValue(Control.ID, "ButtonSize")
 End Sub
 
 '*****************************************************************************
 '[イベント] getContent 動的にメニューを作成する
 '*****************************************************************************
-Sub getContent(control As IRibbonControl, ByRef returnedVal) '
+Sub getContent(Control As IRibbonControl, ByRef returnedVal) '
 On Error Resume Next
-    Select Case control.Id
+    Select Case Control.ID
     Case "M31"
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A1:A21"))
+    Case "M32"
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A23:A32"))
+    Case "M531"
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A34:A38"))
     End Select
 End Sub
 
 '*****************************************************************************
 '[イベント] getPressed
 '*****************************************************************************
-Sub getPressed(control As IRibbonControl, ByRef returnedVal)
+Sub getPressed(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = False
-    Select Case control.Id
+    Select Case Control.ID
     Case "C1"
         On Error Resume Next
         returnedVal = (ActiveWorkbook.DisplayDrawingObjects = xlHide)
@@ -192,20 +236,20 @@ End Sub
 '*****************************************************************************
 '[イベント] onCheckAction
 '*****************************************************************************
-Sub onCheckAction(control As IRibbonControl, pressed As Boolean)
+Sub onCheckAction(Control As IRibbonControl, pressed As Boolean)
     'チェック状態を保存
-    GetTmpControl(control.Id).State = pressed
+    GetTmpControl(Control.ID).State = pressed
     
-    Select Case control.Id
+    Select Case Control.ID
     Case "C1"
         Call HideShapes(pressed)
     End Select
 End Sub
 
 '*****************************************************************************
-'[ 概  要 ]  図形を表示・非表示をトグルさせる
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
+'[概要] 図形を表示・非表示をトグルさせる
+'[引数] なし
+'[戻値] なし
 '*****************************************************************************
 Public Sub ToggleHideShapes()
 On Error GoTo ErrHandle
@@ -220,6 +264,24 @@ End Sub
 '*****************************************************************************
 '[イベント] onAction
 '*****************************************************************************
+Sub onAction(Control As IRibbonControl)
+    Call SetChkBox
+    
+    Dim Param
+    Param = GetValue(Control.ID, "Parameter")
+    On Error Resume Next
+    If Param <> "" Then
+        Call Application.Run(GetValue(Control.ID, "Action"), Param)
+    Else
+        Call Application.Run(GetValue(Control.ID, "Action"))
+    End If
+End Sub
+
+'*****************************************************************************
+'[概要] チェックボックスのチェックを設定する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
 Private Sub SetChkBox()
     If ActiveWorkbook Is Nothing Then
         GetTmpControl("C1").State = False
@@ -230,27 +292,11 @@ Private Sub SetChkBox()
 End Sub
 
 '*****************************************************************************
-'[イベント] onAction
-'*****************************************************************************
-Sub onAction(control As IRibbonControl)
-    Call SetChkBox
-    
-    Dim Param
-    Param = GetValue(control.Id, "Parameter")
-    On Error Resume Next
-    If Param <> "" Then
-        Call Application.Run(GetValue(control.Id, "Action"), Param)
-    Else
-        Call Application.Run(GetValue(control.Id, "Action"))
-    End If
-End Sub
-
-'*****************************************************************************
 '[概要] Commandsシートから該当の値を取得する
 '[引数] コントロールId、項目名
 '[戻値] IPicture
 '*****************************************************************************
-Private Function GetValue(ByVal Id As String, ByVal strCol As String) As Variant
+Private Function GetValue(ByVal ID As String, ByVal strCol As String) As Variant
     Dim x As Long
     Dim y As Long
     
@@ -266,7 +312,7 @@ Private Function GetValue(ByVal Id As String, ByVal strCol As String) As Variant
         If vValues(1, x) = strCol Then
             '行数LOOP
             For y = 2 To UBound(vValues, 1)
-                If vValues(y, 3) = Id Then
+                If vValues(y, 3) = ID Then
                     GetValue = vValues(y, x)
                     Exit Function
                 End If
@@ -337,14 +383,14 @@ End Function
 '*****************************************************************************
 Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     'ファイルサイズの配列を作成
-    ReDim Data(1 To objRow.Cells(1, 1).End(xlToRight).Column - 1) As Byte
+    ReDim data(1 To objRow.Cells(1, 1).End(xlToRight).Column - 1) As Byte
     Dim x As Long
-    For x = 1 To UBound(Data)
-         Data(x) = objRow.Cells(1, x + 1)
+    For x = 1 To UBound(data)
+         data(x) = objRow.Cells(1, x + 1)
     Next
     
     Dim Stream As IUnknown
-    If CreateStreamOnHGlobal(VarPtr(Data(1)), 0, Stream) <> 0 Then
+    If CreateStreamOnHGlobal(VarPtr(data(1)), 0, Stream) <> 0 Then
         Call Err.Raise(513, "CreateStreamOnHGlobalエラー")
     End If
 
@@ -353,7 +399,7 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     
     Dim uPicInfo As PICTDESC_BMP
     With uPicInfo
-        .size = Len(uPicInfo)
+        .Size = Len(uPicInfo)
         .Type = PICTYPE_BITMAP
         .hBitmap = Gdip.ToHBITMAP
         .hPal = 0
@@ -371,26 +417,14 @@ End Function
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
-Public Sub InvalidateRibbon()
-    Call GetRibbonUI.Invalidate
-End Sub
-
-Public Sub ToggleAddin()
-    ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
-End Sub
-
-Public Sub SaveAddin()
-    Call ThisWorkbook.Save
-End Sub
-
-Sub onAction2(control As IRibbonControl)
-    Select Case control.Id
+Sub onAction2(Control As IRibbonControl)
+    Select Case Control.ID
     Case "Bdmy1"
-        Call InvalidateRibbon
+        Call GetRibbonUI.Invalidate
     Case "Bdmy2"
-        Call ToggleAddin
+        ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
     Case "Bdmy3"
-        Call SaveAddin
+        Call ThisWorkbook.Save
     End Select
 End Sub
 

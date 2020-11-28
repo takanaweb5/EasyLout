@@ -32,7 +32,7 @@ Private Enum EDirection
 End Enum
 
 Private Type TShape
-    Id          As Long
+    ID          As Long
     TopRow      As Long
     Top         As Double
     LeftColumn  As Long
@@ -100,7 +100,7 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
         .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
         .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
         .Name = ActiveWorkbook.Styles("Normal").Font.Name
-        .size = ActiveWorkbook.Styles("Normal").Font.size
+        .Size = ActiveWorkbook.Styles("Normal").Font.Size
     End With
     'テキストボックスの背景を変更
     With objTextbox.Fill
@@ -117,7 +117,7 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
         .Transparency = 0#
         .Visible = msoTrue
         .ForeColor.SchemeColor = 64
-        .BackColor.RGB = RGB(255, 255, 255)
+        .BackColor.Rgb = Rgb(255, 255, 255)
         .Pattern = msoPattern50Percent
     End With
     
@@ -587,7 +587,7 @@ Private Function SelectShapes(ByRef objRange As Range) As ShapeRange
            udtRange.Top <= udtShape.Top And _
            udtShape.Top + udtShape.Height <= udtRange.Top + udtRange.Height Then
             i = i + 1
-            lngIDArray(i) = objShape.Id
+            lngIDArray(i) = objShape.ID
         End If
     Next objShape
 
@@ -613,7 +613,7 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
     For Each objShape In objShapes
         With objShape
             i = i + 1
-            udtShapes(i).Id = .Id
+            udtShapes(i).ID = .ID
             udtShapes(i).Placement = .Placement
             udtShapes(i).TopRow = .TopLeftCell.Row - objFromRange.Row + 1
             udtShapes(i).LeftColumn = .TopLeftCell.Column - objFromRange.Column + 1
@@ -630,10 +630,10 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
         If udtShapes(i).Placement <> xlFreeFloating Then
             If blnCopy Then
                 '複写する
-                Call SetRect(GetShapeFromID(udtShapes(i).Id).Duplicate, objToRange, udtShapes(i))
+                Call SetRect(GetShapeFromID(udtShapes(i).ID).Duplicate, objToRange, udtShapes(i))
             Else
                 '移動する
-                Call SetRect(GetShapeFromID(udtShapes(i).Id), objToRange, udtShapes(i))
+                Call SetRect(GetShapeFromID(udtShapes(i).ID), objToRange, udtShapes(i))
             End If
         End If
     Next i

@@ -4,7 +4,7 @@ Option Private Module
 
 Private Type TFont  '標準スタイルのフォントの情報
     Name        As String
-    size        As Long
+    Size        As Long
     Bold        As Boolean
     Italic      As Boolean
 End Type
@@ -1671,13 +1671,13 @@ On Error GoTo ErrHandle
     
     '標準スタイルのフォントが変更されたか判定
     With ActiveWorkbook.Styles("Normal").Font
-        If udtFont.Name = .Name And udtFont.size = .size And _
+        If udtFont.Name = .Name And udtFont.Size = .Size And _
            udtFont.Bold = .Bold And udtFont.Italic = .Italic Then
             Exit Sub
         Else
             'フォント情報を保存する
             udtFont.Name = .Name
-            udtFont.size = .size
+            udtFont.Size = .Size
             udtFont.Bold = .Bold
             udtFont.Italic = .Italic
         End If
@@ -1694,8 +1694,8 @@ On Error GoTo ErrHandle
         If .Name <> udtFont.Name Then
             .Name = udtFont.Name
         End If
-        If .size <> udtFont.size Then
-            .size = udtFont.size
+        If .Size <> udtFont.Size Then
+            .Size = udtFont.Size
         End If
         If .Bold <> udtFont.Bold Then
             .Bold = udtFont.Bold

@@ -1467,7 +1467,7 @@ On Error GoTo ErrHandle
     Call DeleteSheet(objWorksheet)
     With objWorksheet
         .Columns.ColumnWidth = 255
-        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.size = 1
+        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.Size = 1
         Call objSelection.Copy(.Cells(1, 1))
     End With
     

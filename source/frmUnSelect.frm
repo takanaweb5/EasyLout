@@ -236,7 +236,7 @@ End Sub
 '[ 概  要 ]　前回の領域の復元ボタン押下時
 '*****************************************************************************
 Private Sub cmdLastSelect_Click()
-    Call Range(strLastAddress).Select
+    Call GetRange(strLastAddress).Select
 End Sub
 
 '*****************************************************************************

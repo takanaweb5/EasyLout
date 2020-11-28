@@ -18,6 +18,7 @@ Public Enum EUndoType  'アンドゥタイプ
     E_MoveCell    '領域の移動
     E_CopyCell    '領域のコピー
     E_PasteValue  '値の貼り付け
+    E_ApplyFormat '書式の反映
     E_MergeCell   'セルの結合
     E_EraseCol    '列の消去
     E_EraseRow    '行の消去
@@ -25,6 +26,10 @@ Public Enum EUndoType  'アンドゥタイプ
     E_SplitRow    '列の分割
     E_CellToText  'セルをテキストボックスに変換
     E_TextToCell  'テキストボックスをセルに変換
+    E_CommentToRule 'コメントを入力規則に変換
+    E_CommentToText 'コメントをテキストボックスに変換
+    E_TextToComment 'テキストボックスをコメントに変換
+    E_RuleToComment '入力規則をコメントに変換
     E_ShapeSize   '図形のサイズ変更
     E_ShapeSize2  '図形のサイズ変更
     E_CellValue   'セルの値の変更
@@ -34,7 +39,7 @@ End Enum
 
 Private Type TShapes  'Shape(Comment以外)
     Type     As Long
-    Id       As Long
+    ID       As Long
     Name     As String
     Top      As Double
     Height   As Double
@@ -56,7 +61,7 @@ End Type
 
 Private Type TRangeSize  '幅か高さ
     Address  As String
-    size     As Double 'Width or Height
+    Size     As Double 'Width or Height
 End Type
 
 Private Type TUndoInfo  'Undo情報
@@ -181,7 +186,7 @@ On Error GoTo ErrHandle
         Call BackupSheet(ActiveSheet)
         'コメントの位置･サイズを保存
         Call BackupComment
-    Case E_MergeCell, E_CellBorder
+    Case E_MergeCell, E_CellBorder, E_CommentToRule, E_RuleToComment
         udtUndoInfo(bytNo).SelectCell = objObject.Address
         '変更前のセルを保存
         Call BackupSheet(ActiveSheet)
@@ -193,15 +198,23 @@ On Error GoTo ErrHandle
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
         Call BackupSheet(ActiveSheet)
-    Case E_TextToCell
+    Case E_TextToCell, E_TextToComment
         '変更前のセルを保存
         Call BackupSheet(ActiveSheet)
         'テキストボックスを保存
         Call BackupTextbox(objObject)
+    Case E_CommentToText
+        udtUndoInfo(bytNo).SelectCell = objObject.Address
+        '図形の名前を保存(追加されたテキストボックスを削除出来るように)
+        Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
+        '変更前のセルを保存
+        Call BackupSheet(ActiveSheet)
+        'コメントの位置･サイズを保存
+        Call BackupComment
     Case E_ShapeSize, E_ShapeSize2
         '図形の位置･サイズを保存
         Call BackupShapeSize(objObject)
-    Case E_CellValue, E_PasteValue
+    Case E_CellValue, E_PasteValue, E_ApplyFormat
         udtUndoInfo(bytNo).SelectCell = objObject.Address
         'セルを保存
         Call BackupSheet(ActiveSheet)
@@ -239,7 +252,7 @@ On Error GoTo ErrHandle
         '図形の数だけループ
         For i = 1 To objObject.Count
             With udtUndoInfo(bytNo)
-                If .SelectShapes(i) <> objObject(i).Id Then
+                If .SelectShapes(i) <> objObject(i).ID Then
                     Exit Function
                 End If
             End With
@@ -375,9 +388,9 @@ Private Sub BackupRangeSize(ByRef colSelection As Variant)
             .RangeSize(i).Address = colSelection(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
-                .RangeSize(i).size = Range(colSelection(i)).Columns(1).ColumnWidth
+                .RangeSize(i).Size = Range(colSelection(i)).Columns(1).ColumnWidth
             Case E_SplitRow, E_EraseRow, E_RowSize, E_RowSize2
-                .RangeSize(i).size = Range(colSelection(i)).Rows(1).RowHeight
+                .RangeSize(i).Size = Range(colSelection(i)).Rows(1).RowHeight
             End Select
         Next i
         .RangeCount = colSelection.Count
@@ -414,8 +427,8 @@ Private Sub BackupShapeSize(ByRef objSelection As ShapeRange)
         With objSelection(j)
             If .Type <> msoComment Then
                 i = i + 1
-                udtUndoInfo(bytNo).SelectShapes(i) = .Id
-                udtUndoInfo(bytNo).Shapes(i).Id = .Id
+                udtUndoInfo(bytNo).SelectShapes(i) = .ID
+                udtUndoInfo(bytNo).Shapes(i).ID = .ID
                 udtUndoInfo(bytNo).Shapes(i).Name = .Name
                 udtUndoInfo(bytNo).Shapes(i).Type = .Type
                 udtUndoInfo(bytNo).Shapes(i).Rotation = .Rotation
@@ -555,27 +568,37 @@ Public Sub ExecUndo()
         Call RecoverShapeSize
         '追加された図形を削除
         Call DeleteNewShapes
-    Case E_MergeCell, E_CellBorder
+    Case E_MergeCell, E_CellBorder, E_CommentToRule, E_RuleToComment
         'セルを復元
         Call RecoverSheet
         'コメントを復元
         Call RecoverComments
+        If Me.UndoType = E_CommentToRule Then
+            Call DeleteInputRules
+        End If
     Case E_CellToText
         'セルを復元
         Call RecoverSheet
         '追加されたテキストボックスを削除
         Call DeleteNewShapes
-    Case E_TextToCell
+    Case E_TextToCell, E_TextToComment
         'テキストボックスを復元する
         Call RecoverTextbox
         'セルを復元
         Call RecoverSheet
         'コメントを復元
         Call RecoverComments
+    Case E_CommentToText
+        'セルを復元
+        Call RecoverSheet
+        'コメントを復元
+        Call RecoverComments
+        '追加されたテキストボックスを削除
+        Call DeleteNewShapes
     Case E_ShapeSize, E_ShapeSize2
         '図形のサイズを復元する
         Call RecoverShapeSize
-    Case E_CellValue, E_PasteValue
+    Case E_CellValue, E_PasteValue, E_ApplyFormat
         'セルを復元
         Call RecoverSheet
     End Select
@@ -586,10 +609,13 @@ Public Sub ExecUndo()
         Select Case (Me.UndoType)
         Case E_ColSize, E_RowSize, E_ColSize2, E_RowSize2, _
              E_MergeCell, E_MoveCell, E_CopyCell, E_PasteValue, _
-             E_CellToText, _
+             E_CellToText, E_ApplyFormat, _
              E_SplitCol, E_EraseCol, _
              E_SplitRow, E_EraseRow, _
-             E_CellValue
+             E_CellValue, _
+             E_CommentToText, _
+             E_CommentToRule, _
+             E_RuleToComment
             Call .Worksheet.Range(.SelectCell).Select
         Case E_ShapeSize, E_ShapeSize2
             Call GetShapeRangeFromID(.SelectShapes).Select
@@ -682,7 +708,7 @@ Private Sub DeleteNewShapes()
         If objShape.Type <> msoComment Then
             blnHit = False
             For i = 1 To udtUndoInfo(bytNo).ShapeCount
-                If objShape.Id = udtUndoInfo(bytNo).Shapes(i).Id Then
+                If objShape.ID = udtUndoInfo(bytNo).Shapes(i).ID Then
                     blnHit = True
                     Exit For
                 End If
@@ -710,9 +736,9 @@ Private Sub RecoverRangeSize()
         With udtUndoInfo(bytNo).RangeSize(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
-                objWorksheet.Range(.Address).ColumnWidth = .size
+                objWorksheet.Range(.Address).ColumnWidth = .Size
             Case E_SplitRow, E_EraseRow, E_RowSize, E_RowSize2
-                objWorksheet.Range(.Address).RowHeight = .size
+                objWorksheet.Range(.Address).RowHeight = .Size
             End Select
         End With
     Next i
@@ -734,7 +760,7 @@ Private Sub RecoverShapeSize()
     For Each objShape In objWorksheet.Shapes
         For i = 1 To udtUndoInfo(bytNo).ShapeCount
             With udtUndoInfo(bytNo).Shapes(i)
-                If .Id = objShape.Id Then
+                If .ID = objShape.ID Then
                     objShape.Height = .Height
                     objShape.Width = .Width
                     objShape.Top = .Top
@@ -798,13 +824,23 @@ Private Sub RecoverComments()
 End Sub
 
 '*****************************************************************************
+'[概要] 入力規則を削除する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub DeleteInputRules()
+    With udtUndoInfo(bytNo)
+        Call .Worksheet.Range(.SelectCell).Validation.Delete
+    End With
+End Sub
+
+'*****************************************************************************
 '[ 関数名 ]　SetOnUndo
 '[ 概  要 ]　ApplicationオブジェクトのOnUndoイベントを設定
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Public Sub SetOnUndo()
-    
     Select Case (Me.UndoType)
     Case E_ColSize, E_ColSize2
         Call Application.OnUndo("幅の変更", "ExecUndo")
@@ -822,6 +858,8 @@ Public Sub SetOnUndo()
         Call Application.OnUndo("領域のコピー", "ExecUndo")
     Case E_PasteValue
         Call Application.OnUndo("値の貼り付け", "ExecUndo")
+    Case E_ApplyFormat
+        Call Application.OnUndo("書式の反映", "ExecUndo")
     Case E_SplitCol
         Call Application.OnUndo("列の分割", "ExecUndo")
     Case E_EraseCol
@@ -834,6 +872,14 @@ Public Sub SetOnUndo()
         Call Application.OnUndo("セルをテキストボックスに変換", "ExecUndo")
     Case E_TextToCell
         Call Application.OnUndo("テキストボックスをセルに変換", "ExecUndo")
+    Case E_CommentToText
+        Call Application.OnUndo("コメントをテキストボックスに変換", "ExecUndo")
+    Case E_TextToComment
+        Call Application.OnUndo("テキストボックスをコメントに戻す", "ExecUndo")
+    Case E_CommentToRule
+        Call Application.OnUndo("コメントを入力規則に変換", "ExecUndo")
+    Case E_RuleToComment
+        Call Application.OnUndo("入力規則をコメントに変換", "ExecUndo")
     Case E_CellValue
         Call Application.OnUndo("セルの値を変更", "ExecUndo")
     Case E_FilterERR

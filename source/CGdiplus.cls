@@ -41,14 +41,14 @@ End Type
 'End Enum
 
 Private Type Guid
-    Data1 As Long
-    Data2 As Integer
-    Data3 As Integer
-    Data4(7) As Byte
+    data1 As Long
+    data2 As Integer
+    data3 As Integer
+    data4(7) As Byte
 End Type
 
 Private Type BITMAPINFOHEADER
-    size          As Long
+    Size          As Long
     Width         As Long
     Height        As Long
     Planes        As Integer
@@ -71,47 +71,47 @@ Private Type BITMAPDATA
 End Type
 
 Private Const DIB_RGB_COLORS = 0&
-Private Declare PtrSafe Function CreateCompatibleDC Lib "gdi32" (ByVal hDC As LongPtr) As LongPtr
-Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
-Private Declare PtrSafe Function DeleteDC Lib "gdi32" (ByVal hDC As LongPtr) As Long
-Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+Private Declare PtrSafe Function CreateCompatibleDC Lib "gdi32" (ByVal hDc As LongPtr) As LongPtr
+Private Declare PtrSafe Function GetDC Lib "User32" (ByVal hWnd As Long) As Long
+Private Declare PtrSafe Function DeleteDC Lib "gdi32" (ByVal hDc As LongPtr) As Long
+Private Declare PtrSafe Function ReleaseDC Lib "User32" (ByVal hWnd As LongPtr, ByVal hDc As LongPtr) As Long
 Private Declare PtrSafe Function GetDIBits Lib "gdi32" (ByVal aHDC As LongPtr, ByVal hBitmapptr As LongPtr, ByVal nStartScan As Long, ByVal nNumScans As Long, ByRef lpBits As Any, ByRef lpBI As Any, ByVal wUsage As Long) As Long
 
-Private Declare PtrSafe Function GdipSaveImageToStream Lib "gdiplus" (ByVal image As LongPtr, ByVal Stream As LongPtr, ByRef clsidEncoder As Guid, ByVal encoderParams As LongPtr) As Long
-Private Declare PtrSafe Function GdipSaveImageToFile Lib "gdiplus.dll" (ByVal image As LongPtr, ByVal Filename As LongPtr, ByRef clsidEncoder As Guid, ByVal encoderParams As LongPtr) As Long
-Private Declare PtrSafe Function GdipGetImageHeight Lib "gdiplus" (ByVal image As LongPtr, Height As Long) As Long
-Private Declare PtrSafe Function GdipGetImageWidth Lib "gdiplus" (ByVal image As LongPtr, Width As Long) As Long
-Private Declare PtrSafe Function GdipBitmapGetPixel Lib "gdiplus" (ByVal bitmap As LongPtr, ByVal x As Long, ByVal y As Long, ByRef Color As Long) As Long
-Private Declare PtrSafe Function GdipBitmapSetPixel Lib "gdiplus" (ByVal bitmap As LongPtr, ByVal x As Long, ByVal y As Long, ByVal Color As Long) As Long
+Private Declare PtrSafe Function GdipSaveImageToStream Lib "GDIPlus" (ByVal Image As LongPtr, ByVal Stream As LongPtr, ByRef clsidEncoder As Guid, ByVal encoderParams As LongPtr) As Long
+Private Declare PtrSafe Function GdipSaveImageToFile Lib "gdiplus.dll" (ByVal Image As LongPtr, ByVal Filename As LongPtr, ByRef clsidEncoder As Guid, ByVal encoderParams As LongPtr) As Long
+Private Declare PtrSafe Function GdipGetImageHeight Lib "GDIPlus" (ByVal Image As LongPtr, Height As Long) As Long
+Private Declare PtrSafe Function GdipGetImageWidth Lib "GDIPlus" (ByVal Image As LongPtr, Width As Long) As Long
+Private Declare PtrSafe Function GdipBitmapGetPixel Lib "GDIPlus" (ByVal bitmap As LongPtr, ByVal x As Long, ByVal y As Long, ByRef Color As Long) As Long
+Private Declare PtrSafe Function GdipBitmapSetPixel Lib "GDIPlus" (ByVal bitmap As LongPtr, ByVal x As Long, ByVal y As Long, ByVal Color As Long) As Long
 Private Declare PtrSafe Function GdipCreateBitmapFromScan0 Lib "gdiplus.dll" (ByVal nWidth As Long, ByVal Height As Long, ByVal stride As Long, ByVal PixelFormat As Long, ByRef scan0 As Any, ByRef nBitmap As LongPtr) As Long
 Private Declare PtrSafe Function GdipCreateBitmapFromHBITMAP Lib "gdiplus.dll" (ByVal hbm As LongPtr, ByVal hPal As LongPtr, ByRef bitmap As LongPtr) As Long
-Private Declare PtrSafe Function GdipCreateBitmapFromFile Lib "gdiplus" (ByVal Filename As LongPtr, bitmap As LongPtr) As Long
-Private Declare PtrSafe Function GdipCreateHBITMAPFromBitmap Lib "gdiplus" (ByVal bitmap As LongPtr, hbmReturn As LongPtr, ByVal background As Long) As Long
-Private Declare PtrSafe Function GdipDisposeImage Lib "gdiplus" (ByVal image As LongPtr) As Long
-Private Declare PtrSafe Function GdiplusStartup Lib "gdiplus" (ByRef token As LongPtr, ByRef inputbuf As GdiplusStartupInput, Optional ByVal outputbuf As LongPtr = 0) As Long
-Private Declare PtrSafe Function GdiplusShutdown Lib "gdiplus" (ByVal token As LongPtr) As Long
-Private Declare PtrSafe Function GdipLoadImageFromFile Lib "gdiplus" (ByVal Filename As LongPtr, ByRef image As LongPtr) As Long
-Private Declare PtrSafe Function GdipLoadImageFromStream Lib "gdiplus" (ByVal Stream As LongPtr, ByRef image As LongPtr) As Long
-Private Declare PtrSafe Function GdipCreateSolidFill Lib "gdiplus" (ByVal pColor As Long, ByVal brush As LongPtr) As Long
-Private Declare PtrSafe Function GdipGetImageGraphicsContext Lib "gdiplus" (ByVal image As LongPtr, graphics As LongPtr) As Long
-Private Declare PtrSafe Function GdipFillRectangle Lib "gdiplus" (ByVal graphics As LongPtr, ByVal brush As LongPtr, ByVal x As Single, ByVal y As Single, ByVal nWidth As Single, ByVal nHeight As Single) As Long
-Private Declare PtrSafe Function GdipSetSmoothingMode Lib "gdiplus" (ByVal mGraphics As LongPtr, ByVal mSmoothingMode As Long) As Long
-Private Declare PtrSafe Function GdipDeleteBrush Lib "gdiplus" (ByVal mBrush As LongPtr) As Long
-Private Declare PtrSafe Function GdipDeleteGraphics Lib "gdiplus" (ByVal graphics As LongPtr) As Long
-Private Declare PtrSafe Function GdipBitmapSetResolution Lib "gdiplus" (ByVal pbitmap As LongPtr, ByVal xdpi As Single, ByVal ydpi As Single) As Long
-Private Declare PtrSafe Function GdipCreatePen1 Lib "gdiplus" (ByVal pColor As Long, ByVal Width As Long, ByVal unit As Long, ByRef hPen As LongPtr) As Long
-Private Declare PtrSafe Function GdipDrawRectangle Lib "gdiplus" (ByVal hGraphics As LongPtr, ByVal hPen As LongPtr, ByVal x As Single, ByVal y As Single, ByVal nWidth As Single, ByVal nHeight As Single) As Long
-Private Declare PtrSafe Function GdipDeletePen Lib "gdiplus" (ByVal hPen As LongPtr) As Long
-Private Declare PtrSafe Function GdipCreateHICONFromBitmap Lib "gdiplus" (ByVal bitmap As LongPtr, ByRef hIcon As LongPtr) As Long
-Private Declare PtrSafe Function GdipGetImageThumbnail Lib "gdiplus" (ByVal image As LongPtr, ByVal thumbWidth As Long, ByVal thumbHeight As Long, ByRef thumbImage As LongPtr, ByVal callback As Long, ByRef callbackData As Any) As Long
-Private Declare PtrSafe Function GdipCreateBitmapFromGdiDib Lib "gdiplus" (ByRef gdiBitmapInfo As Any, ByRef gdiBitmapData As Any, bitmap As LongPtr) As Long
+Private Declare PtrSafe Function GdipCreateBitmapFromFile Lib "GDIPlus" (ByVal Filename As LongPtr, bitmap As LongPtr) As Long
+Private Declare PtrSafe Function GdipCreateHBITMAPFromBitmap Lib "GDIPlus" (ByVal bitmap As LongPtr, hbmReturn As LongPtr, ByVal background As Long) As Long
+Private Declare PtrSafe Function GdipDisposeImage Lib "GDIPlus" (ByVal Image As LongPtr) As Long
+Private Declare PtrSafe Function GdiplusStartup Lib "GDIPlus" (ByRef token As LongPtr, ByRef inputbuf As GdiplusStartupInput, Optional ByVal outputbuf As LongPtr = 0) As Long
+Private Declare PtrSafe Function GdiplusShutdown Lib "GDIPlus" (ByVal token As LongPtr) As Long
+Private Declare PtrSafe Function GdipLoadImageFromFile Lib "GDIPlus" (ByVal Filename As LongPtr, ByRef Image As LongPtr) As Long
+Private Declare PtrSafe Function GdipLoadImageFromStream Lib "GDIPlus" (ByVal Stream As LongPtr, ByRef Image As LongPtr) As Long
+Private Declare PtrSafe Function GdipCreateSolidFill Lib "GDIPlus" (ByVal pColor As Long, ByVal brush As LongPtr) As Long
+Private Declare PtrSafe Function GdipGetImageGraphicsContext Lib "GDIPlus" (ByVal Image As LongPtr, graphics As LongPtr) As Long
+Private Declare PtrSafe Function GdipFillRectangle Lib "GDIPlus" (ByVal graphics As LongPtr, ByVal brush As LongPtr, ByVal x As Single, ByVal y As Single, ByVal nWidth As Single, ByVal nHeight As Single) As Long
+Private Declare PtrSafe Function GdipSetSmoothingMode Lib "GDIPlus" (ByVal mGraphics As LongPtr, ByVal mSmoothingMode As Long) As Long
+Private Declare PtrSafe Function GdipDeleteBrush Lib "GDIPlus" (ByVal mBrush As LongPtr) As Long
+Private Declare PtrSafe Function GdipDeleteGraphics Lib "GDIPlus" (ByVal graphics As LongPtr) As Long
+Private Declare PtrSafe Function GdipBitmapSetResolution Lib "GDIPlus" (ByVal pbitmap As LongPtr, ByVal xdpi As Single, ByVal ydpi As Single) As Long
+Private Declare PtrSafe Function GdipCreatePen1 Lib "GDIPlus" (ByVal pColor As Long, ByVal Width As Long, ByVal unit As Long, ByRef hPen As LongPtr) As Long
+Private Declare PtrSafe Function GdipDrawRectangle Lib "GDIPlus" (ByVal hGraphics As LongPtr, ByVal hPen As LongPtr, ByVal x As Single, ByVal y As Single, ByVal nWidth As Single, ByVal nHeight As Single) As Long
+Private Declare PtrSafe Function GdipDeletePen Lib "GDIPlus" (ByVal hPen As LongPtr) As Long
+Private Declare PtrSafe Function GdipCreateHICONFromBitmap Lib "GDIPlus" (ByVal bitmap As LongPtr, ByRef hIcon As LongPtr) As Long
+Private Declare PtrSafe Function GdipGetImageThumbnail Lib "GDIPlus" (ByVal Image As LongPtr, ByVal thumbWidth As Long, ByVal thumbHeight As Long, ByRef thumbImage As LongPtr, ByVal callback As Long, ByRef callbackData As Any) As Long
+Private Declare PtrSafe Function GdipCreateBitmapFromGdiDib Lib "GDIPlus" (ByRef gdiBitmapInfo As Any, ByRef gdiBitmapData As Any, bitmap As LongPtr) As Long
 Private Declare PtrSafe Function GdipDrawImageRectI Lib "gdiplus.dll" (ByVal GpGraphics As LongPtr, ByVal GpImage As LongPtr, ByVal Left As Long, ByVal Top As Long, ByVal Width As Long, ByVal Height As Long) As Long
-Private Declare PtrSafe Function GdipSetInterpolationMode Lib "gdiplus" (ByVal graphics As LongPtr, ByVal nInterpolationMode As Long) As Long
-Private Declare PtrSafe Function GdipCreateBitmapFromGraphics Lib "gdiplus" (ByVal Width As Long, ByVal Height As Long, ByVal Target As LongPtr, bitmap As LongPtr) As Long
-Private Declare PtrSafe Function GdipSetPixelOffsetMode Lib "gdiplus" (ByVal graphics As LongPtr, ByVal PixOffsetMode As Long) As Long
-Private Declare PtrSafe Function GdipBitmapLockBits Lib "gdiplus" (ByVal bitmap As LongPtr, ByRef RECT As Any, ByVal flags As Long, ByVal PixelFormat As Long, ByRef lockedBitmapData As Any) As Long
-Private Declare PtrSafe Function GdipBitmapUnlockBits Lib "gdiplus" (ByVal bitmap As LongPtr, ByRef lockedBitmapData As Any) As Long
-Private Declare PtrSafe Function GdipCreateFromHDC Lib "gdiplus" (ByVal hDC As LongPtr, ByRef graphics As LongPtr) As Long
+Private Declare PtrSafe Function GdipSetInterpolationMode Lib "GDIPlus" (ByVal graphics As LongPtr, ByVal nInterpolationMode As Long) As Long
+Private Declare PtrSafe Function GdipCreateBitmapFromGraphics Lib "GDIPlus" (ByVal Width As Long, ByVal Height As Long, ByVal Target As LongPtr, bitmap As LongPtr) As Long
+Private Declare PtrSafe Function GdipSetPixelOffsetMode Lib "GDIPlus" (ByVal graphics As LongPtr, ByVal PixOffsetMode As Long) As Long
+Private Declare PtrSafe Function GdipBitmapLockBits Lib "GDIPlus" (ByVal bitmap As LongPtr, ByRef RECT As Any, ByVal flags As Long, ByVal PixelFormat As Long, ByRef lockedBitmapData As Any) As Long
+Private Declare PtrSafe Function GdipBitmapUnlockBits Lib "GDIPlus" (ByVal bitmap As LongPtr, ByRef lockedBitmapData As Any) As Long
+Private Declare PtrSafe Function GdipCreateFromHDC Lib "GDIPlus" (ByVal hDc As LongPtr, ByRef graphics As LongPtr) As Long
 Private Declare PtrSafe Function CLSIDFromString Lib "ole32" (ByVal lpszCLSID As LongPtr, ByRef pclsid As Guid) As Long
 
 Private Enum ImageLockMode
@@ -252,14 +252,14 @@ End Sub
 '*****************************************************************************
 Private Sub GetPixelsFromHBITMAP(ByVal hBitmap As LongPtr, ByRef Pixels() As Long)
 On Error GoTo Finalization
-    Dim hDC   As LongPtr
+    Dim hDc   As LongPtr
     Dim BmpInfHeader   As BITMAPINFOHEADER
-    hDC = CreateCompatibleDC(0)
-    BmpInfHeader.size = 40 '40å≈íË
+    hDc = CreateCompatibleDC(0)
+    BmpInfHeader.Size = 40 '40å≈íË
 
     'ïùÇ∆çÇÇ≥ÇÃÇ›éÊìæ
     Dim lngHeight  As Long
-    Call GetDIBits(hDC, hBitmap, 0, 0, ByVal 0, BmpInfHeader, DIB_RGB_COLORS)
+    Call GetDIBits(hDc, hBitmap, 0, 0, ByVal 0, BmpInfHeader, DIB_RGB_COLORS)
     lngHeight = Abs(BmpInfHeader.Height)
     ReDim Pixels(1 To BmpInfHeader.Width, 1 To lngHeight)
     
@@ -272,9 +272,9 @@ On Error GoTo Finalization
     End With
 
     'Pixels()Ç…ílÇê›íË
-    Call GetDIBits(hDC, hBitmap, 0, lngHeight, Pixels(1, 1), BmpInfHeader, DIB_RGB_COLORS)
+    Call GetDIBits(hDc, hBitmap, 0, lngHeight, Pixels(1, 1), BmpInfHeader, DIB_RGB_COLORS)
 Finalization:
-    If hDC <> 0 Then Call DeleteDC(hDC)
+    If hDc <> 0 Then Call DeleteDC(hDc)
     If Err.Number <> 0 Then Call Err.Raise(Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext)
 End Sub
 

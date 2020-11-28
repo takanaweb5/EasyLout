@@ -655,7 +655,7 @@ Private Function CheckPasteMode(ByVal strCopyText As String, ByRef objSelection 
     '行方向に結合のない単一セル
     If objSelection.Rows.Count = 1 Then
         '行の高さがだいたい2行以上の時
-        If objSelection.RowHeight > (objSelection.Font.size + 2) * 2 Then
+        If objSelection.RowHeight > (objSelection.Font.Size + 2) * 2 Then
             CheckPasteMode = True
             Exit Function
         End If
@@ -865,7 +865,7 @@ On Error GoTo ErrHandle
         If blnFormLoad = False Then
             If objSelection.Areas.Count > 1 And strLastAddress = "" Then
                 strLastSheet = ActiveSheet.Name
-                strLastAddress = Selection.Address(False, False)
+                strLastAddress = GetAddress(Selection)
             End If
             Exit Sub
         End If
@@ -908,7 +908,7 @@ On Error GoTo ErrHandle
     
 ErrHandle:
     strLastSheet = ActiveSheet.Name
-    strLastAddress = Selection.Address(False, False)
+    strLastAddress = GetAddress(Selection)
     If blnFormLoad = True Then
         Call Unload(frmUnSelect)
     End If
@@ -1070,7 +1070,7 @@ Public Function GroupSelection(ByRef objShapes As ShapeRange) As ShapeRange
     '図形の数だけループ
     For i = 1 To objShapes.Count
         Set objShape = objShapes(i)
-        lngIDArray(i) = objShape.Id
+        lngIDArray(i) = objShape.ID
         
         Select Case objShape.Rotation
         Case 90, 270, 180
@@ -1090,10 +1090,10 @@ Public Function GroupSelection(ByRef objShapes As ShapeRange) As ShapeRange
                 '透明にする
                 .Fill.Visible = msoFalse
                 .Line.Visible = msoFalse
-                With GetShapeRangeFromID(Array(.Id, objShape.Id)).Group
+                With GetShapeRangeFromID(Array(.ID, objShape.ID)).Group
                     .AlternativeText = "EL_TemporaryGroup" & i
                     .Placement = btePlacement
-                    lngIDArray(i) = .Id
+                    lngIDArray(i) = .ID
                 End With
             End With
         End If
@@ -1118,7 +1118,7 @@ Public Function UnGroupSelection(ByRef objGroups As ShapeRange) As ShapeRange
     '図形の数だけループ
     For i = 1 To objGroups.Count
         Set objShape = objGroups(i)
-        lngIDArray(i) = objShape.Id
+        lngIDArray(i) = objShape.ID
         
         If Left$(objShape.AlternativeText, 17) = "EL_TemporaryGroup" Then
             blnRotation(i) = True
@@ -1133,7 +1133,7 @@ Public Function UnGroupSelection(ByRef objGroups As ShapeRange) As ShapeRange
             With objShape.Ungroup
                 .Item(1).Placement = btePlacement
                 Call .Item(2).Delete
-                lngIDArray(i) = .Item(1).Id
+                lngIDArray(i) = .Item(1).ID
             End With
         End If
     Next i
@@ -1276,7 +1276,7 @@ On Error GoTo ErrHandle
     '図形の数だけループ
     For i = 1 To objSelection.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
         Set objTextbox = objSelection(i)
-        lngIDArray(i) = objTextbox.Id
+        lngIDArray(i) = objTextbox.ID
         'テキストボックスだけが選択されているか判定
         If CheckTextbox(objTextbox) = False Then
             Call MsgBox("テキストボックス以外は選択しないで下さい", vbExclamation)
@@ -1598,7 +1598,7 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
         .NameComplexScript = objCell.Font.Name
         .NameFarEast = objCell.Font.Name
         .Name = objCell.Font.Name
-        .size = objCell.Font.size
+        .Size = objCell.Font.Size
     End With
     With objTextbox.TextFrame2.TextRange
         .Text = objCell.Value
@@ -1663,8 +1663,8 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
         .Weight = DPIRatio
         .DashStyle = msoLineSolid
         .Style = msoLineSingle
-        .ForeColor.RGB = 0
-        .BackColor.RGB = RGB(255, 255, 255)
+        .ForeColor.Rgb = 0
+        .BackColor.Rgb = Rgb(255, 255, 255)
     End With
     With objRange
         If .Borders(xlEdgeTop).LineStyle = xlNone Or _
@@ -1678,6 +1678,394 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
     End With
     
     Set ChangeCellToTextbox = objTextbox
+End Function
+
+'*****************************************************************************
+'[概要] コメントをテキストボックスに変換する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ChangeCommentsToTextboxes()
+    Dim objRange As Range
+    Set objRange = GetComments()
+    If objRange Is Nothing Then
+        Exit Sub
+    End If
+    Application.ScreenUpdating = False
+    
+    'アンドゥ用に元の状態を保存する
+    If CheckSelection() = E_Range Then
+        Call SaveUndoInfo(E_CommentToText, Selection)
+    Else
+        Call SaveUndoInfo(E_CommentToText, objRange)
+    End If
+    
+    Dim strTextboxes()  As Variant
+    Dim i As Long
+
+    '図形が非表示かどうか判定
+    If ActiveWorkbook.DisplayDrawingObjects = xlHide Then
+        ActiveWorkbook.DisplayDrawingObjects = xlDisplayShapes
+    End If
+    
+    Dim objCell  As Range
+    For Each objCell In objRange
+        If objCell.MergeArea(1).Address = objCell.Address Then
+            i = i + 1
+            ReDim Preserve strTextboxes(1 To i)
+            strTextboxes(i) = ChangeCommentToTextbox(objCell).Name
+        End If
+    Next
+    Call objRange.ClearComments
+    
+    '作成したテキストボックスを選択
+    Call ActiveSheet.Shapes.Range(strTextboxes).Select
+    Call SetOnUndo
+End Sub
+
+'*****************************************************************************
+'[概要] コメントをテキストボックスに変換する
+'[引数] コメントオブジェクト
+'[戻値] テキストボックス
+'*****************************************************************************
+Private Function ChangeCommentToTextbox(ByRef objCell As Range) As Shape
+    Dim objTextbox As Shape
+    Dim objComment As Comment
+    Set objComment = objCell.Comment
+    
+    With objComment.Shape
+        'テキストボックス作成
+        Set objTextbox = ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, .Left, .Top, .Width, .Height)
+    End With
+    
+    'フォントと文字列の設定
+    Dim objFont As Font
+    Set objFont = objComment.Shape.DrawingObject.Font
+    With objTextbox.TextFrame2.TextRange.Font
+        .NameComplexScript = objFont.Name
+        .NameFarEast = objFont.Name
+        .Name = objFont.Name
+        .Size = objFont.Size
+    End With
+    With objTextbox.TextFrame2.TextRange
+        .Text = objComment.Text
+    End With
+    
+    '線の設定
+    With objTextbox.Line
+        .Weight = DPIRatio
+        .DashStyle = msoLineSolid
+        .Style = msoLineSingle
+        .ForeColor.Rgb = 0
+        .BackColor.Rgb = Rgb(255, 255, 255)
+        .Visible = msoTrue
+    End With
+    
+    With objTextbox
+        .Title = "コメント"
+        .AlternativeText = objCell.Address(0, 0)
+    End With
+
+    Set ChangeCommentToTextbox = objTextbox
+End Function
+
+'*****************************************************************************
+'[概要] テキストボックスをコメントに変換する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ChangeTextboxesToComments()
+On Error GoTo ErrHandle
+    Dim objSelection As ShapeRange
+    Dim objRange As Range
+    Set objSelection = Selection.ShapeRange
+    ReDim lngIDArray(1 To objSelection.Count) As Variant
+    
+    '図形の数だけループ
+    Dim i As Long
+    Dim objTextbox As Shape
+    For i = 1 To objSelection.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
+        Set objTextbox = objSelection(i)
+        lngIDArray(i) = objTextbox.ID
+        Set objRange = UnionRange(objRange, Range(objTextbox.AlternativeText))
+    Next
+    
+    '**************************************
+    'アンドゥ用に元の状態を保存する
+    '**************************************
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False 'コメントがあると警告が出る時がある
+    
+    Call SaveUndoInfo(E_TextToComment, objSelection, objRange)
+    
+    '**************************************
+    'テキストボックスをコメントに変換する
+    '**************************************
+    Dim objShapeRange As ShapeRange
+    Set objShapeRange = GetShapeRangeFromID(lngIDArray)
+    'テキストボックスの数だけループ
+    For i = 1 To objShapeRange.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
+        Set objTextbox = objShapeRange(i)
+        Call ChangeTextboxToComment(objTextbox)
+    Next
+    
+    'テキストボックスを削除
+    Call objShapeRange.Delete
+    
+    '変換されたセルを選択する
+    Call objRange.Select
+    Call SetOnUndo
+    Application.DisplayAlerts = True
+Exit Sub
+ErrHandle:
+End Sub
+
+'*****************************************************************************
+'[概要] コメントから変換されたテキストボックスだけが選択されているかどうか
+'[引数] なし
+'[戻値] True or False
+'*****************************************************************************
+Public Function ChangeTextboxToComment(ByRef objTextbox As Shape) As Boolean
+    Dim objCell As Range
+    Set objCell = Range(objTextbox.AlternativeText)
+    Call objCell.Select
+    Call objCell.ClearComments
+    Call objCell.AddComment(objTextbox.TextFrame2.TextRange.Text)
+End Function
+
+'*****************************************************************************
+'[概要] コメントから変換されたテキストボックスだけが選択されているかどうか
+'[引数] なし
+'[戻値] True or False
+'*****************************************************************************
+Public Function IsSelectCommentTextbox() As Boolean
+On Error GoTo ErrHandle
+    '図形が選択されているか判定
+    If CheckSelection() <> E_Shape Then
+        Exit Function
+    End If
+    
+    Dim objSelection As ShapeRange
+    Set objSelection = Selection.ShapeRange
+    
+    '図形の数だけループ
+    Dim i As Long
+    For i = 1 To objSelection.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
+        If Not IsCommentTextbox(objSelection(i)) Then
+            Exit Function
+        End If
+    Next
+    IsSelectCommentTextbox = True
+Exit Function
+ErrHandle:
+End Function
+
+'*****************************************************************************
+'[概要] オートシェイプがコメントから変換されたテキストボックスかどうか判定
+'[引数] オートシェイプ
+'[戻値] True:コメントから変換されたテキストボックス
+'*****************************************************************************
+Private Function IsCommentTextbox(ByRef objShape As Shape) As Boolean
+On Error GoTo ErrHandle
+    If objShape.Title = "コメント" Then
+        Dim objRegExp As Object
+        Set objRegExp = CreateObject("VBScript.RegExp")
+        objRegExp.Global = False
+        objRegExp.Pattern = "[A-Z]{1,3}[1-9][0-9]{0,6}"
+        If objRegExp.Test(objShape.AlternativeText) Then
+            IsCommentTextbox = True
+        End If
+    End If
+ErrHandle:
+End Function
+
+'*****************************************************************************
+'[概要] コメントを入力規則に変換する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ChangeCommentsToInputRules()
+    Dim objRange As Range
+    Set objRange = GetComments()
+    If objRange Is Nothing Then
+        Exit Sub
+    End If
+    Application.ScreenUpdating = False
+    
+    'アンドゥ用に元の状態を保存する
+    If CheckSelection() = E_Range Then
+        Call SaveUndoInfo(E_CommentToRule, Selection)
+    Else
+        Call SaveUndoInfo(E_CommentToRule, objRange)
+    End If
+    
+    Call objRange.Validation.Delete
+    Dim objCell  As Range
+    For Each objCell In objRange
+        If objCell.MergeArea(1).Address = objCell.Address Then
+            Call ChangeCommentToInputRule(objCell)
+        End If
+    Next
+    Call objRange.ClearComments
+    Call objRange.Select
+    Call SetOnUndo
+End Sub
+
+'*****************************************************************************
+'[概要] コメントを入力規則に変換する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ChangeCommentToInputRule(ByRef objCell As Range)
+    Call objCell.Select
+    With objCell.Validation
+        Call .Delete
+        Call .Add(xlValidateInputOnly)
+        .ShowInput = True
+        .InputTitle = ""
+        .InputMessage = objCell.MergeArea(1).Comment.Text
+        .ShowError = False
+        .ErrorTitle = ""
+        .ErrorMessage = ""
+        .IgnoreBlank = True
+        .InCellDropdown = True
+        .IMEMode = xlIMEModeNoControl
+    End With
+End Sub
+
+'*****************************************************************************
+'[概要] 選択されているセル範囲のコメントのあるセル範囲を取得
+'[引数] なし
+'[戻値] コメントのあるセル範囲
+'*****************************************************************************
+Public Function GetComments() As Range
+    Select Case CheckSelection()
+    Case E_Shape
+        If Selection.ShapeRange.Type = msoComment Then
+            Set GetComments = GetCommentsCell(Selection.ShapeRange.ID)
+            Exit Function
+        End If
+    End Select
+    
+    Dim objRange As Range
+    On Error Resume Next
+    Set objRange = Selection.SpecialCells(xlCellTypeComments)
+    Set GetComments = IntersectRange(Selection, objRange)
+End Function
+
+'*****************************************************************************
+'[概要] 選択されているセル範囲のコメントのあるセル範囲を取得
+'[引数] なし
+'[戻値] コメントのあるセル範囲
+'*****************************************************************************
+Public Function GetCommentsCell(ByVal ID As Long) As Range
+    Dim objRange As Range
+    On Error Resume Next
+    Set objRange = Cells.SpecialCells(xlCellTypeComments)
+    On Error GoTo 0
+    
+    Dim objCell As Range
+    For Each objCell In objRange
+        If objCell.Comment.Shape.ID = ID Then
+            Set GetCommentsCell = objCell(1)
+            Exit Function
+        End If
+    Next
+End Function
+
+'*****************************************************************************
+'[概要] 入力規則をコメントに変換する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ChangeInputRulesToComments()
+    Dim objRange As Range
+    Set objRange = GetInputRules
+    If objRange Is Nothing Then
+        Exit Sub
+    End If
+    Application.ScreenUpdating = False
+    
+    'アンドゥ用に元の状態を保存する
+    Call SaveUndoInfo(E_RuleToComment, Selection)
+    
+    Call objRange.ClearComments
+    Dim objCell  As Range
+    For Each objCell In objRange
+        If objCell.MergeArea(1).Address = objCell.Address Then
+            Call ChangeInputRuleToComment(objCell)
+        End If
+    Next
+    Call objRange.Validation.Delete
+    Call Cells(Rows.Count, Columns.Count).Select
+    Call objRange.Select
+    Call SetOnUndo
+End Sub
+
+'*****************************************************************************
+'[概要] 入力規則をコメントに変換する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ChangeInputRuleToComment(ByRef objCell As Range)
+    Dim strComment As String
+    Dim strInputTitle As String
+    Dim strInputMessage As String
+    
+    With objCell.Validation
+        On Error Resume Next
+        strInputTitle = .InputTitle
+        strInputMessage = .InputMessage
+        On Error GoTo 0
+    End With
+                
+    If strInputTitle <> "" Then
+        strComment = strInputTitle
+        If strInputMessage <> "" Then
+            strComment = strComment & vbLf & strInputMessage
+        End If
+    Else
+        strComment = strInputMessage
+    End If
+    
+    Call objCell.AddComment
+    objCell.Comment.Visible = True
+    Call objCell.Comment.Text(strComment)
+End Sub
+
+'*****************************************************************************
+'[概要] 選択されているセル範囲の入力規則のあるセル範囲を取得
+'[引数] blnCheckOnly:チェックのみする時（Enabled設定時の高速化）
+'[戻値] 入力規則のあるセル範囲
+'*****************************************************************************
+Public Function GetInputRules(Optional ByVal blnCheckOnly As Boolean = False) As Range
+    If CheckSelection <> E_Range Then
+        Exit Function
+    End If
+    
+    Dim objRange As Range
+    On Error Resume Next
+    Set objRange = Cells.SpecialCells(xlCellTypeAllValidation)
+'    On Error GoTo 0
+    
+    Set objRange = IntersectRange(Selection, objRange)
+    If objRange Is Nothing Then
+        Exit Function
+    End If
+    Dim objCell As Range
+    For Each objCell In objRange
+        With objCell.Validation
+            If .ShowInput = True Then
+                If .InputMessage <> "" Or .InputTitle <> "" Then
+                    If blnCheckOnly Then
+                        Set GetInputRules = objCell
+                    Else
+                        Set GetInputRules = UnionRange(GetInputRules, objCell)
+                    End If
+                End If
+            End If
+        End With
+    Next
 End Function
 
 '*****************************************************************************
@@ -1916,7 +2304,7 @@ Public Function GetShapeRangeFromID(ByRef lngID As Variant) As ShapeRange
     ReDim lngArray(LBound(lngID) To UBound(lngID)) As Variant
     
     For j = 1 To ActiveSheet.Shapes.Count
-        lngShapeID = ActiveSheet.Shapes(j).Id
+        lngShapeID = ActiveSheet.Shapes(j).ID
         For i = LBound(lngID) To UBound(lngID)
             If lngShapeID = lngID(i) Then
                 lngArray(i) = j
@@ -1939,7 +2327,7 @@ Public Function GetShapeFromID(ByVal lngID As Long) As Shape
     Dim lngIndex As Long
         
     For j = 1 To ActiveSheet.Shapes.Count
-        If ActiveSheet.Shapes(j).Id = lngID Then
+        If ActiveSheet.Shapes(j).ID = lngID Then
             lngIndex = j
             Exit For
         End If
@@ -2061,6 +2449,12 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub OpenEdit()
+    '[Ctrl]Keyが押下されていれば、UnSelectを実行
+    If GetKeyState(vbKeyControl) < 0 Then
+        Call UnSelect
+        Exit Sub
+    End If
+
 On Error GoTo ErrHandle
     Static udtEditInfo As TEditInfo
     
@@ -2174,46 +2568,46 @@ Private Function IsInclude(ByRef objRange As Range, ByRef objShape As Shape) As 
     End With
 End Function
 
-'*****************************************************************************
-'[ 関数名 ]　OnElseMenuClick
-'[ 概  要 ]　｢その他｣メニューを開く時に、各コマンドのEnabledの初期設定を行う
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub OnElseMenuClick()
-    Dim objMenu          As CommandBarPopup
-    Dim enmSelectionType As ESelectionType
-    Dim objCommand       As Object
-        
-    Call SetKeys
-    
-    enmSelectionType = CheckSelection()
-    Set objMenu = CommandBars.ActionControl
-    
-    'Menuがカスタマイズされていた場合の考慮
-    For Each objCommand In objMenu.Controls
-        objCommand.Enabled = True
-    Next
-    
-    On Error Resume Next
-    objMenu.Controls("テキストボックスをセルに変換").Enabled = (enmSelectionType = E_Shape)
-    objMenu.Controls("セルをテキストボックスに変換").Enabled = (enmSelectionType = E_Range)
-    objMenu.Controls("図形をグリッドに合せる").Enabled = (enmSelectionType = E_Shape)
-    objMenu.Controls("文字種の変換").Enabled = (enmSelectionType = E_Range)
-    objMenu.Controls("選択領域の一部取消し").Enabled = (enmSelectionType = E_Range)
-    objMenu.Controls("入力補助画面").Enabled = (enmSelectionType = E_Range)
-
-    '図形非表示が図形再表示になっていたら元に戻す
-    objMenu.Controls("図形再表示").Caption = "図形非表示"
-    If ActiveWorkbook Is Nothing Then
-        objMenu.Controls("図形非表示").Enabled = False
-    Else
-        If ActiveWorkbook.DisplayDrawingObjects <> xlDisplayShapes Then
-            objMenu.Controls("図形非表示").Caption = "図形再表示"
-        End If
-    End If
-    On Error GoTo 0
-End Sub
+''*****************************************************************************
+''[ 関数名 ]　OnElseMenuClick
+''[ 概  要 ]　｢その他｣メニューを開く時に、各コマンドのEnabledの初期設定を行う
+''[ 引  数 ]　なし
+''[ 戻り値 ]　なし
+''*****************************************************************************
+'Private Sub OnElseMenuClick()
+'    Dim objMenu          As CommandBarPopup
+'    Dim enmSelectionType As ESelectionType
+'    Dim objCommand       As Object
+'
+'    Call SetKeys
+'
+'    enmSelectionType = CheckSelection()
+'    Set objMenu = CommandBars.ActionControl
+'
+'    'Menuがカスタマイズされていた場合の考慮
+'    For Each objCommand In objMenu.Controls
+'        objCommand.Enabled = True
+'    Next
+'
+'    On Error Resume Next
+'    objMenu.Controls("テキストボックスをセルに変換").Enabled = (enmSelectionType = E_Shape)
+'    objMenu.Controls("セルをテキストボックスに変換").Enabled = (enmSelectionType = E_Range)
+'    objMenu.Controls("図形をグリッドに合せる").Enabled = (enmSelectionType = E_Shape)
+'    objMenu.Controls("文字種の変換").Enabled = (enmSelectionType = E_Range)
+'    objMenu.Controls("選択領域の一部取消し").Enabled = (enmSelectionType = E_Range)
+'    objMenu.Controls("入力補助画面").Enabled = (enmSelectionType = E_Range)
+'
+'    '図形非表示が図形再表示になっていたら元に戻す
+'    objMenu.Controls("図形再表示").Caption = "図形非表示"
+'    If ActiveWorkbook Is Nothing Then
+'        objMenu.Controls("図形非表示").Enabled = False
+'    Else
+'        If ActiveWorkbook.DisplayDrawingObjects <> xlDisplayShapes Then
+'            objMenu.Controls("図形非表示").Caption = "図形再表示"
+'        End If
+'    End If
+'    On Error GoTo 0
+'End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　PressBackSpace
@@ -2309,13 +2703,17 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Public Sub PasteAppearance()
+    Dim CopyMode  As XlCutCopyMode
+    CopyMode = Application.CutCopyMode
+    
     '選択されているオブジェクトを判定
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If
     
-    If Application.CutCopyMode <> xlCopy Then
-        Call MsgBox("セルをコピーしてから実行して下さい", vbExclamation)
+    If CopyMode = xlCopy Or CopyMode = xlCut Then
+    Else
+        Call MsgBox("セルを [コピー] または [切取り] してから実行して下さい", vbExclamation)
         Exit Sub
     End If
     
@@ -2337,9 +2735,16 @@ On Error GoTo ErrHandle
     'コピー先のRangeを設定する
     Set objToRange = Selection(1)
     
+    If CopyMode = xlCut Then
+        If Not CheckSameSheet(objFromRange.Worksheet, objToRange.Worksheet) Then
+            Call MsgBox("切り取り時は同じシートでなければなりません", vbExclamation)
+            Exit Sub
+        End If
+    End If
+    
     'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
     Call SetPixelInfo
-    Call ShowCopyCellForm(objFromRange, objToRange)
+    Call ShowCopyCellForm(objFromRange, objToRange, CopyMode = xlCut)
     
     Call Application.OnRepeat("", "")
 Exit Sub
@@ -2351,15 +2756,16 @@ End Sub
 '[概要] 結合セルを含む領域を移動する
 '[引数] objFromRange:移動(コピー元)の領域
 '       objToRange:選択中の領域
-'[戻値]なし
+'       blnMove:True=移動する
+'[戻値] なし
 '*****************************************************************************
-Private Sub ShowCopyCellForm(ByRef objFromRange As Range, ByRef objToRange As Range)
+Private Sub ShowCopyCellForm(ByRef objFromRange As Range, ByRef objToRange As Range, ByVal blnMove As Boolean)
     Dim blnCopyObjectsWithCells  As Boolean
     blnCopyObjectsWithCells = Application.CopyObjectsWithCells
 On Error GoTo ErrHandle
     'フォームを表示
     With frmCopyCell
-        Call .Initialize(objFromRange, objToRange)
+        Call .Initialize(objFromRange, objToRange, blnMove)
         Call .Show
     End With
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
@@ -2371,3 +2777,98 @@ ErrHandle:
     End If
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
+
+'*****************************************************************************
+'[概要] 数式をプレーンテキストでコピーします
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Public Sub CopyFormula()
+On Error GoTo ErrHandle
+    Dim strText      As String
+    Dim objSelection As Range
+    
+    'Rangeオブジェクトが選択されているか判定
+    If CheckSelection() <> E_Range Then
+        Exit Sub
+    End If
+    
+    Set objSelection = Selection
+    
+    '選択領域が複数の時
+    If objSelection.Areas.Count > 1 Then
+        Call MsgBox("このコマンドは複数の選択範囲に対して実行できません。", vbExclamation)
+        Exit Sub
+    End If
+    
+    'すべての行の選択時
+    Dim lngLast As Long
+    If objSelection.Rows.Count = Rows.Count Then
+        '使用されている最後の行
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Row
+    Else
+        lngLast = objSelection.Rows.Count
+    End If
+
+    '行の数だけループ
+    Dim i As Long
+    strText = GetRowFormula(objSelection.Rows(1))
+    For i = 2 To lngLast
+        strText = strText & vbLf & GetRowFormula(objSelection.Rows(i))
+    Next
+    
+    If strText <> "" Then
+        Call SetClipbordText(Replace$(strText, vbLf, vbCrLf))
+    End If
+    Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] 対象行の数式をTabで連結して取得
+'[引数] 対象行
+'[戻値] Tabで連結した数式
+'*****************************************************************************
+Private Function GetRowFormula(ByRef objRange As Range) As String
+    Dim i       As Long
+    Dim strText As String
+    
+    '列の数だけループ
+    GetRowFormula = objRange.Cells(1, 1).Formula
+    For i = 2 To objRange.Columns.Count
+        GetRowFormula = GetRowFormula & vbTab & objRange.Cells(1, 1).Formula
+    Next i
+End Function
+
+'*****************************************************************************
+'[概要] 数式や値が文字列になった時、書式を反映します
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Public Sub ApplyFormat()
+On Error GoTo ErrHandle
+    Dim objSelection  As Range
+    
+    'Rangeオブジェクトが選択されているか判定
+    If CheckSelection() <> E_Range Then
+        Exit Sub
+    End If
+
+    Set objSelection = Selection
+    Dim objUsedRange  As Range
+    Set objUsedRange = IntersectRange(objSelection, objSelection.Worksheet.UsedRange)
+    
+    Application.ScreenUpdating = False
+    
+    'アンドゥ用に元の状態を保存する
+    Call SaveUndoInfo(E_ApplyFormat, objSelection)
+    Dim objArea As Range
+    For Each objArea In objUsedRange
+        objArea.Formula = objArea.Formula
+    Next
+    Call objSelection.Select
+    Call SetOnUndo
+ErrHandle:
+End Sub
+
