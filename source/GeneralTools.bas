@@ -1092,17 +1092,56 @@ On Error GoTo ErrHandle
     Dim objRegExp As Object
     Set objRegExp = CreateObject("VBScript.RegExp")
     objRegExp.Global = False
-    objRegExp.Pattern = "Excel\/.*\[(.+)\](.+)\/(.+)\/\/$"
+    
+    Dim strAddress As String
+    Dim strFileAndSheet As String
+    '例：Excel/Z:\[Book1.xlsx]Sheet1/R1C1:R2C2//
+    objRegExp.Pattern = "Excel\/(.+)\/(R[0-9]+C[0-9]+(:R[0-9]+C[0-9]+)?)\/\/$"
     If Not objRegExp.Test(strData) Then Exit Function
     With objRegExp.Execute(strData)(0)
-        Dim strRange As String
-        strRange = Application.ConvertFormula(.SubMatches(2), xlR1C1, xlA1)
-        Set GetCopyRange = Workbooks(.SubMatches(0)).Worksheets(.SubMatches(1)).Range(strRange)
+        '例：Z:\[Book1.xlsx]Sheet1
+        strFileAndSheet = .SubMatches(0)
+        '例：R1C1:R2C2
+        strAddress = .SubMatches(1)
     End With
+    
+    Dim strBook  As String
+    Dim strSheet As String
+    '例：Z:\[Book1.xlsx]Sheet1
+    objRegExp.Pattern = "\[(.+)\](.+)$"
+    If objRegExp.Test(strFileAndSheet) Then
+        With objRegExp.Execute(strFileAndSheet)(0)
+            '例：Book1.xlsx
+            strBook = .SubMatches(0)
+            '例：Sheet1
+            strSheet = .SubMatches(1)
+        End With
+    Else
+        If vbYes = MsgBox("コピー元のファイルパスとシート名の合計の文字列が長すぎるためコピー元のセル範囲の取得ができませんでした" & vbLf & "ファイルパスとシート名を入力しますか？", vbQuestion & vbYesNo) Then
+            strBook = InputBox("コピー元のファイル名を入力してください。" & vbLf & "貼り付け先と同じファイルの場合は省略可")
+            strSheet = InputBox("コピー元のシート名を入力してください。" & vbLf & "貼り付け先と同じシートの場合は省略可")
+        Else
+            Exit Function
+        End If
+    End If
+    
+    Dim strRange As String
+    strRange = Application.ConvertFormula(strAddress, xlR1C1, xlA1)
+    If strBook = "" Then
+        If strSheet = "" Then
+            Set GetCopyRange = Range(strRange)
+        Else
+            Set GetCopyRange = Worksheets(strSheet).Range(strRange)
+        End If
+    Else
+        Set GetCopyRange = Workbooks(strBook).Worksheets(strSheet).Range(strRange)
+    End If
+    
     Application.CutCopyMode = False
     Exit Function
 ErrHandle:
     If hMem <> 0 Then Call CloseClipboard
+    If Err.Number <> 0 Then Call Err.Raise(Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext)
 End Function
 
 '*****************************************************************************

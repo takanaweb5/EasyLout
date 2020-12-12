@@ -156,7 +156,6 @@ Private Sub DeleteUserStyles2()
     End Select
 End Sub
 
-
 '*****************************************************************************
 '[概要] ユーザ定義の名前をすべて削除
 '[引数] なし
@@ -171,7 +170,9 @@ Private Sub DeleteNameObjects()
         'EXCEL2019の謎の事象対応(TEXTJOIN関数等を使えば勝手に名前が定義されるが削除すると例外になるので回避)
         Case xlFunction, xlCommand, xlNotXLM
         Case Else
-            If (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
+            If IsError(Evaluate(objName.Value)) Then
+                lngCnt = lngCnt + 1
+            ElseIf (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
                (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") And _
                objName.Visible Then
                 lngCnt = lngCnt + 1
@@ -394,7 +395,9 @@ Private Sub DeleteNames(ByRef objWorkbook As Workbook)
         'EXCEL2019の謎の事象対応(TEXTJOIN関数等を使えば勝手に名前が定義されるが削除すると例外になるので回避)
         Case xlFunction, xlCommand, xlNotXLM
         Case Else
-            If (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
+            If IsError(Evaluate(objName.Value)) Then
+                Call objName.Delete
+            ElseIf (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
                (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") And _
                objName.Visible Then
                 Call objName.Delete

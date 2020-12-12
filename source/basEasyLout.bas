@@ -98,10 +98,10 @@ End Sub
 '*****************************************************************************
 Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
     Select Case Control.ID
-    Case "B311", "B312"
-        returnedVal = (CheckSelection() = E_Shape)
-    Case "B313", "B314", "B315", "B316"
+    Case "B311", "B312", "B313", "B314"
         returnedVal = CommandBars.GetEnabledMso("ObjectsAlignTop")
+    Case "B315", "B316"
+        returnedVal = (CheckSelection() = E_Shape)
     Case "B321" 'セルをテキストボックスに変換
         returnedVal = (CheckSelection() = E_Range)
     Case "B322" 'テキストボックスをセルに変換

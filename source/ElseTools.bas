@@ -433,6 +433,76 @@ Private Sub ParseOneValueRange(ByRef objRange As Range, ByVal lngAlignment As Lo
 End Sub
     
 '*****************************************************************************
+'[概要] 結合を解除して選択範囲で中央寄せ
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub UnmergeCells()
+On Error GoTo ErrHandle
+    'Rangeオブジェクトが選択されているか判定
+    If CheckSelection() <> E_Range Then
+        Exit Sub
+    End If
+
+    Dim objSelection As Range
+    Set objSelection = Selection
+    
+    'アンドゥ用に元の状態を保存する
+    Dim lngCalculation As Long
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    lngCalculation = Application.Calculation
+    Application.Calculation = xlManual
+    Call SaveUndoInfo(E_MergeCell, Selection)
+    
+    Dim objRange As Range
+    '値の入力されたセルを取得
+    With objSelection
+        Dim objWk(1 To 2) As Range
+        On Error Resume Next
+        Set objWk(1) = .SpecialCells(xlCellTypeConstants)
+        Set objWk(2) = .SpecialCells(xlCellTypeFormulas)
+        Set objRange = UnionRange(objWk(1), objWk(2))
+        On Error GoTo ErrHandle
+    End With
+    If objRange Is Nothing Then
+        Call objSelection.UnMerge
+        Call SetOnUndo
+        Application.DisplayAlerts = True
+        Application.Calculation = lngCalculation
+        Exit Sub
+    End If
+    
+    '値の入力されたセルのうち結合されたセルを取得
+    Set objRange = IntersectRange(objSelection, objRange)
+    Set objRange = ArrangeRange(GetMergeRange(objRange))
+    If objRange Is Nothing Then
+        Call objSelection.UnMerge
+        Call SetOnUndo
+        Application.DisplayAlerts = True
+        Application.Calculation = lngCalculation
+        Exit Sub
+    End If
+    
+    With objRange
+        .UnMerge
+        .HorizontalAlignment = xlCenterAcrossSelection
+    End With
+    
+    Set objRange = ArrangeRange(MinusRange(objSelection, objRange))
+    If Not (objRange Is Nothing) Then
+        Call objRange.UnMerge
+    End If
+    
+    Call SetOnUndo
+Exit Sub
+ErrHandle:
+    Application.DisplayAlerts = True
+    Application.Calculation = lngCalculation
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
 '[ 関数名 ]　PasteValue
 '[ 概  要 ]　値を貼り付ける
 '[ 引  数 ]　なし
@@ -2563,6 +2633,7 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Function IsInclude(ByRef objRange As Range, ByRef objShape As Shape) As Boolean
+    On Error Resume Next
     With objShape
         IsInclude = (MinusRange(Range(.TopLeftCell, .BottomRightCell), objRange) Is Nothing)
     End With
@@ -2693,8 +2764,32 @@ On Error GoTo ErrHandle
         Call Application.OnKey("{BS}")
     End If
 
+    Call Application.OnKey("+ ", "SelectRow")
+    Call Application.OnKey("^ ", "SelectCol")
     Call Application.OnKey("^6", "ToggleHideShapes")
 ErrHandle:
+End Sub
+
+'*****************************************************************************
+'[概要] Shift+{SPACE}で行全体を選択する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub SelectRow()
+    If CheckSelection = E_Range Then
+        Call Union(Selection.EntireRow, Selection.EntireRow).Select
+    End If
+End Sub
+
+'*****************************************************************************
+'[概要] Ctrl+{SPACE}で列全体を選択する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub SelectCol()
+    If CheckSelection = E_Range Then
+        Call Union(Selection.EntireColumn, Selection.EntireColumn).Select
+    End If
 End Sub
 
 '*****************************************************************************

@@ -43,6 +43,8 @@ End Sub
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
     ThisWorkbook.Saved = True
     On Error Resume Next
+    Call Application.OnKey("+ ")
+    Call Application.OnKey("^ ")
     Call Application.OnKey("+{F2}")
     Call Application.OnKey("+^{c}")
     Call Application.OnKey("+^{v}")
