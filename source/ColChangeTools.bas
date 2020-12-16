@@ -200,33 +200,66 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　GetSameWidthAddresses
-'[ 概  要 ]　同じ幅の塊ごとのアドレスを配列で取得する
-'[ 引  数 ]　選択された領域
-'[ 戻り値 ]　アドレスの配列
+'[概要] 同じ幅の塊ごとのアドレスを配列で取得する
+'[引数] 選択された領域
+'[戻値] アドレスの配列
 '*****************************************************************************
 Public Function GetSameWidthAddresses(ByRef objSelection As Range) As Collection
-    Dim i           As Long
-    Dim objRange    As Range
-    Dim lngLastCell As Long
-    Dim objColumns  As Range
+    Dim i             As Long
+    Dim lngLastCol    As Long    '使用されている最後の列
+    Dim lngLastCell   As Long
+    Dim objRange      As Range
+    Dim objWkRange    As Range
+    Dim objColumns    As Range
+    Dim objVisible    As Range
+    Dim objNonVisible As Range
     
     Set GetSameWidthAddresses = New Collection
+    
+    '使用されている最後の列
+    With Cells.SpecialCells(xlCellTypeLastCell)
+        lngLastCol = .Column + .Columns.Count - 1
+    End With
     
     '選択範囲のColumnsの和集合を取り重複列を排除する
     Set objColumns = Union(objSelection.EntireColumn, objSelection.EntireColumn)
     
-    'エリアの数だけループ
-    For Each objRange In objColumns.Areas
-        i = objRange.Column
-        lngLastCell = i + objRange.Columns.Count - 1
-        
-        '同じ幅の塊ごとに列幅を判定する
-        While i <= lngLastCell
-            '同じ幅の列のアドレスを保存
-            Call GetSameWidthAddresses.Add(GetSameWidthAddress(i, lngLastCell))
-        Wend
-    Next objRange
+    '可視セルと不可視セルに分ける
+    Set objVisible = GetVisibleCells(objColumns)
+    Set objNonVisible = MinusRange(objColumns, objVisible)
+    
+    '***********************************************
+    '使用された最後の列以前の領域の設定(可視領域)
+    '***********************************************
+    Set objWkRange = IntersectRange(Range(Columns(1), Columns(lngLastCol)), objVisible)
+    If Not (objWkRange Is Nothing) Then
+        'エリアの数だけループ
+        For Each objRange In objWkRange.Areas
+            i = objRange.Column
+            lngLastCell = i + objRange.Columns.Count - 1
+            
+            '同じ幅の塊ごとに列幅を判定する
+            While i <= lngLastCell
+                '同じ幅の列のアドレスを保存
+                Call GetSameWidthAddresses.Add(GetSameWidthAddress(i, lngLastCell))
+            Wend
+        Next
+    End If
+
+    '***********************************************
+    '使用された最後の列以降の領域の設定(可視領域)
+    '***********************************************
+    Set objWkRange = IntersectRange(Range(Columns(lngLastCol + 1), Columns(Columns.Count)), objVisible)
+    If Not (objWkRange Is Nothing) Then
+        Call GetSameWidthAddresses.Add(objWkRange.Address)
+    End If
+    
+    '***********************************************
+    '不可視領域の設定
+    '***********************************************
+    If Not (objNonVisible Is Nothing) Then
+        Call GetSameWidthAddresses.Add(objNonVisible.Address)
+    End If
 End Function
 
 '*****************************************************************************

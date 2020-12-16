@@ -171,10 +171,9 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　GetSameHeightAddresses
-'[ 概  要 ]　同じ高さの塊ごとのアドレスを配列で取得する
-'[ 引  数 ]　選択された領域
-'[ 戻り値 ]　アドレスの配列
+'[概要] 同じ高さの塊ごとのアドレスを配列で取得する
+'[引数] 選択された領域
+'[戻値] アドレスの配列
 '*****************************************************************************
 Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collection
     Dim i             As Long
@@ -189,7 +188,10 @@ Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collectio
     Set GetSameHeightAddresses = New Collection
     
     '使用されている最後の行
-    lngLastRow = Cells.SpecialCells(xlCellTypeLastCell).Row
+    '使用されている最後の列
+    With Cells.SpecialCells(xlCellTypeLastCell)
+        lngLastRow = .Row + .Rows.Count - 1
+    End With
     
     '選択範囲のRowsの和集合を取り重複行を排除する
     Set objRows = Union(objSelection.EntireRow, objSelection.EntireRow)
@@ -213,7 +215,7 @@ Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collectio
                 '同じ高さの行のアドレスを保存
                  Call GetSameHeightAddresses.Add(GetSameHeightAddress(i, lngLastCell))
             Wend
-        Next objRange
+        Next
     End If
     
     '***********************************************
