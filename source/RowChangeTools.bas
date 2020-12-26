@@ -12,10 +12,7 @@ Private Const MaxRowHeight = 409.5  '高さの最大サイズ
 '*****************************************************************************
 Private Sub ChangeHeight(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-'    Dim lngSize As Long
-    
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -40,10 +37,7 @@ End Sub
 '*****************************************************************************
 Private Sub MoveHorizonBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-'    Dim lngSize As Long
-    
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -161,7 +155,6 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     If blnDisplayPageBreaks = True Then
@@ -283,7 +276,6 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -491,7 +483,6 @@ On Error GoTo ErrHandle
     objRange.Rows(1).RowHeight = PixelToHeight(lngPixel(1))
     objRange.Rows(k).RowHeight = PixelToHeight(lngPixel(2))
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -607,7 +598,6 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_RowSize, Range(strSelection), GetSameHeightAddresses(objSelection))
     objSelection.RowHeight = dblHeight / lngRowCount
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -638,7 +628,6 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -762,7 +751,6 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -1368,7 +1356,6 @@ On Error GoTo ErrHandle
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
@@ -1450,14 +1437,12 @@ On Error GoTo ErrHandle
     If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
     Else
         Call SetOnUndo
-'        Call SetOnRepeat
         Exit Sub
     End If
     
     '動作が非常に遅くなるための対応
     If objSelection.Rows.Count > 100 Then
         Call SetOnUndo
-'        Call SetOnRepeat
         Exit Sub
     End If
     
@@ -1496,7 +1481,6 @@ On Error GoTo ErrHandle
     
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)

@@ -22,10 +22,7 @@ Private Const MaxColumnWidth = 255  '幅の最大サイズ
 '*****************************************************************************
 Private Sub ChangeWidth(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-'    Dim lngSize As Long
-    
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -50,10 +47,7 @@ End Sub
 '*****************************************************************************
 Private Sub MoveVerticalBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
-'    Dim lngSize As Long
-    
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-'    lngSize = CommandBars.ActionControl.Parameter
     If GetKeyState(vbKeyControl) < 0 Then
         lngSize = lngSize * 5
     End If
@@ -187,8 +181,6 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Call SetOnUndo
-'    Call SetOnRepeat
-
     ActiveWindow.View = lngWindowView
 Exit Sub
 ErrHandle:
@@ -311,7 +303,6 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -516,7 +507,6 @@ On Error GoTo ErrHandle
     objRange.Columns(1).ColumnWidth = PixelToWidth(lngPixel(1))
     objRange.Columns(k).ColumnWidth = PixelToWidth(lngPixel(2))
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -633,7 +623,6 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(objSelection))
     objSelection.ColumnWidth = PixelToWidth(dblWidth / DPIRatio / lngColCount)
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -664,7 +653,6 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -788,7 +776,6 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -1401,7 +1388,6 @@ On Error GoTo ErrHandle
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
     Call SetOnUndo
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
@@ -1471,7 +1457,6 @@ On Error GoTo ErrHandle
         Call objSelection.Columns.AutoFit
         
         Call SetOnUndo
-'        Call SetOnRepeat
     Exit Sub
     End If
 
@@ -1512,7 +1497,6 @@ On Error GoTo ErrHandle
     End If
     
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)

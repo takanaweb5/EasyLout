@@ -40,8 +40,6 @@ Private lngProcessId As Long   'ヘルプのプロセスID
 Private hHelp        As LongPtr   'ヘルプのハンドル
 Private udtPlacement() As TPlacement
 
-Private objRepeatCmd As IRibbonControl
-
 '*****************************************************************************
 '[ 関数名 ]　OpenHelp
 '[ 概  要 ]　ヘルプファイルを開く
@@ -192,7 +190,6 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -313,7 +310,6 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Application.DisplayAlerts = True
     Application.Calculation = lngCalculation
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -589,7 +585,6 @@ On Error GoTo ErrHandle
         End If
     End If
     Call SetOnUndo
-'    Call SetOnRepeat
     
     '貼り付けた文字列をクリップボードにコピー
     Call SetClipbordText(Replace$(strCopyText, vbLf, vbCrLf))
@@ -913,7 +908,6 @@ Private Sub UnSelect()
     Static strLastSheet   As String '前回の領域の復元用
     Static strLastAddress As String '前回の領域の復元用
 On Error GoTo ErrHandle
-    Dim objSelection As Range
     Dim objUnSelect  As Range
     Dim objRange As Range
     Dim enmUnselectMode As EUnselectMode
@@ -922,7 +916,6 @@ On Error GoTo ErrHandle
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If
-    Set objSelection = Selection
     
     '取消領域を選択させる
     With frmUnSelect
@@ -933,7 +926,7 @@ On Error GoTo ErrHandle
         Call .Show
         'キャンセル時
         If blnFormLoad = False Then
-            If objSelection.Areas.Count > 1 And strLastAddress = "" Then
+            If Selection.Areas.Count > 1 And strLastAddress = "" Then
                 strLastSheet = ActiveSheet.Name
                 strLastAddress = GetAddress(Selection)
             End If
@@ -948,6 +941,9 @@ On Error GoTo ErrHandle
         Call Unload(frmUnSelect)
     End With
 
+    Dim objSelection As Range
+    Set objSelection = Selection
+    
     Select Case (enmUnselectMode)
     Case E_Unselect  '取消し
         Set objRange = MinusRange(objSelection, objUnSelect)
@@ -1086,7 +1082,6 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1246,7 +1241,6 @@ On Error GoTo ErrHandle
     '回転している図形のグループ化を解除し元の図形を選択する
     Call UnGroupSelection(objGroups).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1425,7 +1419,6 @@ On Error GoTo ErrHandle
     Call Range(strSelectAddress).Select
     Call SetOnUndo
     Application.DisplayAlerts = True
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Application.DisplayAlerts = True
@@ -1641,7 +1634,6 @@ On Error GoTo ErrHandle
     '作成したテキストボックスを選択
     Call ActiveSheet.Shapes.Range(strTextboxes).Select
     Call SetOnUndo
-'    Call SetOnRepeat
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -2155,20 +2147,6 @@ Public Sub HideShapes(ByVal blnHide As Boolean)
         Else
             .DisplayDrawingObjects = xlAll
         End If
-        
-'        If .DisplayDrawingObjects = xlDisplayShapes Then
-'            If MsgBox("ワークブック内のすべての図形を非表示にします" & vbLf & _
-'                      "実行すれば、図形の編集が出来なくなります" & vbLf & _
-'                      "よろしいですか？" & vbLf & _
-'                      "※再度表示するには、もう一度クリックして下さい" & vbLf & _
-'                      "※「Ctrl+6」を押下してもExcelの標準機能で同様の操作が行えます" _
-'                      , vbOKCancel + vbQuestion) = vbOK Then
-'                .DisplayDrawingObjects = xlHide
-'            End If
-'            .DisplayDrawingObjects = xlHide
-'        Else
-'            .DisplayDrawingObjects = xlDisplayShapes
-'        End If
     End With
 End Sub
 
@@ -2233,40 +2211,38 @@ Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef objObject As Object, O
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　SetOnUndo
-'[ 概  要 ]　ApplicationオブジェクトのOnUndoイベントを設定
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
+'[概要] ApplicationオブジェクトのOnUndoイベントを設定
+'[引数] なし
+'[戻値] なし
 '*****************************************************************************
 Public Sub SetOnUndo()
     'キーの再定義 Excelのバグ?でキーが無効になることがあるため
     Call SetKeys
 
     Call clsUndoObject.SetOnUndo
-    Call Application.OnRepeat("", "")
+    Call Application.OnTime(Now(), "SetOnRepeat")
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　SetOnRepeat
-'[ 概  要 ]　ApplicationオブジェクトのOnRepeatイベントを設定
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
+'[概要] ApplicationオブジェクトのOnRepeatイベントを設定
+'[引数] なし
+'[戻値] なし
 '*****************************************************************************
-'Public Sub SetOnRepeat()
-'    Set objRepeatCmd = CommandBars.ActionControl
-'    If Not (objRepeatCmd Is Nothing) Then
-'        Call Application.OnRepeat("繰り返し　" & CommandBars.ActionControl.Caption, "OnRepeat")
-'    End If
-'End Sub
+Private Sub SetOnRepeat()
+    Call Application.OnRepeat("繰り返し", "OnRepeat")
+End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　OnRepeat
-'[ 概  要 ]　繰り返しクリック時
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
+'[概要] 繰返しクリック時
+'[引数] なし
+'[戻値] なし
 '*****************************************************************************
 Private Sub OnRepeat()
-    Call objRepeatCmd.Execute
+    If FParam = "" Then
+        Call Application.Run(FCommand)
+    Else
+        Call Application.Run(FCommand, FParam)
+    End If
 End Sub
 
 '*****************************************************************************
@@ -2484,9 +2460,6 @@ On Error GoTo ErrHandle
 '    MsgBox Timer - t
     
     Call SetOnUndo
-    
-    Set objRepeatCmd = CommandBars.ActionControl
-    Call Application.OnRepeat("繰り返し " & objRepeatCmd.Caption, "OnRepeat")
     Application.StatusBar = False
     Call objSelection.Select
 Exit Sub
@@ -2638,47 +2611,6 @@ Private Function IsInclude(ByRef objRange As Range, ByRef objShape As Shape) As 
         IsInclude = (MinusRange(Range(.TopLeftCell, .BottomRightCell), objRange) Is Nothing)
     End With
 End Function
-
-''*****************************************************************************
-''[ 関数名 ]　OnElseMenuClick
-''[ 概  要 ]　｢その他｣メニューを開く時に、各コマンドのEnabledの初期設定を行う
-''[ 引  数 ]　なし
-''[ 戻り値 ]　なし
-''*****************************************************************************
-'Private Sub OnElseMenuClick()
-'    Dim objMenu          As CommandBarPopup
-'    Dim enmSelectionType As ESelectionType
-'    Dim objCommand       As Object
-'
-'    Call SetKeys
-'
-'    enmSelectionType = CheckSelection()
-'    Set objMenu = CommandBars.ActionControl
-'
-'    'Menuがカスタマイズされていた場合の考慮
-'    For Each objCommand In objMenu.Controls
-'        objCommand.Enabled = True
-'    Next
-'
-'    On Error Resume Next
-'    objMenu.Controls("テキストボックスをセルに変換").Enabled = (enmSelectionType = E_Shape)
-'    objMenu.Controls("セルをテキストボックスに変換").Enabled = (enmSelectionType = E_Range)
-'    objMenu.Controls("図形をグリッドに合せる").Enabled = (enmSelectionType = E_Shape)
-'    objMenu.Controls("文字種の変換").Enabled = (enmSelectionType = E_Range)
-'    objMenu.Controls("選択領域の一部取消し").Enabled = (enmSelectionType = E_Range)
-'    objMenu.Controls("入力補助画面").Enabled = (enmSelectionType = E_Range)
-'
-'    '図形非表示が図形再表示になっていたら元に戻す
-'    objMenu.Controls("図形再表示").Caption = "図形非表示"
-'    If ActiveWorkbook Is Nothing Then
-'        objMenu.Controls("図形非表示").Enabled = False
-'    Else
-'        If ActiveWorkbook.DisplayDrawingObjects <> xlDisplayShapes Then
-'            objMenu.Controls("図形非表示").Caption = "図形再表示"
-'        End If
-'    End If
-'    On Error GoTo 0
-'End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　PressBackSpace
@@ -2959,7 +2891,7 @@ On Error GoTo ErrHandle
     'アンドゥ用に元の状態を保存する
     Call SaveUndoInfo(E_ApplyFormat, objSelection)
     Dim objArea As Range
-    For Each objArea In objUsedRange
+    For Each objArea In objUsedRange.Areas
         objArea.Formula = objArea.Formula
     Next
     Call objSelection.Select

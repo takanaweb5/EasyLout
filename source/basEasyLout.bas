@@ -24,6 +24,7 @@ Private Const PICTYPE_BITMAP = 1
 Private Const IID_IPictureDisp As String = "{7BF80981-BF32-101A-8BBB-00AA00300CAB}"
 
 Public FCommand As String
+Public FParam   As Variant
 
 '*****************************************************************************
 '[概要] IRibbonUIを保存するCommandBarを作成する
@@ -72,7 +73,7 @@ End Function
 '*****************************************************************************
 '[イベント] onLoad
 '*****************************************************************************
-Sub onLoad(Ribbon As IRibbonUI)
+Private Sub onLoad(Ribbon As IRibbonUI)
     'リボンUIをテンポラリのコマンドバーに保存する
     '(モジュール変数に保存した場合は、例外やコードの強制停止で値が損なわれるため)
     Call CreateTmpCommandBar(Ribbon)
@@ -81,14 +82,14 @@ End Sub
 '*****************************************************************************
 '[イベント] loadImage
 '*****************************************************************************
-Sub loadImage(imageID As String, ByRef returnedVal)
+Private Sub loadImage(imageID As String, ByRef returnedVal)
   returnedVal = imageID
 End Sub
 
 '*****************************************************************************
 '[イベント] getVisible
 '*****************************************************************************
-Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
 '    returnedVal = (GetValue(control.Id, "Visible") = 1)
     returnedVal = True
 End Sub
@@ -96,7 +97,7 @@ End Sub
 '*****************************************************************************
 '[イベント] getEnabled
 '*****************************************************************************
-Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
     Select Case Control.ID
     Case "B311", "B312", "B313", "B314"
         returnedVal = CommandBars.GetEnabledMso("ObjectsAlignTop")
@@ -136,14 +137,14 @@ End Function
 '*****************************************************************************
 '[イベント] getShowLabel
 '*****************************************************************************
-Sub getShowLabel(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getShowLabel(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = (GetValue(Control.ID, "ShowLabel") = 1)
 End Sub
 
 '*****************************************************************************
 '[イベント] getLabel
 '*****************************************************************************
-Sub getLabel(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getLabel(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "Label")
     
     Select Case Control.ID
@@ -155,7 +156,7 @@ End Sub
 '*****************************************************************************
 '[イベント] getScreentip
 '*****************************************************************************
-Sub getScreentip(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getScreentip(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "Screentip")
     
     Select Case Control.ID
@@ -163,10 +164,11 @@ Sub getScreentip(Control As IRibbonControl, ByRef returnedVal)
         returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
     End Select
 End Sub
+
 '*****************************************************************************
 '[イベント] getSupertip
 '*****************************************************************************
-Sub getSupertip(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getSupertip(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "Supertip")
 
     Select Case Control.ID
@@ -178,14 +180,14 @@ End Sub
 '*****************************************************************************
 '[イベント] getShowImage
 '*****************************************************************************
-Sub getShowImage(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getShowImage(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = (GetValue(Control.ID, "ShowImage") = 1)
 End Sub
 
 '*****************************************************************************
 '[イベント] getImage
 '*****************************************************************************
-Sub getImage(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getImage(Control As IRibbonControl, ByRef returnedVal)
     Dim Str As String
     Str = GetValue(Control.ID, "ImageMso")
     If Str <> "" Then
@@ -202,14 +204,14 @@ End Sub
 '*****************************************************************************
 '[イベント] getSize
 '*****************************************************************************
-Sub getSize(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getSize(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "ButtonSize")
 End Sub
 
 '*****************************************************************************
 '[イベント] getContent 動的にメニューを作成する
 '*****************************************************************************
-Sub getContent(Control As IRibbonControl, ByRef returnedVal) '
+Private Sub getContent(Control As IRibbonControl, ByRef returnedVal) '
 On Error Resume Next
     Select Case Control.ID
     Case "M31"
@@ -224,7 +226,7 @@ End Sub
 '*****************************************************************************
 '[イベント] getPressed
 '*****************************************************************************
-Sub getPressed(Control As IRibbonControl, ByRef returnedVal)
+Private Sub getPressed(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = False
     Select Case Control.ID
     Case "C1"
@@ -236,7 +238,7 @@ End Sub
 '*****************************************************************************
 '[イベント] onCheckAction
 '*****************************************************************************
-Sub onCheckAction(Control As IRibbonControl, pressed As Boolean)
+Private Sub onCheckAction(Control As IRibbonControl, pressed As Boolean)
     'チェック状態を保存
     GetTmpControl(Control.ID).State = pressed
     
@@ -264,16 +266,17 @@ End Sub
 '*****************************************************************************
 '[イベント] onAction
 '*****************************************************************************
-Sub onAction(Control As IRibbonControl)
+Private Sub onAction(Control As IRibbonControl)
     Call SetChkBox
     
-    Dim Param
-    Param = GetValue(Control.ID, "Parameter")
+    FCommand = GetValue(Control.ID, "Action")
+    FParam = GetValue(Control.ID, "Parameter")
+    
     On Error Resume Next
-    If Param <> "" Then
-        Call Application.Run(GetValue(Control.ID, "Action"), Param)
+    If FParam <> "" Then
+        Call Application.Run(FCommand, FParam)
     Else
-        Call Application.Run(GetValue(Control.ID, "Action"))
+        Call Application.Run(FCommand)
     End If
 End Sub
 
@@ -417,7 +420,7 @@ End Function
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
-Sub onAction2(Control As IRibbonControl)
+Private Sub onAction2(Control As IRibbonControl)
     Select Case Control.ID
     Case "Bdmy1"
         Call GetRibbonUI.Invalidate

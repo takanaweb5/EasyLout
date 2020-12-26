@@ -598,60 +598,6 @@ Public Function GetNearlyRange(ByRef objShape As Shape) As Range
     Set GetNearlyRange = Range(objTopLeft, objBottomRight)
 End Function
 
-''*****************************************************************************
-''[ 概  要 ]　Copy対象のRangeのAddressを取得
-''[ 引  数 ]　なし
-''[ 戻り値 ]　例：[Book1]Sheet1!$A$1:$B$1
-''*****************************************************************************
-'Public Function GetCopyRangeAddress() As String
-'On Error GoTo ErrHandle
-'    Application.DisplayAlerts = False
-'
-'    Dim objWorksheet As Worksheet
-'    Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
-'    With objWorksheet.Pictures.Paste(Link:=True)
-'        GetCopyRangeAddress = .Formula
-'        Call .Delete
-'    End With
-'
-'    GetCopyRangeAddress = GetMergeAddress(GetCopyRangeAddress)
-'
-'    Application.DisplayAlerts = True
-'Exit Function
-'ErrHandle:
-'    Application.DisplayAlerts = True
-'    Dim strMsg As String
-'    strMsg = "コピー元のセルの取得に失敗しました。以下の点を確認してください。" & vbCrLf
-'    strMsg = strMsg & "複数の範囲をコピーして実行できません。" & vbCrLf
-'    strMsg = strMsg & "ファイルのパスが長すぎると実行できません。"
-'    Call Err.Raise(Err.Number, Err.Source, strMsg)
-'End Function
-
-'*****************************************************************************
-'[ 関数名 ]　GetCharactersText
-'[ 概  要 ]　テキストボックスの中身の文字列を取得する
-'[ 引  数 ]　TextFrameオブジェクト
-'[ 戻り値 ]　中身の文字列
-'*****************************************************************************
-'Public Function GetCharactersText(ByRef objTextFrame As TextFrame) As String
-'    Dim i As Long
-'    Dim strText  As String
-'
-'    GetCharactersText = ""
-'    If objTextFrame.Characters.Text = "" Then
-'        Exit Function
-'    End If
-'
-'    'Characters.Textは255文字以上は返さないため、それ以上の文字数の時の対応を行う
-'    For i = 1 To 100000 Step 250
-'        strText = objTextFrame.Characters(i).Text
-'        GetCharactersText = GetCharactersText & Left$(strText, 250)
-'        If Len(strText) <= 250 Then
-'            Exit Function
-'        End If
-'    Next
-'End Function
-
 '*****************************************************************************
 '[ 関数名 ]　CheckDupRange
 '[ 概  要 ]　領域に重複がないかどうか判定する
@@ -1210,4 +1156,3 @@ Public Function GetRange(ByVal strAddress As String) As Range
         Set GetRange = UnionRange(GetRange, Range(AddressList(i)))
     Next
 End Function
-

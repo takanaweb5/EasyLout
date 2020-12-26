@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmUnSelect 
    Caption         =   "選択してください"
-   ClientHeight    =   2328
+   ClientHeight    =   2484
    ClientLeft      =   108
    ClientTop       =   336
    ClientWidth     =   4668
@@ -37,30 +37,37 @@ Private strLastAddress As String '前回の領域の復元用
 '*****************************************************************************
 Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 Private Sub Frame_Click()
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 Private Sub Frame_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 Private Sub lblTitle_Click()
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 Private Sub lblTitle_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 Private Sub cmdOK_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 Private Sub cmdCancel_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     On Error Resume Next
+    Call Selection.Select
     RefEdit.SetFocus
 End Sub
 
@@ -111,38 +118,21 @@ Private Sub RefEdit_KeyUp(KeyCode As Integer, ByVal Shift As Integer)
 End Sub
 
 '*****************************************************************************
-'[イベント]　chkReverse_Change
-'[ 概  要 ]　反転チェック時
+'[イベント] 選択取消しチェック時
 '*****************************************************************************
-Private Sub chkReverse_Change()
+Private Sub chkUnselect_Click()
     If blnCheck = True Then
         Exit Sub
     End If
-    If chkReverse.Value = True Then
-        Call ChangeMode(E_Reverse)
-    Else
+    If chkUnselect.Value = True Then
         Call ChangeMode(E_Unselect)
+    Else
+        Call ChangeMode(E_Union)
     End If
 End Sub
 
 '*****************************************************************************
-'[イベント]　chkIntersect_Change
-'[ 概  要 ]　絞り込みチェック時
-'*****************************************************************************
-Private Sub chkIntersect_Change()
-    If blnCheck = True Then
-        Exit Sub
-    End If
-    If chkIntersect.Value = True Then
-        Call ChangeMode(E_Intersect)
-    Else
-        Call ChangeMode(E_Unselect)
-    End If
-End Sub
-
-'*****************************************************************************
-'[イベント]　chkUnion_Change
-'[ 概  要 ]　追加チェック時
+'[イベント] 追加チェック時
 '*****************************************************************************
 Private Sub chkUnion_Change()
     If blnCheck = True Then
@@ -156,8 +146,35 @@ Private Sub chkUnion_Change()
 End Sub
 
 '*****************************************************************************
-'[イベント]　chkMerge_Click
-'[ 概  要 ]　結合セルのみチェック時
+'[イベント] 絞り込みチェック時
+'*****************************************************************************
+Private Sub chkIntersect_Change()
+    If blnCheck = True Then
+        Exit Sub
+    End If
+    If chkIntersect.Value = True Then
+        Call ChangeMode(E_Intersect)
+    Else
+        Call ChangeMode(E_Unselect)
+    End If
+End Sub
+
+'*****************************************************************************
+'[イベント] 反転チェック時
+'*****************************************************************************
+Private Sub chkReverse_Change()
+    If blnCheck = True Then
+        Exit Sub
+    End If
+    If chkReverse.Value = True Then
+        Call ChangeMode(E_Reverse)
+    Else
+        Call ChangeMode(E_Unselect)
+    End If
+End Sub
+
+'*****************************************************************************
+'[イベント] 結合セルのみチェック時
 '*****************************************************************************
 Private Sub chkMerge_Click()
     If blnCheck = True Then
@@ -171,29 +188,29 @@ Private Sub chkMerge_Click()
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　ChangeMode
-'[ 概  要 ]  ｢反転｣･｢絞り込み｣･｢取消し｣のモードを変更する
-'[ 引  数 ]　モードタイプ
-'[ 戻り値 ]　なし
+'[概要] モードを変更する
+'[引数] モードタイプ
+'[戻値] なし
 '*****************************************************************************
 Private Sub ChangeMode(ByVal enmModeType As EUnselectMode)
     Select Case enmModeType
     Case E_Unselect
         lblTitle.Caption = "マウスで選択を取消させたい領域を選択してください"
-    Case E_Reverse
-        lblTitle.Caption = "マウスで選択を反転させたい領域を選択してください"
-    Case E_Intersect
-        lblTitle.Caption = "マウスで選択を絞り込みたい領域を選択してください"
     Case E_Union
         lblTitle.Caption = "マウスで選択を追加したい領域を選択してください"
+    Case E_Intersect
+        lblTitle.Caption = "マウスで選択を絞り込みたい領域を選択してください"
+    Case E_Reverse
+        lblTitle.Caption = "マウスで選択を反転させたい領域を選択してください"
     Case E_Merge
         lblTitle.Caption = "結合セルのみを選択します"
     End Select
     
     blnCheck = True
-    chkReverse.Value = (enmModeType = E_Reverse)
-    chkIntersect.Value = (enmModeType = E_Intersect)
+    chkUnselect.Value = (enmModeType = E_Unselect)
     chkUnion.Value = (enmModeType = E_Union)
+    chkIntersect.Value = (enmModeType = E_Intersect)
+    chkReverse.Value = (enmModeType = E_Reverse)
     chkMerge.Value = (enmModeType = E_Merge)
  
     blnCheck = False
@@ -214,6 +231,9 @@ Private Sub UserForm_Initialize()
     lngReferenceStyle = Application.ReferenceStyle
     Application.ReferenceStyle = xlA1
 
+    '選択取消しを選択
+    chkUnselect.Value = True
+    
     'RefEditを隠す
     RefEdit.Top = RefEdit.Top + 100
     
