@@ -3,7 +3,7 @@
 <ribbon>
 <tabs>
 <tab id="tab1" label="かんたんレイアウト">
-<group id="grp1" label="結合セルの操作" imageMso="PivotChartMultipleUnified" centerVertically="true" autoScale="true">
+<group id="grp1" label="結合セルの操作" imageMso="PivotChartMultipleUnified" centerVertically="true" autoScale="false">
  <button id="B101" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <separator id="SP11"/>
  <box id="box11" boxStyle="vertical">
@@ -73,7 +73,7 @@
  </box>
 </group>
 
-<group id="grp3" label="図形" imageMso="DrawingCanvasExpand" centerVertically="false" autoScale="true">
+<group id="grp3" label="図形" imageMso="DrawingCanvasExpand" centerVertically="false" autoScale="false">
   <button id="B301" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <separator id="SP31"/>
   <checkBox id="C1" getPressed="getPressed" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" onAction="basEasyLout.onCheckAction"/>
