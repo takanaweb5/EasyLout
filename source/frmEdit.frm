@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 Option Explicit
 
 Private hWnd       As LongPtr
@@ -173,7 +175,7 @@ On Error GoTo ErrHandle
     'â¸çsÇÃCRLFÅ®LF
     strText = Replace$(txtEdit.Text, vbCr, "")
     
-    If IsOnlyCell(Selection) And Selection.MergeCells Then
+    If IsOnlyCell(Selection) Then
         Call SaveUndoInfo(E_CellValue, ActiveCell.MergeArea)
         ActiveCell.Value = Replace$(strText, vbTab, "")
         Set objNewSelection = Selection
