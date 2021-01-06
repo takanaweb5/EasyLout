@@ -499,22 +499,6 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　PasteValue
-'[ 概  要 ]　値を貼り付ける
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
-'*****************************************************************************
-Private Sub PasteValue()
-    Call SetKeys
-    
-    If GetKeyState(vbKeyControl) < 0 Then
-        Call CopyText  'セルの値をクリップボードにコピーする
-    Else
-        Call PasteText '値をセルに貼り付ける
-    End If
-End Sub
-    
-'*****************************************************************************
 '[ 関数名 ]　PasteText
 '[ 概  要 ]　値をセルに貼り付ける
 '[ 引  数 ]　なし
@@ -2862,9 +2846,9 @@ Private Function GetRowFormula(ByRef objRange As Range) As String
     Dim strText As String
     
     '列の数だけループ
-    GetRowFormula = objRange.Cells(1, 1).Formula
+    GetRowFormula = objRange.Columns(1).Formula
     For i = 2 To objRange.Columns.Count
-        GetRowFormula = GetRowFormula & vbTab & objRange.Cells(1, 1).Formula
+        GetRowFormula = GetRowFormula & vbTab & objRange.Columns(i).Formula
     Next i
 End Function
 
