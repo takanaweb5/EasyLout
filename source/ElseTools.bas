@@ -2693,7 +2693,7 @@ End Sub
 '*****************************************************************************
 Private Sub SelectRow()
     If CheckSelection = E_Range Then
-        Call Union(Selection.EntireRow, Selection.EntireRow).Select
+        Call Selection.EntireRow.Select
     End If
 End Sub
 
@@ -2704,7 +2704,7 @@ End Sub
 '*****************************************************************************
 Private Sub SelectCol()
     If CheckSelection = E_Range Then
-        Call Union(Selection.EntireColumn, Selection.EntireColumn).Select
+        Call Selection.EntireColumn.Select
     End If
 End Sub
 
