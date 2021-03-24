@@ -1083,6 +1083,10 @@ On Error GoTo ErrHandle
         Set GetCopyRange = Workbooks(strBook).Worksheets(strSheet).Range(strRange)
     End If
     
+    If IsOnlyCell(GetCopyRange) Then
+        Set GetCopyRange = GetCopyRange.MergeArea
+    End If
+    
     Application.CutCopyMode = False
     Exit Function
 ErrHandle:
