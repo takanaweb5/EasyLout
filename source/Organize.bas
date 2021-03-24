@@ -347,18 +347,6 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[概要] オブジェクトの選択を表示画面を表示する
-'[引数] なし
-'[戻値] なし
-'*****************************************************************************
-Private Sub ShowSelectionPane()
-    On Error Resume Next
-    If Not CommandBars.GetPressedMso("SelectionPane") Then
-        Call CommandBars.ExecuteMso("SelectionPane")
-    End If
-End Sub
-
-'*****************************************************************************
 '[概要] A1形式とR1C1参照形式を相互に切替える
 '[引数] なし
 '[戻値] なし
