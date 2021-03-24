@@ -2549,6 +2549,8 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
+    Call ShowSelectionPane
+    
     If CheckSelection() <> E_Range Then
         Exit Sub
     End If

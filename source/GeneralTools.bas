@@ -1083,10 +1083,6 @@ On Error GoTo ErrHandle
         Set GetCopyRange = Workbooks(strBook).Worksheets(strSheet).Range(strRange)
     End If
     
-    If IsOnlyCell(GetCopyRange) Then
-        Set GetCopyRange = GetCopyRange.MergeArea
-    End If
-    
     Application.CutCopyMode = False
     Exit Function
 ErrHandle:
@@ -1160,3 +1156,17 @@ Public Function GetRange(ByVal strAddress As String) As Range
         Set GetRange = UnionRange(GetRange, Range(AddressList(i)))
     Next
 End Function
+
+'*****************************************************************************
+'[概要] オブジェクトの選択を表示画面を表示する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Public Sub ShowSelectionPane()
+    On Error Resume Next
+    If Not CommandBars.GetPressedMso("SelectionPane") Then
+        Call CommandBars.ExecuteMso("SelectionPane")
+    End If
+End Sub
+
+
