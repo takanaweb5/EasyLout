@@ -127,12 +127,7 @@ End Sub
 Private Sub DeleteUserStyles()
     '件数のカウント
     Dim objStyle  As Style
-    FCount = 0
-    For Each objStyle In ActiveWorkbook.Styles
-        If objStyle.BuiltIn = False Then
-            FCount = FCount + 1
-        End If
-    Next
+    FCount = DeleteStyles(ActiveWorkbook, True)
     If FCount = 0 Then
         Call MsgBox("ユーザ定義のスタイルはありません")
         Exit Sub
@@ -363,7 +358,7 @@ End Sub
 '*****************************************************************************
 '[概要] 名前オブジェクトを削除する
 '[引数] Workbook, blnCountOnly:件数のカウントのみの時True
-'[戻値] 削除対象の名前オブジェクトの件数
+'[戻値] 削除対象のオブジェクトの件数
 '*****************************************************************************
 Private Function DeleteNames(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
     Dim objName     As Name
@@ -393,10 +388,10 @@ End Function
 
 '*****************************************************************************
 '[概要] スタイルを削除する
-'[引数] Workbook
-'[戻値] なし
+'[引数] Workbook, blnCountOnly:件数のカウントのみの時True
+'[戻値] 削除対象のオブジェクトの件数
 '*****************************************************************************
-Private Sub DeleteStyles(ByRef objWorkbook As Workbook)
+Private Function DeleteStyles(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
     Dim objStyle  As Style
     For Each objStyle In objWorkbook.Styles
         If objStyle.BuiltIn = False Then
@@ -404,7 +399,7 @@ Private Sub DeleteStyles(ByRef objWorkbook As Workbook)
             DoEvents
         End If
     Next
-End Sub
+End Function
 
 '*****************************************************************************
 '[概要] ユーザ設定のビューを削除する
