@@ -395,8 +395,11 @@ Private Function DeleteStyles(ByRef objWorkbook As Workbook, Optional ByVal blnC
     Dim objStyle  As Style
     For Each objStyle In objWorkbook.Styles
         If objStyle.BuiltIn = False Then
-            Call objStyle.Delete
-            DoEvents
+            DeleteStyles = DeleteStyles + 1
+            If Not blnCountOnly Then
+                Call objStyle.Delete
+                DoEvents
+            End If
         End If
     Next
 End Function
