@@ -165,20 +165,7 @@ Private Sub DeleteNameObjects()
     '件数のカウント
     Dim lngCnt As Long
     Dim objName As Name
-    For Each objName In ActiveWorkbook.Names
-        Select Case objName.MacroType
-        'EXCEL2019の謎の事象対応(TEXTJOIN関数等を使えば勝手に名前が定義されるが削除すると例外になるので回避)
-        Case xlFunction, xlCommand, xlNotXLM
-        Case Else
-            If IsError(Evaluate(objName.Value)) Then
-                lngCnt = lngCnt + 1
-            ElseIf (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
-               (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") And _
-               objName.Visible Then
-                lngCnt = lngCnt + 1
-            End If
-        End Select
-    Next
+    lngCnt = DeleteNames(ActiveWorkbook, True)
     If lngCnt = 0 Then
         Call MsgBox("ユーザ定義の名前はありません")
         Exit Sub
@@ -198,6 +185,7 @@ Private Sub DeleteNameObjects()
         Call CommandBars.ExecuteMso("NameManager")
     End Select
 End Sub
+
 '*****************************************************************************
 '[概要] ユーザ設定のビューをすべて削除
 '[引数] なし
@@ -285,6 +273,7 @@ Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
+
 '*****************************************************************************
 '[概要] 罫線と同化した直線の選択
 '[引数] なし
@@ -373,26 +362,34 @@ End Sub
 
 '*****************************************************************************
 '[概要] 名前オブジェクトを削除する
-'[引数] Workbook
-'[戻値] なし
+'[引数] Workbook, blnCountOnly:件数のカウントのみの時True
+'[戻値] 削除対象の名前オブジェクトの件数
 '*****************************************************************************
-Private Sub DeleteNames(ByRef objWorkbook As Workbook)
+Private Function DeleteNames(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
     Dim objName     As Name
     For Each objName In objWorkbook.Names
         Select Case objName.MacroType
         'EXCEL2019の謎の事象対応(TEXTJOIN関数等を使えば勝手に名前が定義されるが削除すると例外になるので回避)
         Case xlFunction, xlCommand, xlNotXLM
         Case Else
-            If IsError(Evaluate(objName.Value)) Then
-                Call objName.Delete
+            If Right(objName.RefersTo, 5) = "#REF!" Then
+                DeleteNames = DeleteNames + 1
+                If Not blnCountOnly Then
+                    Call objName.Delete
+                    DoEvents
+                End If
             ElseIf (Right(objName.Name, Len("Print_Area")) <> "Print_Area") And _
                (Right(objName.Name, Len("Print_Titles")) <> "Print_Titles") And _
                objName.Visible Then
-                Call objName.Delete
+                DeleteNames = DeleteNames + 1
+                If Not blnCountOnly Then
+                    Call objName.Delete
+                    DoEvents
+                End If
             End If
         End Select
     Next
-End Sub
+End Function
 
 '*****************************************************************************
 '[概要] スタイルを削除する
@@ -404,6 +401,7 @@ Private Sub DeleteStyles(ByRef objWorkbook As Workbook)
     For Each objStyle In objWorkbook.Styles
         If objStyle.BuiltIn = False Then
             Call objStyle.Delete
+            DoEvents
         End If
     Next
 End Sub
