@@ -415,6 +415,7 @@ Private Sub DeleteViews(ByRef objWorkbook As Workbook)
     Dim objView  As CustomView
     For Each objView In objWorkbook.CustomViews
         Call objView.Delete
+        DoEvents
     Next
 End Sub
 
