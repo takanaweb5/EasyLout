@@ -39,7 +39,7 @@ Private Sub ApplyNormalFontToShape()
     
     For i = 1 To ActiveSheet.Shapes.Count
         Select Case ActiveSheet.Shapes(i).Type
-        Case msoAutoShape, msoTextBox
+        Case msoAutoShape, msoTextBox, msoCallout
             If blnShapeSelect Then
                 For k = 1 To Selection.ShapeRange.Count
                     If Selection.ShapeRange(k).Name = ActiveSheet.Shapes(i).Name Then
@@ -59,6 +59,7 @@ Private Sub ApplyNormalFontToShape()
     End If
     
     ReDim Preserve lngArray(1 To j)
+    On Error Resume Next
     With ActiveSheet.Shapes.Range(lngArray).TextFrame2.TextRange.Font
         .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
         .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
