@@ -704,7 +704,7 @@ Private Function CheckPasteMode(ByVal strCopyText As String, ByRef objSelection 
     '行方向に結合のない単一セル
     If objSelection.Rows.Count = 1 Then
         '行の高さがだいたい2行以上の時
-        If objSelection.RowHeight > (objSelection.Font.Size + 2) * 2 Then
+        If objSelection.RowHeight > (objSelection.Font.size + 2) * 2 Then
             CheckPasteMode = True
             Exit Function
         End If
@@ -1136,6 +1136,15 @@ Public Function GroupSelection(ByRef objShapes As ShapeRange) As ShapeRange
             With objShape.Duplicate
                 .Top = objShape.Top
                 .Left = objShape.Left
+                If objShape.Top < 0 Then
+                    '図形が回転して座標がマイナスになった時ゼロになるため補正する
+                    Call .IncrementTop(objShape.Top)
+                End If
+                If objShape.Left < 0 Then
+                    '図形が回転して座標がマイナスになった時ゼロになるため補正する
+                    Call .IncrementLeft(objShape.Left)
+                End If
+                
                 '透明にする
                 .Fill.Visible = msoFalse
                 .Line.Visible = msoFalse
@@ -1644,7 +1653,7 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
         .NameComplexScript = objCell.Font.Name
         .NameFarEast = objCell.Font.Name
         .Name = objCell.Font.Name
-        .Size = objCell.Font.Size
+        .size = objCell.Font.size
     End With
     With objTextbox.TextFrame2.TextRange
         .Text = objCell.Value
@@ -1791,7 +1800,7 @@ Private Function ChangeCommentToTextbox(ByRef objCell As Range) As Shape
         .NameComplexScript = objFont.Name
         .NameFarEast = objFont.Name
         .Name = objFont.Name
-        .Size = objFont.Size
+        .size = objFont.size
     End With
     With objTextbox.TextFrame2.TextRange
         .Text = objComment.Text

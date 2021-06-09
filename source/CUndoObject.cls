@@ -61,7 +61,7 @@ End Type
 
 Private Type TRangeSize  'ïùÇ©çÇÇ≥
     Address  As String
-    Size     As Double 'Width or Height
+    size     As Double 'Width or Height
 End Type
 
 Private Type TUndoInfo  'UndoèÓïÒ
@@ -388,9 +388,9 @@ Private Sub BackupRangeSize(ByRef colSelection As Variant)
             .RangeSize(i).Address = colSelection(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
-                .RangeSize(i).Size = Range(colSelection(i)).Columns(1).ColumnWidth
+                .RangeSize(i).size = Range(colSelection(i)).Columns(1).ColumnWidth
             Case E_SplitRow, E_EraseRow, E_RowSize, E_RowSize2
-                .RangeSize(i).Size = Range(colSelection(i)).Rows(1).RowHeight
+                .RangeSize(i).size = Range(colSelection(i)).Rows(1).RowHeight
             End Select
         Next i
         .RangeCount = colSelection.Count
@@ -736,9 +736,9 @@ Private Sub RecoverRangeSize()
         With udtUndoInfo(bytNo).RangeSize(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
-                objWorksheet.Range(.Address).ColumnWidth = .Size
+                objWorksheet.Range(.Address).ColumnWidth = .size
             Case E_SplitRow, E_EraseRow, E_RowSize, E_RowSize2
-                objWorksheet.Range(.Address).RowHeight = .Size
+                objWorksheet.Range(.Address).RowHeight = .size
             End Select
         End With
     Next i
@@ -765,6 +765,15 @@ Private Sub RecoverShapeSize()
                     objShape.Width = .Width
                     objShape.Top = .Top
                     objShape.Left = .Left
+                    If .Top < 0 Then
+                        'ê}å`Ç™âÒì]ÇµÇƒç¿ïWÇ™É}ÉCÉiÉXÇ…Ç»Ç¡ÇΩéûÉ[ÉçÇ…Ç»ÇÈÇΩÇﬂï‚ê≥Ç∑ÇÈ
+                        Call objShape.IncrementTop(.Top)
+                    End If
+                    If .Left < 0 Then
+                        'ê}å`Ç™âÒì]ÇµÇƒç¿ïWÇ™É}ÉCÉiÉXÇ…Ç»Ç¡ÇΩéûÉ[ÉçÇ…Ç»ÇÈÇΩÇﬂï‚ê≥Ç∑ÇÈ
+                        Call objShape.IncrementLeft(.Left)
+                    End If
+                    
                     .Recover = True
                     Exit For
                 End If

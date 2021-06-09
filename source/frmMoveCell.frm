@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmMoveCell 
    Caption         =   "領域の操作"
-   ClientHeight    =   2976
+   ClientHeight    =   2970
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   5004
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 Public Enum EModeType
@@ -100,7 +101,7 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
         .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
         .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
         .Name = ActiveWorkbook.Styles("Normal").Font.Name
-        .Size = ActiveWorkbook.Styles("Normal").Font.Size
+        .size = ActiveWorkbook.Styles("Normal").Font.size
     End With
     'テキストボックスの背景を変更
     With objTextbox.Fill
@@ -246,9 +247,8 @@ On Error GoTo ErrHandle
     End Select
     
     '図形を移動・コピーする
-    If blnCopyObjectsWithCells = True Then
+'    If blnCopyObjectsWithCells = True Then
         If chkOnlyValue.Value = False Then
-'        If chkOnlyValue.Value = False And blnSameSheet = True Then
             If ActiveSheet.Shapes.Count > 0 And lngDisplayObjects <> xlHide Then
                 Select Case enmModeType
                 Case E_Move, E_Copy
@@ -260,7 +260,7 @@ On Error GoTo ErrHandle
                 End Select
             End If
         End If
-    End If
+'    End If
         
     If enmModeType = E_CutInsert Then
         Select Case GetDirection()
@@ -627,7 +627,7 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
     Next objShape
     
     For i = 1 To objShapes.Count
-        If udtShapes(i).Placement <> xlFreeFloating Then
+'        If udtShapes(i).Placement <> xlFreeFloating Then
             If blnCopy Then
                 '複写する
                 Call SetRect(GetShapeFromID(udtShapes(i).ID).Duplicate, objToRange, udtShapes(i))
@@ -635,7 +635,7 @@ Private Sub MoveShapes(ByRef objShapes As ShapeRange, ByRef objFromRange As Rang
                 '移動する
                 Call SetRect(GetShapeFromID(udtShapes(i).ID), objToRange, udtShapes(i))
             End If
-        End If
+'        End If
     Next i
 End Sub
 
@@ -647,16 +647,16 @@ End Sub
 '*****************************************************************************
 Private Sub SetRect(ByRef objShape As Shape, ByRef objRange As Range, ByRef udtShape As TShape)
     '左上の位置を設定する
-    If udtShape.Placement <> xlFreeFloating Then
+'    If udtShape.Placement <> xlFreeFloating Then
         objShape.Top = objRange.Rows(udtShape.TopRow).Top + udtShape.Top
         objShape.Left = objRange.Columns(udtShape.LeftColumn).Left + udtShape.Left
-    End If
+'    End If
 
     '幅と高さを設定する
-    If udtShape.Placement = xlMoveAndSize Then
+'    If udtShape.Placement = xlMoveAndSize Then
         objShape.Height = objRange.Rows(udtShape.BottomRow).Top + udtShape.Height - objShape.Top
         objShape.Width = objRange.Columns(udtShape.RightColumn).Left + udtShape.Width - objShape.Left
-    End If
+'    End If
 End Sub
 
 '*****************************************************************************
