@@ -3,12 +3,12 @@ Option Explicit
 Option Private Module
 
 Public Declare PtrSafe Sub Sleep Lib "Kernel32" (ByVal dwMilliseconds As Long)
-Public Declare PtrSafe Function GetWindowLong Lib "User32" Alias "GetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long) As Long
-Public Declare PtrSafe Function SetWindowLong Lib "User32" Alias "SetWindowLongA" (ByVal hWnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-Public Declare PtrSafe Function ShowWindow Lib "User32" (ByVal hWnd As LongPtr, ByVal nCmdShow As Long) As Long
-Public Declare PtrSafe Function FindWindow Lib "User32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
-Public Declare PtrSafe Function IsZoomed Lib "User32" (ByVal hWnd As LongPtr) As Long
-Public Declare PtrSafe Function GetSystemMenu Lib "User32" (ByVal hWnd As LongPtr, ByVal bRevert As Long) As LongPtr
+Public Declare PtrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As LongPtr, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Public Declare PtrSafe Function ShowWindow Lib "user32" (ByVal hwnd As LongPtr, ByVal nCmdShow As Long) As Long
+Public Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
+Public Declare PtrSafe Function IsZoomed Lib "user32" (ByVal hwnd As LongPtr) As Long
+Public Declare PtrSafe Function GetSystemMenu Lib "user32" (ByVal hwnd As LongPtr, ByVal bRevert As Long) As LongPtr
 Public Declare PtrSafe Function EnableMenuItem Lib "user32.dll" (ByVal hMenu As LongPtr, ByVal uIDEnableItem As Long, ByVal uEnable As Long) As Long
 Public Declare PtrSafe Function OpenProcess Lib "kernel32.dll" (ByVal dwDesiredAccess As Long, ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As LongPtr
 Public Declare PtrSafe Function GetExitCodeProcess Lib "kernel32.dll" (ByVal hProcess As LongPtr, lpExitCode As Long) As Long
@@ -16,23 +16,23 @@ Public Declare PtrSafe Function GetExitCodeProcess Lib "kernel32.dll" (ByVal hPr
 'Public Declare PtrSafe Function TerminateProcess Lib "KERNEL32.DLL" (ByVal hProcess As Longptr, ByVal uExitCode As Long) As Long
 Public Declare PtrSafe Function LoadCursor Lib "user32.dll" Alias "LoadCursorA" (ByVal hInstance As LongPtr, ByVal lpCursorName As Long) As LongPtr
 Public Declare PtrSafe Function SetCursor Lib "user32.dll" (ByVal hCursor As LongPtr) As LongPtr
-Public Declare PtrSafe Function GetKeyState Lib "User32" (ByVal lngVirtKey As Long) As Integer
+Public Declare PtrSafe Function GetKeyState Lib "user32" (ByVal lngVirtKey As Long) As Integer
 'Public Declare PtrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Longptr, ByVal hwnd As Longptr, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hWnd As LongPtr, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hWnd As LongPtr) As LongPtr
+Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As LongPtr, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As LongPtr) As LongPtr
 Public Declare PtrSafe Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As LongPtr, ByVal b As Long) As Long
-Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hWnd As LongPtr, ByVal himc As LongPtr) As Long
+Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As LongPtr, ByVal himc As LongPtr) As Long
 Public Declare PtrSafe Function ReleaseCapture Lib "user32.dll" () As Long
-Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDc As LongPtr, ByVal nIndex As Long) As Long
-Public Declare PtrSafe Function GetDC Lib "User32" (ByVal hWnd As LongPtr) As Long
-Public Declare PtrSafe Function ReleaseDC Lib "User32" (ByVal hWnd As LongPtr, ByVal hDc As LongPtr) As Long
-Public Declare PtrSafe Function OpenClipboard Lib "User32" (ByVal hWnd As LongPtr) As Long
-Public Declare PtrSafe Function CloseClipboard Lib "User32" () As Long
-Public Declare PtrSafe Function IsClipboardFormatAvailable Lib "User32" (ByVal wFormat As Long) As Long
-Public Declare PtrSafe Function RegisterClipboardFormat Lib "User32" Alias "RegisterClipboardFormatA" (ByVal lpString As String) As Long
-Public Declare PtrSafe Function EmptyClipboard Lib "User32" () As Long
-Public Declare PtrSafe Function SetClipboardData Lib "User32" (ByVal wFormat As Long, ByVal hMem As LongPtr) As Long
-Public Declare PtrSafe Function GetClipboardData Lib "User32" (ByVal wFormat As Long) As LongPtr
+Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
+Public Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As LongPtr) As Long
+Public Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+Public Declare PtrSafe Function OpenClipboard Lib "user32" (ByVal hwnd As LongPtr) As Long
+Public Declare PtrSafe Function CloseClipboard Lib "user32" () As Long
+Public Declare PtrSafe Function IsClipboardFormatAvailable Lib "user32" (ByVal wFormat As Long) As Long
+Public Declare PtrSafe Function RegisterClipboardFormat Lib "user32" Alias "RegisterClipboardFormatA" (ByVal lpString As String) As Long
+Public Declare PtrSafe Function EmptyClipboard Lib "user32" () As Long
+Public Declare PtrSafe Function SetClipboardData Lib "user32" (ByVal wFormat As Long, ByVal hMem As LongPtr) As Long
+Public Declare PtrSafe Function GetClipboardData Lib "user32" (ByVal wFormat As Long) As LongPtr
 Public Declare PtrSafe Function GlobalAlloc Lib "Kernel32" (ByVal uFlags As Long, ByVal dwBytes As Long) As LongPtr
 Public Declare PtrSafe Function GlobalFree Lib "Kernel32" (ByVal hMem As Long) As Long
 Public Declare PtrSafe Function GlobalSize Lib "Kernel32" (ByVal hMem As LongPtr) As Long
@@ -65,7 +65,7 @@ Public Const MAXROWCOLCNT = 1000
 Public Const LOGPIXELSX = 88
 Public Const LOGPIXELSY = 90
 
-Public Const REGKEY = "EasyLout "
+Public Const REGKEY = "EasyLout"
 Public Const DEFAULTFONT = "ＭＳ ゴシック"
 
 'Public DPIRatio As Double
@@ -972,11 +972,11 @@ End Sub
 Public Sub SetIMEOff()
 On Error GoTo ErrHandle
     Dim hIME As LongPtr
-    hIME = ImmGetContext(Application.hWnd)
+    hIME = ImmGetContext(Application.hwnd)
     Call ImmSetOpenStatus(hIME, 0)
 ErrHandle:
     If hIME <> 0 Then
-        Call ImmReleaseContext(Application.hWnd, hIME)
+        Call ImmReleaseContext(Application.hwnd, hIME)
     End If
 End Sub
 
@@ -1016,19 +1016,19 @@ Public Function GetCopyRange() As Range
     End If
      
 On Error GoTo ErrHandle
-    Dim Size As Long
+    Dim size As Long
     Dim p As LongPtr
-    Size = GlobalSize(hMem)
+    size = GlobalSize(hMem)
     p = GlobalLock(hMem)
-    ReDim data(1 To Size) As Byte
-    Call CopyMemory(data(1), ByVal p, Size)
+    ReDim data(1 To size) As Byte
+    Call CopyMemory(data(1), ByVal p, size)
     Call GlobalUnlock(hMem)
     Call CloseClipboard
     hMem = 0
     
     Dim strData As String
     Dim i As Long
-    For i = 1 To Size
+    For i = 1 To size
         If data(i) = 0 Then
             data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
         End If
