@@ -478,5 +478,6 @@ On Error GoTo ErrHandle
     For x = 1 To UBound(Data)
         ActiveCell.Cells(1, x + 1) = Data(x)
     Next
+    ActiveCell = strFilename
 ErrHandle:
 End Sub
