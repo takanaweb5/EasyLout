@@ -3,17 +3,17 @@ Option Explicit
 Option Private Module
 
 Private Type PICTDESC_BMP
-    Size    As Long
+    size    As Long
     Type    As Long
     hBitmap As LongPtr
     hPal    As LongPtr
 End Type
 
 Private Type Guid
-    data1 As Long
-    data2 As Integer
-    data3 As Integer
-    data4(7) As Byte
+    Data1 As Long
+    Data2 As Integer
+    Data3 As Integer
+    Data4(7) As Byte
 End Type
 
 Private Declare PtrSafe Function CreateStreamOnHGlobal Lib "ole32" (ByVal hGlobal As LongPtr, ByVal fDeleteOnRelease As Long, ppstm As Any) As Long
@@ -386,14 +386,14 @@ End Function
 '*****************************************************************************
 Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     'ファイルサイズの配列を作成
-    ReDim data(1 To objRow.Cells(1, 1).End(xlToRight).Column - 1) As Byte
+    ReDim Data(1 To objRow.Cells(1, 1).End(xlToRight).Column - 1) As Byte
     Dim x As Long
-    For x = 1 To UBound(data)
-         data(x) = objRow.Cells(1, x + 1)
+    For x = 1 To UBound(Data)
+         Data(x) = objRow.Cells(1, x + 1)
     Next
     
     Dim Stream As IUnknown
-    If CreateStreamOnHGlobal(VarPtr(data(1)), 0, Stream) <> 0 Then
+    If CreateStreamOnHGlobal(VarPtr(Data(1)), 0, Stream) <> 0 Then
         Call Err.Raise(513, "CreateStreamOnHGlobalエラー")
     End If
 
@@ -402,7 +402,7 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     
     Dim uPicInfo As PICTDESC_BMP
     With uPicInfo
-        .Size = Len(uPicInfo)
+        .size = Len(uPicInfo)
         .Type = PICTYPE_BITMAP
         .hBitmap = Gdip.ToHBITMAP
         .hPal = 0
@@ -415,8 +415,9 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     Set LoadImageFromResource = IBitmap
 End Function
 
+
 '*****************************************************************************
-'[概要] リボンのコールバック関数を実行する(Debug用)
+'[概要] リボンのコールバック関数を実行する(開発用)
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
@@ -431,3 +432,51 @@ Private Sub onAction2(Control As IRibbonControl)
     End Select
 End Sub
 
+'*****************************************************************************
+'[概要] ResourceシートのPngファイルをフォルダに書き込む(開発用)
+'[引数] 書込むフォルダ
+'[戻値] なし
+'*****************************************************************************
+Public Sub SavePngFiles(ByVal strFolder As String)
+    Dim y As Long
+    Dim objRange As Range
+    Dim objRow As Range
+    Set objRange = ThisWorkbook.Worksheets("Resource").UsedRange
+    
+    Dim strFilename As String
+    
+    '行数LOOP
+    For y = 1 To objRange.Rows.Count
+        'ファイルサイズの配列を作成
+        ReDim Data(1 To objRange.Cells(y, 1).End(xlToRight).Column - 1) As Byte
+        Dim x As Long
+        For x = 1 To UBound(Data)
+            Data(x) = objRange.Cells(y, x + 1)
+        Next
+        
+        strFilename = strFolder & "\" & objRange.Cells(y, "A").Value
+        Open strFilename For Binary Access Write As #1
+        Put #1, , Data
+        Close #1
+    Next
+End Sub
+
+'*****************************************************************************
+'[概要] アクティブセルにファイルを読込む(開発用)
+'[引数] ファイル名
+'[戻値] なし
+'*****************************************************************************
+Public Sub LoadBinaryFile(ByVal strFilename As String)
+On Error GoTo ErrHandle
+    ReDim Data(1 To FileLen(strFilename)) As Byte
+
+    Open strFilename For Binary Access Read As #1
+    Get #1, , Data
+    Close #1
+
+    Dim x As Long
+    For x = 1 To UBound(Data)
+        ActiveCell.Cells(1, x + 1) = Data(x)
+    Next
+ErrHandle:
+End Sub
