@@ -2703,8 +2703,12 @@ End Sub
 '[–ß’l] ‚È‚µ
 '*****************************************************************************
 Private Sub SelectRow()
+    Dim objSelection As Range
+    Dim objExceptRange As Range
     If CheckSelection = E_Range Then
-        Call Selection.EntireRow.Select
+        Set objSelection = Selection.EntireRow
+        Set objExceptRange = ArrangeRange(MinusRange(ArrangeRange(objSelection), objSelection))
+        Call MinusRange(objSelection, objExceptRange).Select
     End If
 End Sub
 
@@ -2714,8 +2718,12 @@ End Sub
 '[–ß’l] ‚È‚µ
 '*****************************************************************************
 Private Sub SelectCol()
+    Dim objSelection As Range
+    Dim objExceptRange As Range
     If CheckSelection = E_Range Then
-        Call Selection.EntireColumn.Select
+        Set objSelection = Selection.EntireColumn
+        Set objExceptRange = ArrangeRange(MinusRange(ArrangeRange(objSelection), objSelection))
+        Call MinusRange(objSelection, objExceptRange).Select
     End If
 End Sub
 
