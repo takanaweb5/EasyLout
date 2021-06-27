@@ -2708,6 +2708,7 @@ Private Sub SelectRow()
     If CheckSelection = E_Range Then
         Set objSelection = Selection.EntireRow
         Set objExceptRange = ArrangeRange(MinusRange(ArrangeRange(objSelection), objSelection))
+        '縦方向に結合がはみ出ているセルを除く
         Call MinusRange(objSelection, objExceptRange).Select
     End If
 End Sub
@@ -2723,6 +2724,7 @@ Private Sub SelectCol()
     If CheckSelection = E_Range Then
         Set objSelection = Selection.EntireColumn
         Set objExceptRange = ArrangeRange(MinusRange(ArrangeRange(objSelection), objSelection))
+        '横方向に結合がはみ出ているセルを除く
         Call MinusRange(objSelection, objExceptRange).Select
     End If
 End Sub
