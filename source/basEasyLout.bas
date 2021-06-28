@@ -350,25 +350,37 @@ End Function
 '*****************************************************************************
 Private Function GetImageFromResource(ByVal strImageFile As String) As IPicture
     Dim y As Long
+    Dim i As Long
     Dim objRange As Range
     Dim objRow As Range
     Set objRange = ThisWorkbook.Worksheets("Resource").UsedRange
     
     Dim strPixel As String
+    Dim strImageFile2 As String
     'DPIから 16Pixel or 20Pixelのアイコンを使用するか判定 ※Windowsの標準は96DPI
     Select Case GetDPI()
     Case Is < 120
         '例：Sample.png → Sample16.png
-        strImageFile = Replace(strImageFile, ".png", 16 & ".png")
+        strImageFile2 = Replace(strImageFile, ".png", 16 & ".png")
     Case 120
         '例：Sample.png → Sample20.png
-        strImageFile = Replace(strImageFile, ".png", 20 & ".png")
+        strImageFile2 = Replace(strImageFile, ".png", 20 & ".png")
+    Case Else
+        strImageFile2 = strImageFile
     End Select
         
     '行数LOOP
     For y = 1 To objRange.Rows.Count
         If objRange.Cells(y, "A").Value = strImageFile Then
-            Set objRow = objRange.Rows(y)
+            For i = 0 To 2
+                If objRange.Cells(y + i, "A").Value = strImageFile2 Then
+                    Set objRow = objRange.Rows(y + i)
+                    Exit For
+                End If
+            Next
+            If objRow Is Nothing Then
+                Set objRow = objRange.Rows(y)
+            End If
             Exit For
         End If
     Next
