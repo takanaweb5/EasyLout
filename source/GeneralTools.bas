@@ -65,7 +65,7 @@ Public Const MAXROWCOLCNT = 1000
 Public Const LOGPIXELSX = 88
 Public Const LOGPIXELSY = 90
 
-Public Const REGKEY = "EasyLout "
+Public Const REGKEY = "EasyLout"
 Public Const DEFAULTFONT = "ÇlÇr ÉSÉVÉbÉN"
 
 'Public DPIRatio As Double
