@@ -65,7 +65,7 @@ Public Const MAXROWCOLCNT = 1000
 Public Const LOGPIXELSX = 88
 Public Const LOGPIXELSY = 90
 
-Public Const REGKEY = "EasyLout"
+Public Const REGKEY = "EasyLout "
 Public Const DEFAULTFONT = "ＭＳ ゴシック"
 
 'Public DPIRatio As Double
@@ -845,6 +845,7 @@ End Function
 '[ 戻り値 ]　使用されている領域
 '*****************************************************************************
 Public Function GetUsedRange(Optional ByRef objSheet As Worksheet = Nothing) As Range
+    On Error Resume Next
     If objSheet Is Nothing Then
         Set GetUsedRange = Range(Cells(1, 1), Cells.SpecialCells(xlCellTypeLastCell))
     Else
@@ -1020,8 +1021,8 @@ On Error GoTo ErrHandle
     Dim p As LongPtr
     size = GlobalSize(hMem)
     p = GlobalLock(hMem)
-    ReDim data(1 To size) As Byte
-    Call CopyMemory(data(1), ByVal p, size)
+    ReDim Data(1 To size) As Byte
+    Call CopyMemory(Data(1), ByVal p, size)
     Call GlobalUnlock(hMem)
     Call CloseClipboard
     hMem = 0
@@ -1029,11 +1030,11 @@ On Error GoTo ErrHandle
     Dim strData As String
     Dim i As Long
     For i = 1 To size
-        If data(i) = 0 Then
-            data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
+        If Data(i) = 0 Then
+            Data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
         End If
     Next i
-    strData = StrConv(data, vbUnicode)
+    strData = StrConv(Data, vbUnicode)
     
     Dim objRegExp As Object
     Set objRegExp = CreateObject("VBScript.RegExp")
