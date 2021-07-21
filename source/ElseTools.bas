@@ -2897,7 +2897,11 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_ApplyFormat, objSelection)
     Dim objArea As Range
     For Each objArea In objUsedRange.Areas
-        objArea.Formula = objArea.Formula
+        If GetKeyState(vbKeyControl) < 0 Then
+            objArea.Value = objArea.Value
+        Else
+            objArea.Formula = objArea.Formula
+        End If
     Next
     Call objSelection.Select
     Call SetOnUndo
