@@ -775,41 +775,40 @@ Private Function StrConvWideOnlyKana(ByVal strText As String) As String
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　SortArray
-'[ 概  要 ]　SortArray配列をWorksheetを使ってソートする
-'[ 引  数 ]　PosArray配列
-'[ 戻り値 ]　なし
+'[概要] SortArray配列をソートする
+'[引数] Sort対象配列
+'[戻値] なし
 '*****************************************************************************
-Public Sub SortArray(ByRef udtSortArray() As TSortArray)
-On Error GoTo ErrHandle
-    Dim objWorksheet As Worksheet
+Public Sub SortArray(ByRef SortArray() As TSortArray)
     Dim i As Long
-    
-    Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
-    Call DeleteSheet(objWorksheet)
-    For i = 1 To UBound(udtSortArray)
-        With udtSortArray(i)
-            objWorksheet.Cells(i, 1) = .Key1
-            objWorksheet.Cells(i, 2) = .Key2
-            objWorksheet.Cells(i, 3) = .Key3
-        End With
-    Next
-    
-    With objWorksheet.Cells(1, 1).CurrentRegion
-        'Key1、Key2 でソートする
-        Call .Sort(Key1:=.Columns(1), Key2:=.Columns(2), Header:=xlNo)
-    End With
-    
-    For i = 1 To UBound(udtSortArray)
-        With udtSortArray(i)
-            .Key1 = objWorksheet.Cells(i, 1)
-            .Key2 = objWorksheet.Cells(i, 2)
-            .Key3 = objWorksheet.Cells(i, 3)
-        End With
-    Next
-ErrHandle:
-    Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
+    Dim j As Long
+    Dim Swap As TSortArray
+    For i = UBound(SortArray) To 1 Step -1
+        For j = 1 To i - 1
+            If CompareValue(SortArray(j), SortArray(j + 1)) Then
+                Swap = SortArray(j)
+                SortArray(j) = SortArray(j + 1)
+                SortArray(j + 1) = Swap
+            End If
+        Next j
+    Next i
 End Sub
+
+'*****************************************************************************
+'[概要] 大小比較を行う
+'[引数] 比較対象
+'[戻値] True: SortArray1 > SortArray2
+'*****************************************************************************
+Public Function CompareValue(ByRef SortArray1 As TSortArray, ByRef SortArray2 As TSortArray) As Boolean
+    If SortArray1.Key1 > SortArray2.Key1 Then
+        CompareValue = True
+        Exit Function
+    End If
+    If SortArray1.Key2 > SortArray2.Key2 Then
+        CompareValue = True
+        Exit Function
+    End If
+End Function
 
 '*****************************************************************************
 '[ 関数名 ]　IsBorderMerged
