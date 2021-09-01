@@ -172,8 +172,13 @@ On Error GoTo ErrHandle
     
     '同じ幅の塊ごとに幅を設定する
     For i = 1 To colAddress.Count
-        lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
-        Range(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
+        'SHIFTが押下されていると非表示にする
+        If lngSize < 0 And FPressKey = E_Shift Then
+            Range(colAddress(i)).ColumnWidth = 0
+        Else
+            lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
+            Range(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
+        End If
     Next i
     
     '改ページを元に戻す

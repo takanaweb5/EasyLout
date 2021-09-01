@@ -146,8 +146,13 @@ On Error GoTo ErrHandle
     
     '同じ高さの塊ごとに高さを設定する
     For i = 1 To colAddress.Count
-        lngPixel = Range(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
-        Range(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
+        'SHIFTが押下されていると非表示にする
+        If lngSize < 0 And FPressKey = E_Shift Then
+            Range(colAddress(i)).RowHeight = 0
+        Else
+            lngPixel = Range(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
+            Range(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
+        End If
     Next i
     
     '改ページを元に戻す
