@@ -4,7 +4,7 @@ Option Private Module
 
 Private Type TFont  '標準スタイルのフォントの情報
     Name        As String
-    Size        As Long
+    size        As Long
     Bold        As Boolean
     Italic      As Boolean
 End Type
@@ -23,7 +23,7 @@ Private Const MaxColumnWidth = 255  '幅の最大サイズ
 Private Sub ChangeWidth(ByVal lngSize As Long)
 On Error GoTo ErrHandle
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
+    If FPressKey = E_Ctrl Then
         lngSize = lngSize * 5
     End If
     
@@ -48,7 +48,7 @@ End Sub
 Private Sub MoveVerticalBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
+    If FPressKey = E_Ctrl Then
         lngSize = lngSize * 5
     End If
     
@@ -293,7 +293,7 @@ On Error GoTo ErrHandle
     Set objGroups = GroupSelection(Selection.ShapeRange)
     
     '[Shift]Keyが押下されていれば、枠線に合わせて変更する
-    If GetKeyState(vbKeyShift) < 0 Then
+    If FPressKey = E_Shift Then
         blnFitGrid = True
     End If
     
@@ -528,7 +528,7 @@ End Sub
 '    Call SaveUndoInfo(E_ShapeSize2, Selection.ShapeRange)
 '
 '    '[Shift]Keyが押下されていれば、枠線に合わせて変更する
-'    If GetKeyState(vbKeyShift) < 0 Then
+'    If FPressKey = E_Shift Then
 '        blnFitGrid = True
 '    End If
 '
@@ -1688,13 +1688,13 @@ On Error GoTo ErrHandle
     
     '標準スタイルのフォントが変更されたか判定
     With ActiveWorkbook.Styles("Normal").Font
-        If udtFont.Name = .Name And udtFont.Size = .Size And _
+        If udtFont.Name = .Name And udtFont.size = .size And _
            udtFont.Bold = .Bold And udtFont.Italic = .Italic Then
             Exit Sub
         Else
             'フォント情報を保存する
             udtFont.Name = .Name
-            udtFont.Size = .Size
+            udtFont.size = .size
             udtFont.Bold = .Bold
             udtFont.Italic = .Italic
         End If
@@ -1711,8 +1711,8 @@ On Error GoTo ErrHandle
         If .Name <> udtFont.Name Then
             .Name = udtFont.Name
         End If
-        If .Size <> udtFont.Size Then
-            .Size = udtFont.Size
+        If .size <> udtFont.size Then
+            .size = udtFont.size
         End If
         If .Bold <> udtFont.Bold Then
             .Bold = udtFont.Bold

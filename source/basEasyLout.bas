@@ -23,8 +23,14 @@ Private Declare PtrSafe Function OleCreatePictureIndirect Lib "oleaut32.dll" (By
 Private Const PICTYPE_BITMAP = 1
 Private Const IID_IPictureDisp As String = "{7BF80981-BF32-101A-8BBB-00AA00300CAB}"
 
-Public FCommand As String
-Public FParam   As Variant
+Public FCommand  As String
+Public FParam    As Variant
+Public FPressKey As EPressKey
+Public Enum EPressKey
+    E_Shift = 1
+    E_Ctrl = 2
+    E_ShiftAndCtrl = 3
+End Enum
 
 '*****************************************************************************
 '[äTóv] IRibbonUIÇï€ë∂Ç∑ÇÈCommandBarÇçÏê¨Ç∑ÇÈ
@@ -271,6 +277,7 @@ Private Sub onAction(Control As IRibbonControl)
     
     FCommand = GetValue(Control.ID, "Action")
     FParam = GetValue(Control.ID, "Parameter")
+    FPressKey = IIf(GetKeyState(vbKeyShift) < 0, 1, 0) + IIf(GetKeyState(vbKeyControl) < 0, 2, 0)
     
     On Error Resume Next
     If FParam <> "" Then

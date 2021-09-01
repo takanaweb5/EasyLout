@@ -13,7 +13,7 @@ Private Const MaxRowHeight = 409.5  '高さの最大サイズ
 Private Sub ChangeHeight(ByVal lngSize As Long)
 On Error GoTo ErrHandle
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
+    If FPressKey = E_Ctrl Then
         lngSize = lngSize * 5
     End If
     
@@ -38,7 +38,7 @@ End Sub
 Private Sub MoveHorizonBorder(ByVal lngSize As Long)
 On Error GoTo ErrHandle
     '[Ctrl]Keyが押下されていれば、移動幅を5倍にする
-    If GetKeyState(vbKeyControl) < 0 Then
+    If FPressKey = E_Ctrl Then
         lngSize = lngSize * 5
     End If
     
@@ -266,7 +266,7 @@ On Error GoTo ErrHandle
     Set objGroups = GroupSelection(Selection.ShapeRange)
     
     '[Shift]Keyが押下されていれば、枠線に合わせて変更する
-    If GetKeyState(vbKeyShift) < 0 Then
+    If FPressKey = E_Shift Then
         blnFitGrid = True
     End If
     
@@ -504,7 +504,7 @@ End Sub
 '    Call SaveUndoInfo(E_ShapeSize2, Selection.ShapeRange)
 '
 '    '[Shift]Keyが押下されていれば、枠線に合わせて変更する
-'    If GetKeyState(vbKeyShift) < 0 Then
+'    If FPressKey = E_Shift Then
 '        blnFitGrid = True
 '    End If
 '
@@ -1454,7 +1454,7 @@ On Error GoTo ErrHandle
     Call DeleteSheet(objWorksheet)
     With objWorksheet
         .Columns.ColumnWidth = 255
-        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.Size = 1
+        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.size = 1
         Call objSelection.Copy(.Cells(1, 1))
     End With
     

@@ -1006,33 +1006,33 @@ End Function
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Private Sub MoveShape()
-    If GetKeyState(vbKeyControl) < 0 And GetKeyState(vbKeyShift) < 0 Then
-        Call UnSelect
-        Exit Sub
-    End If
-
-    '選択されているオブジェクトを判定
-    If CheckSelection() <> E_Shape Then
-        Call MsgBox("図形が選択されていません")
-        Exit Sub
-    End If
-    
-    'IMEをオフにする
-    Call SetIMEOff
-
-On Error GoTo ErrHandle
-    'フォームを表示
-    Call frmMoveShape.Show
-    Call Application.OnRepeat("", "")
-Exit Sub
-ErrHandle:
-    If blnFormLoad = True Then
-        Call Unload(frmMoveShape)
-    End If
-    Call MsgBox(Err.Description, vbExclamation)
-    Call Application.OnRepeat("", "")
-End Sub
+'Private Sub MoveShape()
+'    If FPressKey = E_ShiftAndCtrl Then
+'        Call UnSelect
+'        Exit Sub
+'    End If
+'
+'    '選択されているオブジェクトを判定
+'    If CheckSelection() <> E_Shape Then
+'        Call MsgBox("図形が選択されていません")
+'        Exit Sub
+'    End If
+'
+'    'IMEをオフにする
+'    Call SetIMEOff
+'
+'On Error GoTo ErrHandle
+'    'フォームを表示
+'    Call frmMoveShape.Show
+'    Call Application.OnRepeat("", "")
+'Exit Sub
+'ErrHandle:
+'    If blnFormLoad = True Then
+'        Call Unload(frmMoveShape)
+'    End If
+'    Call MsgBox(Err.Description, vbExclamation)
+'    Call Application.OnRepeat("", "")
+'End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　FitShapes
@@ -2486,7 +2486,7 @@ End Sub
 '*****************************************************************************
 Private Sub OpenEdit()
     '[Ctrl]Keyが押下されていれば、UnSelectを実行
-    If GetKeyState(vbKeyControl) < 0 Then
+    If FPressKey = E_Ctrl Then
         Call UnSelect
         Exit Sub
     End If
@@ -2897,7 +2897,7 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_ApplyFormat, objSelection)
     Dim objArea As Range
     For Each objArea In objUsedRange.Areas
-        If GetKeyState(vbKeyControl) < 0 Then
+        If FPressKey = E_Ctrl Then
             objArea.Value = objArea.Value
         Else
             objArea.Formula = objArea.Formula
