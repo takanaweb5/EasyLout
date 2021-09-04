@@ -97,7 +97,11 @@ End Sub
 '*****************************************************************************
 Private Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
 '    returnedVal = (GetValue(control.Id, "Visible") = 1)
-    returnedVal = True
+    If Control.ID = "dmy" Then
+        returnedVal = False
+    Else
+        returnedVal = True
+    End If
 End Sub
 '
 '*****************************************************************************

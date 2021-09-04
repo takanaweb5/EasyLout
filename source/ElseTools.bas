@@ -2897,7 +2897,7 @@ On Error GoTo ErrHandle
     Call SaveUndoInfo(E_ApplyFormat, objSelection)
     Dim objArea As Range
     For Each objArea In objUsedRange.Areas
-        If FPressKey = E_Ctrl Then
+        If FPressKey = E_Shift Then
             objArea.Value = objArea.Value
         Else
             objArea.Formula = objArea.Formula
