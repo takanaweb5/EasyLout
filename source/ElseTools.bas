@@ -2485,12 +2485,6 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub OpenEdit()
-    '[Ctrl]Keyが押下されていれば、UnSelectを実行
-    If FPressKey = E_Ctrl Then
-        Call UnSelect
-        Exit Sub
-    End If
-
 On Error GoTo ErrHandle
     Static udtEditInfo As TEditInfo
     
