@@ -104,21 +104,25 @@ On Error GoTo ErrHandle
         '非表示の列がある時
         If objSelection.Address <> objVisible.Address Then
             If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
-                ActiveWindow.View = lngWindowView
-                Application.ScreenUpdating = True
-                Select Case MsgBox("非表示の列を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
-                Case vbYes
-                    If lngSize < 0 Then
-                        Call MsgBox("これ以上縮小出来ません", vbExclamation)
-                        Exit Sub
-                    End If
-                Case vbNo
-                    '可視セルのみ選択する
-                    Call IntersectRange(Selection, objVisible).Select
+                If lngSize < 0 And FPressKey = E_Shift Then
                     Set objSelection = objVisible
-                Case vbCancel
-                    Exit Sub
-                End Select
+                Else
+                    ActiveWindow.View = lngWindowView
+                    Application.ScreenUpdating = True
+                    Select Case MsgBox("非表示の列を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
+                    Case vbYes
+                        If lngSize < 0 Then
+                            Call MsgBox("これ以上縮小出来ません", vbExclamation)
+                            Exit Sub
+                        End If
+                    Case vbNo
+                        '可視セルのみ選択する
+                        Call IntersectRange(Selection, objVisible).Select
+                        Set objSelection = objVisible
+                    Case vbCancel
+                        Exit Sub
+                    End Select
+                End If
             Else
                 '可視セルのみ選択する
                 Call IntersectRange(Selection, objVisible).Select
@@ -145,15 +149,18 @@ On Error GoTo ErrHandle
     '変更後のサイズのチェック
     '***********************************************
     Dim lngPixel    As Long    '幅(単位:Pixel)
-    For i = 1 To colAddress.Count
-        lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
-        If lngPixel < 0 Then
-            ActiveWindow.View = lngWindowView
-            Application.ScreenUpdating = True
-            Call MsgBox("これ以上縮小出来ません", vbExclamation)
-            Exit Sub
-        End If
-    Next i
+    If lngSize < 0 And FPressKey = E_Shift Then
+    Else
+        For i = 1 To colAddress.Count
+            lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
+            If lngPixel < 0 Then
+                ActiveWindow.View = lngWindowView
+                Application.ScreenUpdating = True
+                Call MsgBox("これ以上縮小出来ません", vbExclamation)
+                Exit Sub
+            End If
+        Next i
+    End If
     
     '***********************************************
     'サイズの変更
@@ -170,16 +177,16 @@ On Error GoTo ErrHandle
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ColSize2, Range(strSelection), colAddress)
     
-    '同じ幅の塊ごとに幅を設定する
-    For i = 1 To colAddress.Count
-        'SHIFTが押下されていると非表示にする
-        If lngSize < 0 And FPressKey = E_Shift Then
-            Range(colAddress(i)).ColumnWidth = 0
-        Else
+    'SHIFTが押下されていると非表示にする
+    If lngSize < 0 And FPressKey = E_Shift Then
+        objSelection.EntireColumn.Hidden = True
+    Else
+        '同じ幅の塊ごとに幅を設定する
+        For i = 1 To colAddress.Count
             lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
             Range(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
-        End If
-    Next i
+        Next i
+    End If
     
     '改ページを元に戻す
     If blnDisplayPageBreaks = True Then
