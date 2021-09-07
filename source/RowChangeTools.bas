@@ -1400,7 +1400,7 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    '列方向の結合セルを含む時
+    '行方向の結合セルを含む時
     If IsBorderMerged(objSelection) Then
         Call MsgBox("結合されたセルの一部を選択することはできません。", vbExclamation)
         Exit Sub
