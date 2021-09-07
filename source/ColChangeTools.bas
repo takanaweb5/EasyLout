@@ -152,7 +152,7 @@ On Error GoTo ErrHandle
     If lngSize < 0 And FPressKey = E_Shift Then
     Else
         For i = 1 To colAddress.Count
-            lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
+            lngPixel = GetRange(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
             If lngPixel < 0 Then
                 ActiveWindow.View = lngWindowView
                 Application.ScreenUpdating = True
@@ -175,7 +175,7 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_ColSize2, Range(strSelection), colAddress)
+    Call SaveUndoInfo(E_ColSize2, GetRange(strSelection), colAddress)
     
     'SHIFTが押下されていると非表示にする
     If lngSize < 0 And FPressKey = E_Shift Then
@@ -183,8 +183,8 @@ On Error GoTo ErrHandle
     Else
         '同じ幅の塊ごとに幅を設定する
         For i = 1 To colAddress.Count
-            lngPixel = Range(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
-            Range(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
+            lngPixel = GetRange(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
+            GetRange(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
         Next i
     End If
     

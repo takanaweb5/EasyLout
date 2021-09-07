@@ -128,7 +128,7 @@ On Error GoTo ErrHandle
     If lngSize < 0 And FPressKey = E_Shift Then
     Else
         For i = 1 To colAddress.Count
-            lngPixel = Range(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
+            lngPixel = GetRange(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
             If lngPixel < 0 Then
                 Call MsgBox("これ以上縮小出来ません", vbExclamation)
                 Exit Sub
@@ -149,7 +149,7 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_RowSize2, Range(strSelection), colAddress)
+    Call SaveUndoInfo(E_RowSize2, GetRange(strSelection), colAddress)
     
     'SHIFTが押下されていると非表示にする
     If lngSize < 0 And FPressKey = E_Shift Then
@@ -157,8 +157,8 @@ On Error GoTo ErrHandle
     Else
         '同じ高さの塊ごとに高さを設定する
         For i = 1 To colAddress.Count
-            lngPixel = Range(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
-            Range(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
+            lngPixel = GetRange(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
+            GetRange(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
         Next i
     End If
     
@@ -1400,9 +1400,9 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    '選択エリアが複数なら対象外
-    If objSelection.Areas.Count <> 1 Then
-        Call MsgBox("このコマンドは複数の選択範囲に対して実行できません。", vbExclamation)
+    '列方向の結合セルを含む時
+    If IsBorderMerged(objSelection) Then
+        Call MsgBox("結合されたセルの一部を選択することはできません。", vbExclamation)
         Exit Sub
     End If
     
