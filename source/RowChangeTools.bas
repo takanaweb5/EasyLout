@@ -1464,31 +1464,35 @@ On Error GoTo ErrHandle
     Dim objWorksheet As Worksheet
     Set objWorksheet = ThisWorkbook.Worksheets("Workarea1")
     Call DeleteSheet(objWorksheet)
-    With objWorksheet
-        .Columns.ColumnWidth = 255
-        .Range(.Rows(1), .Rows(objSelection.Rows.Count)).Font.size = 1
-        Call objSelection.Copy(.Cells(1, 1))
-    End With
+    objWorksheet.Columns.ColumnWidth = 255
     
-    '行数分ループ
-    Dim objRow     As Range
-    Dim objWorkRow As Range
-    For i = 1 To objSelection.Rows.Count
-        Set objRow = objSelection.Rows(i)
-        Set objWorkRow = objWorksheet.Rows(i)
+    Dim k As Long
+    For k = 1 To objSelection.Areas.Count
+        With objWorksheet
+            .Range(.Rows(1), .Rows(objSelection.Areas(k).Rows.Count)).Font.size = 1
+            Call objSelection.Areas(k).Copy(.Cells(1, 1))
+        End With
         
-        '非表示を対象外にするかどうか
-        If blnVisible Or objRow.Hidden = False Then
-            '行方向の結合がある行は、標準のAutoFitのみ行う（すでにAutoFitは完了している）
-            If IsBorderMerged(objRow) = False Then
-                'WorkSheetを利用し、行の高さを適正化
-                dblNewHeight = GetFitRow(objRow, objWorkRow)
-                '編集でFontを変えても自動で調製されるようために判定する
-                If objRow.RowHeight <> dblNewHeight Then
-                    objRow.RowHeight = dblNewHeight
+        '行数分ループ
+        Dim objRow     As Range
+        Dim objWorkRow As Range
+        For i = 1 To objSelection.Areas(k).Rows.Count
+            Set objRow = objSelection.Areas(k).Rows(i)
+            Set objWorkRow = objWorksheet.Rows(i)
+            
+            '非表示を対象外にするかどうか
+            If blnVisible Or objRow.Hidden = False Then
+                '行方向の結合がある行は、標準のAutoFitのみ行う（すでにAutoFitは完了している）
+                If IsBorderMerged(objRow) = False Then
+                    'WorkSheetを利用し、行の高さを適正化
+                    dblNewHeight = GetFitRow(objRow, objWorkRow)
+                    '編集でFontを変えても自動で調製されるようために判定する
+                    If objRow.RowHeight <> dblNewHeight Then
+                        objRow.RowHeight = dblNewHeight
+                    End If
                 End If
             End If
-        End If
+        Next
     Next
     
     Call DeleteSheet(ThisWorkbook.Worksheets("Workarea1"))
