@@ -799,14 +799,11 @@ End Sub
 '[ˆø”] ”äŠr‘ÎÛ
 '[–ß’l] True: SortArray1 > SortArray2
 '*****************************************************************************
-Private Function CompareValue(ByRef SortArray1 As TSortArray, ByRef SortArray2 As TSortArray) As Boolean
-    If SortArray1.Key1 > SortArray2.Key1 Then
-        CompareValue = True
-        Exit Function
-    End If
-    If SortArray1.Key2 > SortArray2.Key2 Then
-        CompareValue = True
-        Exit Function
+Public Function CompareValue(ByRef SortArray1 As TSortArray, ByRef SortArray2 As TSortArray) As Boolean
+    If SortArray1.Key1 <> SortArray2.Key1 Then
+        CompareValue = (SortArray1.Key1 > SortArray2.Key1)
+    Else
+        CompareValue = (SortArray1.Key2 > SortArray2.Key2)
     End If
 End Function
 
