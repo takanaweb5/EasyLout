@@ -780,6 +780,7 @@ End Function
 '[戻値] なし
 '*****************************************************************************
 Public Sub SortArray(ByRef SortArray() As TSortArray)
+    'バブルソート
     Dim i As Long
     Dim j As Long
     Dim Swap As TSortArray
@@ -792,7 +793,40 @@ Public Sub SortArray(ByRef SortArray() As TSortArray)
             End If
         Next j
     Next i
+    
+    'スタック領域不足が起きる
+'    Call QuickSort(SortArray, 1, UBound(SortArray))
 End Sub
+
+'Private Sub QuickSort(ByRef SortArray() As TSortArray, ByVal lngMin As Long, ByVal lngMax As Long)
+'    Dim i As Long
+'    Dim j As Long
+'    Dim Base As TSortArray
+'    Dim Swap As TSortArray
+'    Base = SortArray(Int((lngMin + lngMax) / 2))
+'    i = lngMin
+'    j = lngMax
+'    Do
+'        Do While CompareValue(SortArray(i), Base)
+'            i = i + 1
+'        Loop
+'        Do While Not CompareValue(SortArray(j), Base)
+'            j = j - 1
+'        Loop
+'        If i >= j Then Exit Do
+'            Swap = SortArray(i)
+'            SortArray(i) = SortArray(j)
+'            SortArray(j) = Swap
+'        i = i + 1
+'        j = j - 1
+'    Loop
+'    If (lngMin < i - 1) Then
+'        Call QuickSort(SortArray, lngMin, i - 1)
+'    End If
+'    If (lngMax > j + 1) Then
+'        Call QuickSort(SortArray, j + 1, lngMax)
+'    End If
+'End Sub
 
 '*****************************************************************************
 '[概要] 大小比較を行う
@@ -800,10 +834,10 @@ End Sub
 '[戻値] True: SortArray1 > SortArray2
 '*****************************************************************************
 Public Function CompareValue(ByRef SortArray1 As TSortArray, ByRef SortArray2 As TSortArray) As Boolean
-    If SortArray1.Key1 <> SortArray2.Key1 Then
-        CompareValue = (SortArray1.Key1 > SortArray2.Key1)
-    Else
+    If SortArray1.Key1 = SortArray2.Key1 Then
         CompareValue = (SortArray1.Key2 > SortArray2.Key2)
+    Else
+        CompareValue = (SortArray1.Key1 > SortArray2.Key1)
     End If
 End Function
 

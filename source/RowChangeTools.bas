@@ -181,83 +181,93 @@ End Sub
 '[戻値] アドレスの配列
 '*****************************************************************************
 Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collection
-    Dim i             As Long
-    Dim lngLastRow    As Long    '使用されている最後の行
-    Dim lngLastCell   As Long
-    Dim objRange      As Range
-    Dim objWkRange    As Range
-    Dim objRows       As Range
-    Dim objVisible    As Range
-    Dim objNonVisible As Range
-    
     Set GetSameHeightAddresses = New Collection
     
-    '使用されている最後の行
-    '使用されている最後の列
-    With Cells.SpecialCells(xlCellTypeLastCell)
-        lngLastRow = .Row + .Rows.Count - 1
-    End With
-    
-    '選択範囲のRowsの和集合を取り重複行を排除する
-    Set objRows = Union(objSelection.EntireRow, objSelection.EntireRow)
-    
     '可視セルと不可視セルに分ける
-    Set objVisible = GetVisibleCells(objRows)
-    Set objNonVisible = MinusRange(objRows, objVisible)
+    Dim objVisible    As Range
+    Dim objNonVisible As Range
+    Set objVisible = GetVisibleCells(objSelection)
+    Set objNonVisible = MinusRange(objSelection, objVisible)
     
     '***********************************************
     '使用された最後の行以前の領域の設定(可視領域)
     '***********************************************
-    Set objWkRange = IntersectRange(Range(Rows(1), Rows(lngLastRow)), objVisible)
-    If Not (objWkRange Is Nothing) Then
-        'エリアの数だけループ
-        For Each objRange In objWkRange.Areas
-            i = objRange.Row
-            lngLastCell = i + objRange.Rows.Count - 1
-                    
-            '同じ高さの塊ごとに行高を判定する
-            While i <= lngLastCell
-                '同じ高さの行のアドレスを保存
-                 Call GetSameHeightAddresses.Add(GetSameHeightAddress(i, lngLastCell))
-            Wend
-        Next
+    Dim lngLastRow    As Long    '使用されている最後の行
+    With Cells.SpecialCells(xlCellTypeLastCell)
+        lngLastRow = .Row + .Rows.Count - 1
+    End With
+    
+    Dim objUsedRange  As Range   '使用された最後の行以前の領域の設定(可視領域)
+    Set objUsedRange = IntersectRange(Range(Rows(1), Rows(lngLastRow)), objVisible)
+    If Not (objUsedRange Is Nothing) Then
+        Call GetSameHeightAddresses2(objUsedRange, GetSameHeightAddresses)
     End If
     
     '***********************************************
     '使用された最後の行以降の領域の設定(可視領域)
     '***********************************************
-    Set objWkRange = IntersectRange(Range(Rows(lngLastRow + 1), Rows(Rows.Count)), objVisible)
-    If Not (objWkRange Is Nothing) Then
-        Call GetSameHeightAddresses.Add(objWkRange.Address)
+    Set objVisible = IntersectRange(Range(Rows(lngLastRow + 1), Rows(Rows.Count)), objVisible)
+    If Not (objVisible Is Nothing) Then
+        Call GetSameHeightAddresses.Add(objVisible.Address(0, 0))
     End If
     
     '***********************************************
     '不可視領域の設定
     '***********************************************
     If Not (objNonVisible Is Nothing) Then
-        Call GetSameHeightAddresses.Add(objNonVisible.Address)
+        Call GetSameHeightAddresses.Add(objNonVisible.Address(0, 0))
     End If
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　GetSameHeightAddress
-'[ 概  要 ]　連続する行でlngRowと同じ高さの行を表わすアドレスを取得する
-'[ 引  数 ]　lngRow:最初の行(実行後は次の行)、lngLastCell:検索の最後の行
-'[ 戻り値 ]　なし
+'[概要] 同じ高さの塊ごとのアドレスを配列で取得する
+'[引数] 使用された最後の行以前の可視領域、 同じ高さの塊ごとのアドレスの配列
+'[戻値] なし
 '*****************************************************************************
-Private Function GetSameHeightAddress(ByRef lngRow As Long, ByVal lngLastCell As Long) As String
-    Dim lngPixel As Long
-    Dim i As Long
-    lngPixel = Rows(lngRow).Height / DPIRatio
+Private Sub GetSameHeightAddresses2(ByRef objUsedRange As Range, ByRef colAddresses As Collection)
+    Dim objRange      As Range
     
-    For i = lngRow + 1 To lngLastCell
-        If (Rows(i).Height / DPIRatio) <> lngPixel Then
-            Exit For
+    'エリアの数だけループして行数をカウントする
+    Dim cnt As Long
+    For Each objRange In objUsedRange.Areas
+        cnt = cnt + objRange.Rows.Count
+    Next
+    ReDim udtSortArray(1 To cnt) As TSortArray
+
+    Dim i    As Long
+    Dim k    As Long
+    Dim m    As Long
+    Dim lngPixle  As Long
+    For Each objRange In objUsedRange.Areas
+        For i = 1 To objRange.Rows.Count
+            k = k + 1
+            m = objRange.Rows(i).Row
+            lngPixle = Rows(m).Height / DPIRatio
+            udtSortArray(k).Key1 = lngPixle
+            udtSortArray(k).Key2 = m
+        Next
+    Next
+
+    Call SortArray(udtSortArray)
+    
+    Dim strAddress As String
+    Set objRange = Rows(udtSortArray(1).Key2)
+    For k = 2 To cnt - 1
+        If udtSortArray(k - 1).Key1 = udtSortArray(k).Key1 Then
+            Set objRange = Union(objRange, Rows(udtSortArray(k).Key2))
+        Else
+            Call colAddresses.Add(GetAddress(objRange))
+            Set objRange = Rows(udtSortArray(k).Key2)
         End If
-    Next i
-    GetSameHeightAddress = Range(Rows(lngRow), Rows(i - 1)).Address
-    lngRow = i
-End Function
+    Next
+    If udtSortArray(cnt - 1).Key1 = udtSortArray(cnt).Key1 Then
+        Set objRange = Union(objRange, Rows(udtSortArray(k).Key2))
+        Call colAddresses.Add(GetAddress(objRange))
+    Else
+        Call colAddresses.Add(GetAddress(objRange))
+        Call colAddresses.Add(Rows(udtSortArray(k).Key2).Address(0, 0))
+    End If
+End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　ChangeShapeHeight
