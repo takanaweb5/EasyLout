@@ -255,14 +255,14 @@ Public Function GetSameWidthAddresses(ByRef objSelection As Range) As Collection
     '***********************************************
     Set objWkRange = IntersectRange(Range(Columns(lngLastCol + 1), Columns(Columns.Count)), objVisible)
     If Not (objWkRange Is Nothing) Then
-        Call GetSameWidthAddresses.Add(objWkRange.Address)
+        Call GetSameWidthAddresses.Add(objWkRange.Address(0, 0))
     End If
     
     '***********************************************
     'ïsâ¬éãóÃàÊÇÃê›íË
     '***********************************************
     If Not (objNonVisible Is Nothing) Then
-        Call GetSameWidthAddresses.Add(objNonVisible.Address)
+        Call GetSameWidthAddresses.Add(objNonVisible.Address(0, 0))
     End If
 End Function
 
@@ -282,7 +282,7 @@ Private Function GetSameWidthAddress(ByRef lngCol As Long, ByVal lngLastCell As 
             Exit For
         End If
     Next i
-    GetSameWidthAddress = Range(Columns(lngCol), Columns(i - 1)).Address
+    GetSameWidthAddress = Range(Columns(lngCol), Columns(i - 1)).Address(0, 0)
     lngCol = i
 End Function
 
