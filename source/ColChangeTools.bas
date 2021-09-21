@@ -79,7 +79,7 @@ On Error GoTo ErrHandle
     Dim lngWindowView As Long
         
     '選択範囲のColumnsの和集合を取り重複列を排除する
-    strSelection = Selection.Address
+    strSelection = GetAddress(Selection)
     Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
     
     '標準プレビューに変更する
@@ -102,7 +102,7 @@ On Error GoTo ErrHandle
         End If
     Else
         '非表示の列がある時
-        If objSelection.Address <> objVisible.Address Then
+        If GetAddress(objSelection) <> GetAddress(objVisible) Then
             If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
                 If lngSize < 0 And FPressKey = E_Shift Then
                     Set objSelection = objVisible
@@ -140,7 +140,7 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim colAddress  As New Collection
     If objVisible Is Nothing Then
-        Call colAddress.Add(objSelection.Address)
+        Call colAddress.Add(GetAddress(objSelection))
     Else
         Set colAddress = GetSameWidthAddresses(objSelection)
     End If
@@ -479,7 +479,7 @@ On Error GoTo ErrHandle
     Dim lngPixel(1 To 2)  As Long  '先頭列と最終列のサイズ
     Dim k                 As Long  '最終列の列番号
     
-    strSelection = Selection.Address
+    strSelection = Selection.Address(0, 0)
     Set objRange = Selection
 
     '選択エリアが複数なら対象外
@@ -511,8 +511,8 @@ On Error GoTo ErrHandle
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
     Dim colAddress  As New Collection
-    Call colAddress.Add(objRange.Columns(1).Address)
-    Call colAddress.Add(objRange.Columns(k).Address)
+    Call colAddress.Add(objRange.Columns(1).Address(0, 0))
+    Call colAddress.Add(objRange.Columns(k).Address(0, 0))
     Call SaveUndoInfo(E_ColSize2, Range(strSelection), colAddress)
     
     'サイズの変更
@@ -591,7 +591,7 @@ On Error GoTo ErrHandle
     End Select
     
     '選択範囲のColumnsの和集合を取り重複列を排除する
-    strSelection = Selection.Address
+    strSelection = GetAddress(Selection)
     Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
     
     '選択範囲の可視部分を取出す
@@ -603,7 +603,7 @@ On Error GoTo ErrHandle
     End If
     
     '非表示の列がある時
-    If objSelection.Address <> objVisible.Address Then
+    If GetAddress(objSelection) <> GetAddress(objVisible) Then
         If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
             Select Case MsgBox("非表示の列を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
             Case vbNo
@@ -740,7 +740,7 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    strSelection = Selection.Address
+    strSelection = GetAddress(Selection)
     lngCalculation = Application.Calculation
     
     '***********************************************
@@ -984,7 +984,7 @@ On Error GoTo ErrHandle
     End If
     
     Set objSelection = Selection
-    strSelection = objSelection.Address
+    strSelection = objSelection.Address(0, 0)
     Set objRange = objSelection.EntireColumn
     
     '終了時に選択させる行
@@ -1056,15 +1056,15 @@ On Error GoTo ErrHandle
     Select Case enmSelectType
     Case E_Front
         Set objCol(0) = Columns(lngRightCol)
-        Call colAddress.Add(objCol(0).Address)
+        Call colAddress.Add(objCol(0).Address(0, 0))
     Case E_Back
         Set objCol(0) = Columns(lngLeftCol)
-        Call colAddress.Add(objCol(0).Address)
+        Call colAddress.Add(objCol(0).Address(0, 0))
     Case E_Middle
         Set objCol(0) = Columns(lngRightCol)
         Set objCol(1) = Columns(lngLeftCol)
-        Call colAddress.Add(objCol(0).Address)
-        Call colAddress.Add(objCol(1).Address)
+        Call colAddress.Add(objCol(0).Address(0, 0))
+        Call colAddress.Add(objCol(1).Address(0, 0))
     End Select
     
     '****************************************
@@ -1372,7 +1372,7 @@ On Error GoTo ErrHandle
         Call ActiveSheet.Cells.Copy(.Cells)
         Call .Cells.Clear
         
-        Set objWkRange = .Range(objSelection.Address)
+        Set objWkRange = .Range(objSelection.Address(0, 0))
         
         '領域をコピー
         Call objSelection.Copy(objWkRange)

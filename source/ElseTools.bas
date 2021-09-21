@@ -129,7 +129,7 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    strSelection = Selection.Address
+    strSelection = Selection.Address(0, 0)
     lngCalculation = Application.Calculation
     
     '***********************************************

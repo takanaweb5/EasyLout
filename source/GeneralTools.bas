@@ -666,7 +666,7 @@ Public Function GetMergeAddress(ByVal strAddress As String) As String
         If .Rows.Count = 1 And .Columns.Count = 1 Then
             With .MergeArea
                 If .Count > 1 Then
-                    GetMergeAddress = .Address
+                    GetMergeAddress = .Address(0, 0)
                 End If
             End With
         End If
@@ -1183,13 +1183,25 @@ End Function
 '[–ß’l] Range
 '*****************************************************************************
 Public Function GetRange(ByVal strAddress As String) As Range
-    Dim AddressList As Variant
-    AddressList = Split(strAddress, ",")
-    Set GetRange = Range(AddressList(0))
+    Const MAXLEN = 250
+    Dim strText As String
     Dim i As Long
-    For i = 1 To UBound(AddressList)
-        Set GetRange = UnionRange(GetRange, Range(AddressList(i)))
-    Next
+    
+    While Len(strAddress) > 0
+        If Len(strAddress) >= MAXLEN Then
+            For i = MAXLEN To 1 Step -1
+                If Mid(strAddress, i, 1) = "," Then
+                    strText = Left(strAddress, i - 1)
+                    Set GetRange = UnionRange(GetRange, Range(strText))
+                    strAddress = Mid(strAddress, i + 1)
+                    Exit For
+                End If
+            Next
+        Else
+            Set GetRange = UnionRange(GetRange, Range(strAddress))
+            strAddress = ""
+        End If
+    Wend
 End Function
 
 '*****************************************************************************
@@ -1203,5 +1215,4 @@ Public Sub ShowSelectionPane()
         Call CommandBars.ExecuteMso("SelectionPane")
     End If
 End Sub
-
 

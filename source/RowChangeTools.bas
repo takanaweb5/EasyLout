@@ -68,7 +68,7 @@ On Error GoTo ErrHandle
     Dim strSelection As String
     
     '選択範囲のRowsの和集合を取り重複行を排除する
-    strSelection = Selection.Address
+    strSelection = GetAddress(Selection)
     Set objSelection = Union(Selection.EntireRow, Selection.EntireRow)
     
     '***********************************************
@@ -84,7 +84,7 @@ On Error GoTo ErrHandle
         End If
     Else
         '非表示の行がある時
-        If objSelection.Address <> objVisible.Address Then
+        If GetAddress(objSelection) <> GetAddress(objVisible) Then
             If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
                 If lngSize < 0 And FPressKey = E_Shift Then
                     Set objSelection = objVisible
@@ -116,7 +116,7 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim colAddress  As New Collection
     If objVisible Is Nothing Then
-        Call colAddress.Add(objSelection.Address)
+        Call colAddress.Add(objSelection.Address(0, 0))
     Else
         Set colAddress = GetSameHeightAddresses(objSelection)
     End If
@@ -225,48 +225,30 @@ End Function
 '[戻値] なし
 '*****************************************************************************
 Private Sub GetSameHeightAddresses2(ByRef objUsedRange As Range, ByRef colAddresses As Collection)
-    Dim objRange      As Range
+    Dim objDictionary As Object
+    Set objDictionary = CreateObject("Scripting.Dictionary")
     
-    'エリアの数だけループして行数をカウントする
-    Dim cnt As Long
-    For Each objRange In objUsedRange.Areas
-        cnt = cnt + objRange.Rows.Count
-    Next
-    ReDim udtSortArray(1 To cnt) As TSortArray
-
     Dim i    As Long
-    Dim k    As Long
-    Dim m    As Long
-    Dim lngPixle  As Long
-    For Each objRange In objUsedRange.Areas
-        For i = 1 To objRange.Rows.Count
-            k = k + 1
-            m = objRange.Rows(i).Row
-            lngPixle = Rows(m).Height / DPIRatio
-            udtSortArray(k).Key1 = lngPixle
-            udtSortArray(k).Key2 = m
+    Dim lngPixle As Long
+    Dim objArea   As Range
+    Dim objRange  As Range
+    For Each objArea In objUsedRange.Areas
+        For i = 1 To objArea.Rows.Count
+            Set objRange = objArea.Rows(i)
+            lngPixle = objRange.Height / DPIRatio
+            If objDictionary.Exists(lngPixle) Then
+                Set objDictionary(lngPixle) = Union(objDictionary(lngPixle), objRange)
+            Else
+                Call objDictionary.Add(lngPixle, objRange)
+            End If
         Next
     Next
-
-    Call SortArray(udtSortArray)
     
-    Dim strAddress As String
-    Set objRange = Rows(udtSortArray(1).Key2)
-    For k = 2 To cnt - 1
-        If udtSortArray(k - 1).Key1 = udtSortArray(k).Key1 Then
-            Set objRange = Union(objRange, Rows(udtSortArray(k).Key2))
-        Else
-            Call colAddresses.Add(GetAddress(objRange))
-            Set objRange = Rows(udtSortArray(k).Key2)
-        End If
+    Dim v As Variant
+    For Each v In objDictionary.Items
+        Set objRange = v
+        Call colAddresses.Add(GetAddress(objRange))
     Next
-    If udtSortArray(cnt - 1).Key1 = udtSortArray(cnt).Key1 Then
-        Set objRange = Union(objRange, Rows(udtSortArray(k).Key2))
-        Call colAddresses.Add(GetAddress(objRange))
-    Else
-        Call colAddresses.Add(GetAddress(objRange))
-        Call colAddresses.Add(Rows(udtSortArray(k).Key2).Address(0, 0))
-    End If
 End Sub
 
 '*****************************************************************************
@@ -465,7 +447,7 @@ On Error GoTo ErrHandle
     Dim lngPixel(1 To 2)  As Long   '先頭行と最終行のサイズ
     Dim k                 As Long   '最終行の行番号
     
-    strSelection = Selection.Address
+    strSelection = Selection.Address(0, 0)
     Set objRange = Selection
 
     '選択エリアが複数なら対象外
@@ -497,8 +479,8 @@ On Error GoTo ErrHandle
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
     Dim colAddress  As New Collection
-    Call colAddress.Add(objRange.Rows(1).Address)
-    Call colAddress.Add(objRange.Rows(k).Address)
+    Call colAddress.Add(objRange.Rows(1).Address(0, 0))
+    Call colAddress.Add(objRange.Rows(k).Address(0, 0))
     Call SaveUndoInfo(E_RowSize2, Selection, colAddress)
     
     'サイズの変更
@@ -577,7 +559,7 @@ On Error GoTo ErrHandle
     End Select
     
     '選択範囲のRowsの和集合を取り重複行を排除する
-    strSelection = Selection.Address
+    strSelection = GetAddress(Selection)
     Set objSelection = Union(Selection.EntireRow, Selection.EntireRow)
     
     '選択範囲の可視部分を取出す
@@ -589,7 +571,7 @@ On Error GoTo ErrHandle
     End If
     
     '非表示の行がある時
-    If objSelection.Address <> objVisible.Address Then
+    If GetAddress(objSelection) <> GetAddress(objVisible) Then
         If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
             Select Case MsgBox("非表示の行を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
             Case vbNo
@@ -725,7 +707,7 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
-    strSelection = Selection.Address
+    strSelection = GetAddress(Selection)
     lngCalculation = Application.Calculation
     
     '***********************************************
@@ -970,7 +952,7 @@ On Error GoTo ErrHandle
     End If
     
     Set objSelection = Selection
-    strSelection = objSelection.Address
+    strSelection = objSelection.Address(0, 0)
     Set objRange = objSelection.EntireRow
     
     '終了時に選択させる列
@@ -1042,15 +1024,15 @@ On Error GoTo ErrHandle
     Select Case enmSelectType
     Case E_Front
         Set objRow(0) = Rows(lngBottomRow)
-        Call colAddress.Add(objRow(0).Address)
+        Call colAddress.Add(objRow(0).Address(0, 0))
     Case E_Back
         Set objRow(0) = Rows(lngTopRow)
-        Call colAddress.Add(objRow(0).Address)
+        Call colAddress.Add(objRow(0).Address(0, 0))
     Case E_Middle
         Set objRow(0) = Rows(lngBottomRow)
         Set objRow(1) = Rows(lngTopRow)
-        Call colAddress.Add(objRow(0).Address)
-        Call colAddress.Add(objRow(1).Address)
+        Call colAddress.Add(objRow(0).Address(0, 0))
+        Call colAddress.Add(objRow(1).Address(0, 0))
     End Select
     
     '****************************************
