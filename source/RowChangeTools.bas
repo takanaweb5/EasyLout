@@ -149,7 +149,7 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_RowSize2, GetRange(strSelection), colAddress)
+    Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
     
     'SHIFTが押下されていると非表示にする
     If lngSize < 0 And FPressKey = E_Shift Then
@@ -599,7 +599,7 @@ On Error GoTo ErrHandle
     '***********************************************
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_RowSize, Range(strSelection), GetSameHeightAddresses(objSelection))
+    Call SaveUndoInfo(E_RowSize, strSelection, GetSameHeightAddresses(objSelection))
     objSelection.RowHeight = dblHeight / lngRowCount
     Call SetOnUndo
 Exit Sub
@@ -725,7 +725,7 @@ On Error GoTo ErrHandle
     Application.DisplayAlerts = False
     Application.Calculation = xlManual
     'アンドゥ用に元の状態を保存する
-    Call SaveUndoInfo(E_MergeCell, Range(strSelection))
+    Call SaveUndoInfo(E_MergeCell, strSelection)
     Call Range(strSelection).UnMerge
     
     'エリアの数だけループ
@@ -1043,9 +1043,9 @@ On Error GoTo ErrHandle
     
     'アンドゥ用に元の状態を保存する
     If blnHidden = True Then
-        Call SaveUndoInfo(E_RowSize, Range(strSelection), colAddress)
+        Call SaveUndoInfo(E_RowSize, strSelection, colAddress)
     Else
-        Call SaveUndoInfo(E_EraseRow, Range(strSelection), colAddress)
+        Call SaveUndoInfo(E_EraseRow, strSelection, colAddress)
     End If
     
     '図形は移動させない

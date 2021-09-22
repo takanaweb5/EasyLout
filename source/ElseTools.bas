@@ -180,7 +180,7 @@ On Error GoTo ErrHandle
     Application.DisplayAlerts = False 'コメントが複数セルにある時の対応
     Application.Calculation = xlManual
     'アンドゥ用に元の状態を保存する
-    Call SaveUndoInfo(E_MergeCell, Range(strSelection))
+    Call SaveUndoInfo(E_MergeCell, strSelection)
     
     'エリアの数だけループ
     For Each objRange In Range(strSelection).Areas
@@ -2189,7 +2189,7 @@ End Sub
 '            varInfo:付加情報
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef objObject As Object, Optional ByVal varInfo As Variant = Nothing)
+Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef vSelection As Variant, Optional ByVal varInfo As Variant = Nothing)
     'すでにインスタンスが存在する時は、Rollbackに対応するためNewしない
     If clsUndoObject Is Nothing Then
         Set clsUndoObject = New CUndoObject
@@ -2197,9 +2197,9 @@ Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef objObject As Object, O
     
     'オートフィルタが設定されている時は、Undo不可にする
     If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
-        Call clsUndoObject.SaveUndoInfo(enmType, objObject, varInfo)
+        Call clsUndoObject.SaveUndoInfo(enmType, vSelection, varInfo)
     Else
-        Call clsUndoObject.SaveUndoInfo(E_FilterERR, objObject, varInfo)
+        Call clsUndoObject.SaveUndoInfo(E_FilterERR, vSelection, varInfo)
     End If
 End Sub
 

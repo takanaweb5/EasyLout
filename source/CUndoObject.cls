@@ -111,8 +111,21 @@ End Property
 '            varInfo:付加情報
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef objObject As Object, Optional ByRef varInfo As Variant = Nothing)
+Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef vSelection As Variant, Optional ByRef varInfo As Variant = Nothing)
 On Error GoTo ErrHandle
+    If VarType(vSelection) = vbString Then
+        Dim strAddress As String
+        strAddress = vSelection
+    Else
+        If TypeOf vSelection Is Range Then
+            Dim objRange As Range
+            Set objRange = vSelection
+            strAddress = GetAddress(objRange)
+        Else
+            Dim objObject As Object
+            Set objObject = vSelection
+        End If
+    End If
     
     'クリップボードの中身を保存
     Call SaveClipbordText
@@ -120,7 +133,11 @@ On Error GoTo ErrHandle
     If bytNo <> 0 Then
         If udtUndoInfo(bytNo).UndoType = enmType Then
             Select Case enmType
-            Case E_ColSize2, E_RowSize2, E_ShapeSize2, E_CellBorder
+            Case E_ColSize2, E_RowSize2, E_CellBorder
+                If IsBeat(strAddress) = True Then
+                    Exit Sub
+                End If
+            Case E_ShapeSize2
                 If IsBeat(objObject) = True Then
                     Exit Sub
                 End If
@@ -146,7 +163,7 @@ On Error GoTo ErrHandle
     
     Select Case (enmType)
     Case E_SplitCol, E_SplitRow
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         udtUndoInfo(bytNo).SpiltCount = varInfo
         'ワークシ－トを保存
         Call BackupSheet(ActiveSheet)
@@ -156,13 +173,13 @@ On Error GoTo ErrHandle
         Call BackupComment
         If enmType = E_SplitCol Then
             '列の幅を保存
-            Call BackupRangeSize(GetSameWidthAddresses(objObject))
+            Call BackupRangeSize(GetSameWidthAddresses(objRange))
         Else
             '列の高さを保存
-            Call BackupRangeSize(GetSameHeightAddresses(objObject))
+            Call BackupRangeSize(GetSameHeightAddresses(objRange))
         End If
     Case E_EraseCol, E_EraseRow
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         'ワークシ－トを保存
         Call BackupSheet(ActiveSheet)
         '図形の位置･サイズを保存
@@ -173,13 +190,13 @@ On Error GoTo ErrHandle
         Call BackupRangeSize(varInfo)
     Case E_ColSize, E_RowSize, _
          E_ColSize2, E_RowSize2
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         '列の幅を保存
         Call BackupRangeSize(varInfo)
         '図形の位置･サイズを保存
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
     Case E_CopyCell, E_MoveCell
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         '図形の位置･サイズを保存
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
@@ -187,13 +204,13 @@ On Error GoTo ErrHandle
         'コメントの位置･サイズを保存
         Call BackupComment
     Case E_MergeCell, E_CellBorder, E_CommentToRule, E_RuleToComment
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         '変更前のセルを保存
         Call BackupSheet(ActiveSheet)
         'コメントの位置･サイズを保存
         Call BackupComment
     Case E_CellToText
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         '図形の名前を保存(追加されたテキストボックスを削除出来るように)
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
@@ -204,7 +221,7 @@ On Error GoTo ErrHandle
         'テキストボックスを保存
         Call BackupTextbox(objObject)
     Case E_CommentToText
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         '図形の名前を保存(追加されたテキストボックスを削除出来るように)
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
@@ -215,7 +232,7 @@ On Error GoTo ErrHandle
         '図形の位置･サイズを保存
         Call BackupShapeSize(objObject)
     Case E_CellValue, E_PasteValue, E_ApplyFormat
-        udtUndoInfo(bytNo).SelectCell = GetAddress(objObject)
+        udtUndoInfo(bytNo).SelectCell = strAddress
         'セルを保存
         Call BackupSheet(ActiveSheet)
     Case E_FilterERR
@@ -233,7 +250,7 @@ End Sub
 '[ 引  数 ]　選択されたオブジェクト
 '[ 戻り値 ]　True:連続で実行された時
 '*****************************************************************************
-Private Function IsBeat(ByRef objObject As Object) As Boolean
+Private Function IsBeat(ByRef vSelection As Variant) As Boolean
 On Error GoTo ErrHandle
     Dim i As Long
     
@@ -241,18 +258,18 @@ On Error GoTo ErrHandle
         Exit Function
     End If
     
-    If TypeOf objObject Is Range Then
-        If udtUndoInfo(bytNo).SelectCell <> GetAddress(objObject) Then
+    If VarType(vSelection) = vbString Then
+        If udtUndoInfo(bytNo).SelectCell <> vSelection Then
             Exit Function
         End If
-    ElseIf TypeOf objObject Is ShapeRange Then
-        If udtUndoInfo(bytNo).ShapeCount <> objObject.Count Then
+    ElseIf TypeOf vSelection Is ShapeRange Then
+        If udtUndoInfo(bytNo).ShapeCount <> vSelection.Count Then
             Exit Function
         End If
         '図形の数だけループ
-        For i = 1 To objObject.Count
+        For i = 1 To vSelection.Count
             With udtUndoInfo(bytNo)
-                If .SelectShapes(i) <> objObject(i).ID Then
+                If .SelectShapes(i) <> vSelection(i).ID Then
                     Exit Function
                 End If
             End With

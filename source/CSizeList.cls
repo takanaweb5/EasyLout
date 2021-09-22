@@ -301,7 +301,7 @@ Private Sub spbChgSize_Change()
         Else
             lngIndex = 1
         End If
-        objColRows.Size(lngIndex) = objColRows.PixelToSize(objColRows.Pixel(lngIndex) + lngSgn)     '@
+        objColRows.size(lngIndex) = objColRows.PixelToSize(objColRows.Pixel(lngIndex) + lngSgn)     '@
     Else
         '調整列(行)のサイズを変更
         If lngNo <> CLng(lblNo) Then
@@ -317,7 +317,7 @@ Private Sub spbChgSize_Change()
         End If
         
         '選択列(行)のサイズを変更
-        objColRows.Size = objColRows.PixelToSize(objColRows.Pixel + lngSgn)     '@
+        objColRows.size = objColRows.PixelToSize(objColRows.Pixel + lngSgn)     '@
     End If
     
     Call frmSizeList.ReCalc
@@ -393,7 +393,7 @@ Public Sub SetSize()
     spbChgSize.Value = objColRows.Pixel
     
     If objColRows.Count = 1 Then '@
-        lblOther.Caption = Format$(objColRows.Size, "##0.00")  '@
+        lblOther.Caption = Format$(objColRows.size, "##0.00")  '@
     End If
 End Sub
 
@@ -441,7 +441,7 @@ Public Sub SetValues(ByRef objRange As Range)
     If lngCount > 1 Then
         lblOther.Caption = "詳細情報"
         lblOther.Font.Underline = True
-        lblOther.Font.Size = 10
+        lblOther.Font.size = 10
         lblOther.Width = 45
         lblOther.Top = lblOther.Top + 2
         lblOther.ForeColor = &HFF0000

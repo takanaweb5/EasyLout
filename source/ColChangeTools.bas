@@ -175,7 +175,7 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_ColSize2, GetRange(strSelection), colAddress)
+    Call SaveUndoInfo(E_ColSize2, strSelection, colAddress)
     
     'SHIFTが押下されていると非表示にする
     If lngSize < 0 And FPressKey = E_Shift Then
@@ -513,7 +513,7 @@ On Error GoTo ErrHandle
     Dim colAddress  As New Collection
     Call colAddress.Add(objRange.Columns(1).Address(0, 0))
     Call colAddress.Add(objRange.Columns(k).Address(0, 0))
-    Call SaveUndoInfo(E_ColSize2, Range(strSelection), colAddress)
+    Call SaveUndoInfo(E_ColSize2, strSelection, colAddress)
     
     'サイズの変更
     objRange.Columns(1).ColumnWidth = PixelToWidth(lngPixel(1))
@@ -758,7 +758,7 @@ On Error GoTo ErrHandle
     Application.DisplayAlerts = False
     Application.Calculation = xlManual
     'アンドゥ用に元の状態を保存する
-    Call SaveUndoInfo(E_MergeCell, Range(strSelection))
+    Call SaveUndoInfo(E_MergeCell, strSelection)
     Call Range(strSelection).UnMerge
     
     'エリアの数だけループ
@@ -1075,9 +1075,9 @@ On Error GoTo ErrHandle
     
     'アンドゥ用に元の状態を保存する
     If blnHidden = True Then
-        Call SaveUndoInfo(E_ColSize, Range(strSelection), colAddress)
+        Call SaveUndoInfo(E_ColSize, strSelection, colAddress)
     Else
-        Call SaveUndoInfo(E_EraseCol, Range(strSelection), colAddress)
+        Call SaveUndoInfo(E_EraseCol, strSelection, colAddress)
     End If
     
     '図形は移動させない
