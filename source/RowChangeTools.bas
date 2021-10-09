@@ -114,26 +114,27 @@ On Error GoTo ErrHandle
     '***********************************************
     '同じ高さの塊ごとにAddressを取得する
     '***********************************************
+    Dim lngPixel    As Long    '幅(単位:Pixel)
     Dim colAddress  As New Collection
     If objVisible Is Nothing Then
-        Call colAddress.Add(objSelection.Address(0, 0))
+        Call colAddress.Add(GetAddress(objSelection))
     Else
-        Set colAddress = GetSameHeightAddresses(objSelection)
+        If lngSize < 0 And FPressKey = E_Shift Then
+            lngPixel = 99999
+        Else
+            Set colAddress = GetSameHeightAddresses(objSelection, lngPixel)
+        End If
     End If
     
     '***********************************************
     '変更後のサイズのチェック
     '***********************************************
-    Dim lngPixel    As Long    '幅(単位:Pixel)
     If lngSize < 0 And FPressKey = E_Shift Then
     Else
-        For i = 1 To colAddress.Count
-            lngPixel = GetRange(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
-            If lngPixel < 0 Then
-                Call MsgBox("これ以上縮小出来ません", vbExclamation)
-                Exit Sub
-            End If
-        Next i
+        If lngPixel + lngSize < 0 Then
+            Call MsgBox("これ以上縮小出来ません", vbExclamation)
+            Exit Sub
+        End If
     End If
     
     '***********************************************
@@ -149,16 +150,22 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
+    If lngSize < 0 And FPressKey = E_Shift Then
+        Call SaveUndoInfo(E_RowSize2, strSelection, GetAddress(objSelection))
+    Else
+        Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
+    End If
     
     'SHIFTが押下されていると非表示にする
     If lngSize < 0 And FPressKey = E_Shift Then
         objSelection.EntireRow.Hidden = True
     Else
+        Dim objRange As Range
         '同じ高さの塊ごとに高さを設定する
         For i = 1 To colAddress.Count
-            lngPixel = GetRange(colAddress(i)).Rows(1).Height / DPIRatio + lngSize
-            GetRange(colAddress(i)).RowHeight = PixelToHeight(lngPixel)
+            Set objRange = GetRange(colAddress(i))
+            lngPixel = objRange.Rows(1).Height / DPIRatio + lngSize
+            objRange.RowHeight = PixelToHeight(lngPixel)
         Next i
     End If
     
@@ -177,79 +184,82 @@ End Sub
 
 '*****************************************************************************
 '[概要] 同じ高さの塊ごとのアドレスを配列で取得する
-'[引数] 選択された領域
+'[引数] 選択された領域、最小の高さ
 '[戻値] アドレスの配列
 '*****************************************************************************
-Public Function GetSameHeightAddresses(ByRef objSelection As Range) As Collection
+Public Function GetSameHeightAddresses(ByRef objSelection As Range, Optional ByRef MinPixel As Long) As Collection
+    MinPixel = 99999
     Set GetSameHeightAddresses = New Collection
+    Dim objWkRange As Range
     
-    '可視セルと不可視セルに分ける
-    Dim objVisible    As Range
-    Dim objNonVisible As Range
-    Set objVisible = GetVisibleCells(objSelection)
-    Set objNonVisible = MinusRange(objSelection, objVisible)
+    '使用されている最後の行
+    Dim lngLastRow As Long
+    lngLastRow = Cells.SpecialCells(xlCellTypeLastCell).Row
     
     '***********************************************
-    '使用された最後の行以前の領域の設定(可視領域)
+    '使用された最後の行以前の領域の設定
     '***********************************************
-    Dim lngLastRow    As Long    '使用されている最後の行
-    With Cells.SpecialCells(xlCellTypeLastCell)
-        lngLastRow = .Row + .Rows.Count - 1
-    End With
-    
-    Dim objUsedRange  As Range   '使用された最後の行以前の領域の設定(可視領域)
-    Set objUsedRange = IntersectRange(Range(Rows(1), Rows(lngLastRow)), objVisible)
-    If Not (objUsedRange Is Nothing) Then
-        Call GetSameHeightAddresses2(objUsedRange, GetSameHeightAddresses)
+    Set objWkRange = IntersectRange(Range(Rows(1), Rows(lngLastRow)), objSelection)
+    If Not (objWkRange Is Nothing) Then
+        MinPixel = GetSameHeightAddresses2(objWkRange, GetSameHeightAddresses)
     End If
     
     '***********************************************
-    '使用された最後の行以降の領域の設定(可視領域)
+    '使用された最後の行以降の領域の設定
     '***********************************************
-    Set objVisible = IntersectRange(Range(Rows(lngLastRow + 1), Rows(Rows.Count)), objVisible)
+    Set objWkRange = IntersectRange(Range(Rows(lngLastRow + 1), Rows(Rows.Count)), objSelection)
+    
+    '可視領域の設定
+    Dim objVisible As Range
+    Set objVisible = GetVisibleCells(objWkRange)
     If Not (objVisible Is Nothing) Then
         Call GetSameHeightAddresses.Add(objVisible.Address(0, 0))
+        MinPixel = WorksheetFunction.Min(objVisible.Rows(1).Height / DPIRatio, MinPixel)
     End If
     
-    '***********************************************
     '不可視領域の設定
-    '***********************************************
+    Dim objNonVisible As Range
+    Set objNonVisible = MinusRange(objWkRange, objVisible)
     If Not (objNonVisible Is Nothing) Then
         Call GetSameHeightAddresses.Add(objNonVisible.Address(0, 0))
+        MinPixel = 0
     End If
 End Function
 
 '*****************************************************************************
 '[概要] 同じ高さの塊ごとのアドレスを配列で取得する
 '[引数] 使用された最後の行以前の可視領域、 同じ高さの塊ごとのアドレスの配列
-'[戻値] なし
+'[戻値] 最小の高さ
 '*****************************************************************************
-Private Sub GetSameHeightAddresses2(ByRef objUsedRange As Range, ByRef colAddresses As Collection)
+Private Function GetSameHeightAddresses2(ByRef objUsedRange As Range, ByRef colAddresses As Collection) As Long
     Dim objDictionary As Object
     Set objDictionary = CreateObject("Scripting.Dictionary")
+    GetSameHeightAddresses2 = 99999
     
     Dim i    As Long
     Dim lngPixle As Long
-    Dim objArea   As Range
-    Dim objRange  As Range
+    Dim objArea  As Range
+    Dim lngRow   As Long
     For Each objArea In objUsedRange.Areas
         For i = 1 To objArea.Rows.Count
-            Set objRange = objArea.Rows(i)
-            lngPixle = objRange.Height / DPIRatio
+            lngRow = objArea.Rows(i).Row
+            lngPixle = Rows(lngRow).Height / DPIRatio
             If objDictionary.Exists(lngPixle) Then
-                Set objDictionary(lngPixle) = Union(objDictionary(lngPixle), objRange)
+                objDictionary(lngPixle) = objDictionary(lngPixle) & "," & lngRow & ":" & lngRow
             Else
-                Call objDictionary.Add(lngPixle, objRange)
+                Call objDictionary.Add(lngPixle, lngRow & ":" & lngRow)
+                If lngPixle < GetSameHeightAddresses2 Then
+                    GetSameHeightAddresses2 = lngPixle
+                End If
             End If
         Next
     Next
     
     Dim v As Variant
     For Each v In objDictionary.Items
-        Set objRange = v
-        Call colAddresses.Add(GetAddress(objRange))
+        Call colAddresses.Add(v)
     Next
-End Sub
+End Function
 
 '*****************************************************************************
 '[ 関数名 ]　ChangeShapeHeight
@@ -883,15 +893,17 @@ On Error GoTo ErrHandle
     '*************************************************
     '新しい高さに設定
     If blnCheckInsert = False Then
+        Dim lngNewPixel As Long
+        lngNewPixel = lngPixel / lngSplitCount
         If lngSplitCount = 2 Then
-            objRange.EntireRow.RowHeight = PixelToHeight(Round(lngPixel / 2))
-            objNewRow.EntireRow.RowHeight = PixelToHeight(Int(lngPixel / 2))
+            objRange.EntireRow.RowHeight = PixelToHeight(lngNewPixel)
+            objNewRow.EntireRow.RowHeight = PixelToHeight(lngPixel - lngNewPixel)
         Else
             With Range(objRange, objNewRow).EntireRow
                 If lngPixel < lngSplitCount Then
                     .RowHeight = PixelToHeight(1)
                 Else
-                    .RowHeight = PixelToHeight(lngPixel / lngSplitCount)
+                    .RowHeight = PixelToHeight(lngNewPixel)
                 End If
             End With
         End If

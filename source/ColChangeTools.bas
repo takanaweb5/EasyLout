@@ -915,15 +915,17 @@ On Error GoTo ErrHandle
     'ïùÇÃêÆîı
     '*************************************************
     If blnCheckInsert = False Then
+        Dim lngNewPixel As Long
+        lngNewPixel = lngPixel / lngSplitCount
         If lngSplitCount = 2 Then
-            objRange.EntireColumn.ColumnWidth = PixelToWidth(Round(lngPixel / 2))
-            objNewCol.EntireColumn.ColumnWidth = PixelToWidth(Int(lngPixel / 2))
+            objRange.EntireColumn.ColumnWidth = PixelToWidth(lngNewPixel)
+            objNewCol.EntireColumn.ColumnWidth = PixelToWidth(lngPixel - lngNewPixel)
         Else
             With Range(objRange, objNewCol).EntireColumn
                 If lngPixel < lngSplitCount Then
                     .ColumnWidth = PixelToWidth(1)
                 Else
-                    .ColumnWidth = PixelToWidth(lngPixel / lngSplitCount)
+                    .ColumnWidth = PixelToWidth(lngNewPixel)
                 End If
             End With
         End If
