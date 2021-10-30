@@ -704,7 +704,7 @@ Private Function CheckPasteMode(ByVal strCopyText As String, ByRef objSelection 
     '行方向に結合のない単一セル
     If objSelection.Rows.Count = 1 Then
         '行の高さがだいたい2行以上の時
-        If objSelection.RowHeight > (objSelection.Font.size + 2) * 2 Then
+        If objSelection.RowHeight > (objSelection.Font.Size + 2) * 2 Then
             CheckPasteMode = True
             Exit Function
         End If
@@ -1653,7 +1653,7 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
         .NameComplexScript = objCell.Font.Name
         .NameFarEast = objCell.Font.Name
         .Name = objCell.Font.Name
-        .size = objCell.Font.size
+        .Size = objCell.Font.Size
     End With
     With objTextbox.TextFrame2.TextRange
         .Text = objCell.Value
@@ -1800,7 +1800,7 @@ Private Function ChangeCommentToTextbox(ByRef objCell As Range) As Shape
         .NameComplexScript = objFont.Name
         .NameFarEast = objFont.Name
         .Name = objFont.Name
-        .size = objFont.size
+        .Size = objFont.Size
     End With
     With objTextbox.TextFrame2.TextRange
         .Text = objComment.Text

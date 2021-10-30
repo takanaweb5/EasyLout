@@ -4,7 +4,7 @@ Option Private Module
 
 Private Type TFont  '標準スタイルのフォントの情報
     Name        As String
-    size        As Long
+    Size        As Long
     Bold        As Boolean
     Italic      As Boolean
 End Type
@@ -92,7 +92,7 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim objVisible     As Range    '可視Range
     '選択範囲の可視部分を取出す
-    Set objVisible = GetVisibleCells(objSelection)
+    Set objVisible = GetVisibleCols(objSelection)
     If objVisible Is Nothing Then
         If lngSize < 0 Then
             ActiveWindow.View = lngWindowView
@@ -175,7 +175,11 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    Call SaveUndoInfo(E_ColSize2, strSelection, colAddress)
+    If lngSize < 0 And FPressKey = E_Shift Then
+        Call SaveUndoInfo(E_ColHide, strSelection, GetAddress(objSelection))
+    Else
+        Call SaveUndoInfo(E_ColSize2, strSelection, colAddress)
+    End If
     
     'SHIFTが押下されていると非表示にする
     If lngSize < 0 And FPressKey = E_Shift Then
@@ -229,7 +233,7 @@ Public Function GetSameWidthAddresses(ByRef objSelection As Range) As Collection
     Set objColumns = Union(objSelection.EntireColumn, objSelection.EntireColumn)
     
     '可視セルと不可視セルに分ける
-    Set objVisible = GetVisibleCells(objColumns)
+    Set objVisible = GetVisibleCols(objColumns)
     Set objNonVisible = MinusRange(objColumns, objVisible)
     
     '***********************************************
@@ -448,22 +452,21 @@ Public Function GetRightGrid(ByVal lngPos As Long, ByRef objColumn As Range) As 
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　GetVisibleCells
-'[ 概  要 ]　可視セルを取得
-'[ 引  数 ]　選択セル
-'[ 戻り値 ]　可視セル
+'[概要] 列単位の可視セルを取得
+'[引数] 選択セル
+'[戻値] 可視セル
 '*****************************************************************************
-Private Function GetVisibleCells(ByRef objRange As Range) As Range
+Private Function GetVisibleCols(ByRef objRange As Range) As Range
 On Error GoTo ErrHandle
     Dim objCells As Range
     Set objCells = objRange.SpecialCells(xlCellTypeVisible)
     
     '行の非表示は選択する
-    Set GetVisibleCells = Union(objCells.EntireColumn, objCells.EntireColumn)
-    Set GetVisibleCells = IntersectRange(GetVisibleCells, objRange)
+    Set GetVisibleCols = Union(objCells.EntireColumn, objCells.EntireColumn)
+    Set GetVisibleCols = IntersectRange(GetVisibleCols, objRange)
 Exit Function
 ErrHandle:
-    Set GetVisibleCells = Nothing
+    Set GetVisibleCols = Nothing
 End Function
 
 '*****************************************************************************
@@ -595,7 +598,7 @@ On Error GoTo ErrHandle
     Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
     
     '選択範囲の可視部分を取出す
-    Set objVisible = GetVisibleCells(objSelection)
+    Set objVisible = GetVisibleCols(objSelection)
     
     'すべて非表示の時
     If objVisible Is Nothing Then
@@ -915,17 +918,15 @@ On Error GoTo ErrHandle
     '幅の整備
     '*************************************************
     If blnCheckInsert = False Then
-        Dim lngNewPixel As Long
-        lngNewPixel = lngPixel / lngSplitCount
         If lngSplitCount = 2 Then
-            objRange.EntireColumn.ColumnWidth = PixelToWidth(lngNewPixel)
-            objNewCol.EntireColumn.ColumnWidth = PixelToWidth(lngPixel - lngNewPixel)
+            objRange.EntireColumn.ColumnWidth = PixelToWidth(Round(lngPixel / 2))
+            objNewCol.EntireColumn.ColumnWidth = PixelToWidth(Int(lngPixel / 2))
         Else
             With Range(objRange, objNewCol).EntireColumn
                 If lngPixel < lngSplitCount Then
                     .ColumnWidth = PixelToWidth(1)
                 Else
-                    .ColumnWidth = PixelToWidth(lngNewPixel)
+                    .ColumnWidth = PixelToWidth(lngPixel / lngSplitCount)
                 End If
             End With
         End If
@@ -1446,7 +1447,7 @@ On Error GoTo ErrHandle
     '非表示の列を対象とするか確認？
     Dim objVisible    As Range
     Dim objNonVisible As Range
-    Set objVisible = GetVisibleCells(objSelection)
+    Set objVisible = GetVisibleCols(objSelection)
     Set objNonVisible = MinusRange(objSelection, objVisible)
     If Not (objNonVisible Is Nothing) Then
         If WorksheetFunction.CountA(objNonVisible) > 0 Then
@@ -1702,13 +1703,13 @@ On Error GoTo ErrHandle
     
     '標準スタイルのフォントが変更されたか判定
     With ActiveWorkbook.Styles("Normal").Font
-        If udtFont.Name = .Name And udtFont.size = .size And _
+        If udtFont.Name = .Name And udtFont.Size = .Size And _
            udtFont.Bold = .Bold And udtFont.Italic = .Italic Then
             Exit Sub
         Else
             'フォント情報を保存する
             udtFont.Name = .Name
-            udtFont.size = .size
+            udtFont.Size = .Size
             udtFont.Bold = .Bold
             udtFont.Italic = .Italic
         End If
@@ -1725,8 +1726,8 @@ On Error GoTo ErrHandle
         If .Name <> udtFont.Name Then
             .Name = udtFont.Name
         End If
-        If .size <> udtFont.size Then
-            .size = udtFont.size
+        If .Size <> udtFont.Size Then
+            .Size = udtFont.Size
         End If
         If .Bold <> udtFont.Bold Then
             .Bold = udtFont.Bold

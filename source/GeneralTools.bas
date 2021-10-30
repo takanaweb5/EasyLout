@@ -1047,19 +1047,19 @@ Public Function GetCopyRange() As Range
     End If
      
 On Error GoTo ErrHandle
-    Dim size As Long
+    Dim Size As Long
     Dim p As LongPtr
-    size = GlobalSize(hMem)
+    Size = GlobalSize(hMem)
     p = GlobalLock(hMem)
-    ReDim Data(1 To size) As Byte
-    Call CopyMemory(Data(1), ByVal p, size)
+    ReDim Data(1 To Size) As Byte
+    Call CopyMemory(Data(1), ByVal p, Size)
     Call GlobalUnlock(hMem)
     Call CloseClipboard
     hMem = 0
     
     Dim strData As String
     Dim i As Long
-    For i = 1 To size
+    For i = 1 To Size
         If Data(i) = 0 Then
             Data(i) = Asc("/") 'シート名にもファイル名にも使えない文字
         End If

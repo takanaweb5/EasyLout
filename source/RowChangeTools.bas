@@ -76,7 +76,7 @@ On Error GoTo ErrHandle
     '***********************************************
     Dim objVisible     As Range    '可視Range
     '選択範囲の可視部分を取出す
-    Set objVisible = GetVisibleCells(objSelection)
+    Set objVisible = GetVisibleRows(objSelection)
     If objVisible Is Nothing Then
         If lngSize < 0 Then
             Call MsgBox("これ以上縮小出来ません", vbExclamation)
@@ -120,7 +120,6 @@ On Error GoTo ErrHandle
         Call colAddress.Add(GetAddress(objSelection))
     Else
         If lngSize < 0 And FPressKey = E_Shift Then
-            lngPixel = 99999
         Else
             Set colAddress = GetSameHeightAddresses(objSelection, lngPixel)
         End If
@@ -151,7 +150,7 @@ On Error GoTo ErrHandle
     
     'アンドゥ用に元のサイズを保存する
     If lngSize < 0 And FPressKey = E_Shift Then
-        Call SaveUndoInfo(E_RowSize2, strSelection, GetAddress(objSelection))
+        Call SaveUndoInfo(E_RowHide, strSelection, GetAddress(objSelection))
     Else
         Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
     End If
@@ -211,7 +210,7 @@ Public Function GetSameHeightAddresses(ByRef objSelection As Range, Optional ByR
     
     '可視領域の設定
     Dim objVisible As Range
-    Set objVisible = GetVisibleCells(objWkRange)
+    Set objVisible = GetVisibleRows(objWkRange)
     If Not (objVisible Is Nothing) Then
         Call GetSameHeightAddresses.Add(objVisible.Address(0, 0))
         MinPixel = WorksheetFunction.Min(objVisible.Rows(1).Height / DPIRatio, MinPixel)
@@ -426,22 +425,21 @@ Public Function GetBottomGrid(ByVal lngPos As Long, ByRef objRow As Range) As Lo
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　GetVisibleCells
-'[ 概  要 ]　可視セルを取得
-'[ 引  数 ]　選択セル
-'[ 戻り値 ]　可視セル
+'[概要] 行単位の可視セルを取得
+'[引数] 選択セル
+'[戻値] 可視セル
 '*****************************************************************************
-Private Function GetVisibleCells(ByRef objRange As Range) As Range
+Private Function GetVisibleRows(ByRef objRange As Range) As Range
 On Error GoTo ErrHandle
     Dim objCells As Range
     Set objCells = objRange.SpecialCells(xlCellTypeVisible)
     
     '列の非表示は選択する
-    Set GetVisibleCells = Union(objCells.EntireRow, objCells.EntireRow)
-    Set GetVisibleCells = IntersectRange(GetVisibleCells, objRange)
+    Set GetVisibleRows = Union(objCells.EntireRow, objCells.EntireRow)
+    Set GetVisibleRows = IntersectRange(GetVisibleRows, objRange)
 Exit Function
 ErrHandle:
-    Set GetVisibleCells = Nothing
+    Set GetVisibleRows = Nothing
 End Function
 
 '*****************************************************************************
@@ -573,7 +571,7 @@ On Error GoTo ErrHandle
     Set objSelection = Union(Selection.EntireRow, Selection.EntireRow)
     
     '選択範囲の可視部分を取出す
-    Set objVisible = GetVisibleCells(objSelection)
+    Set objVisible = GetVisibleRows(objSelection)
     
     'すべて非表示の時
     If objVisible Is Nothing Then
@@ -893,17 +891,15 @@ On Error GoTo ErrHandle
     '*************************************************
     '新しい高さに設定
     If blnCheckInsert = False Then
-        Dim lngNewPixel As Long
-        lngNewPixel = lngPixel / lngSplitCount
         If lngSplitCount = 2 Then
-            objRange.EntireRow.RowHeight = PixelToHeight(lngNewPixel)
-            objNewRow.EntireRow.RowHeight = PixelToHeight(lngPixel - lngNewPixel)
+            objRange.EntireRow.RowHeight = PixelToHeight(Round(lngPixel / 2))
+            objNewRow.EntireRow.RowHeight = PixelToHeight(Int(lngPixel / 2))
         Else
             With Range(objRange, objNewRow).EntireRow
                 If lngPixel < lngSplitCount Then
                     .RowHeight = PixelToHeight(1)
                 Else
-                    .RowHeight = PixelToHeight(lngNewPixel)
+                    .RowHeight = PixelToHeight(lngPixel / lngSplitCount)
                 End If
             End With
         End If
@@ -1413,7 +1409,7 @@ On Error GoTo ErrHandle
     '非表示の行を対象とするか確認？
     Dim objVisible    As Range
     Dim objNonVisible As Range
-    Set objVisible = GetVisibleCells(objSelection)
+    Set objVisible = GetVisibleRows(objSelection)
     Set objNonVisible = MinusRange(objSelection, objVisible)
     If Not (objNonVisible Is Nothing) Then
         If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
@@ -1473,7 +1469,7 @@ On Error GoTo ErrHandle
     Dim k As Long
     For k = 1 To objSelection.Areas.Count
         With objWorksheet
-            .Range(.Rows(1), .Rows(objSelection.Areas(k).Rows.Count)).Font.size = 1
+            .Range(.Rows(1), .Rows(objSelection.Areas(k).Rows.Count)).Font.Size = 1
             Call objSelection.Areas(k).Copy(.Cells(1, 1))
         End With
         
