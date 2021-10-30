@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 'タイプ
@@ -59,8 +60,8 @@ Private Sub UserForm_Terminate()
     If blnDisplayPageBreaks = True Then
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
-    
-    ActiveWindow.View = lngWindowView
+
+'    ActiveWindow.View = lngWindowView 'Undo出来なくなる
 End Sub
 
 '*****************************************************************************

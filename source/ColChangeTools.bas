@@ -189,7 +189,7 @@ On Error GoTo ErrHandle
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
     Call SetOnUndo
-'    ActiveWindow.View = lngWindowView 'Undo出来なるためコメント
+'    ActiveWindow.View = lngWindowView 'Undo出来なくなる
 Exit Sub
 ErrHandle:
     If blnDisplayPageBreaks = True Then
