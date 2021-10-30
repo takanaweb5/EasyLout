@@ -13,9 +13,11 @@ Public Enum EUndoType  'アンドゥタイプ
     E_ColSize     '列幅変更
     E_ColSize2    '列幅変更
     E_ColHide     '列非表示
+    E_ColReShow   '列再表示
     E_RowSize     '行高変更
     E_RowSize2    '行高変更
     E_RowHide     '行非表示
+    E_RowReShow   '行再表示
     E_CellBorder  'セルの境界移動
     E_MoveCell    '領域の移動
     E_CopyCell    '領域のコピー
@@ -197,7 +199,8 @@ On Error GoTo ErrHandle
         Call BackupRangeSize(varInfo)
         '図形の位置･サイズを保存
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
-    Case E_ColHide, E_RowHide
+    Case E_ColHide, E_ColReShow, _
+         E_RowHide, E_RowReShow
         udtUndoInfo(bytNo).SelectCell = strAddress
         udtUndoInfo(bytNo).Address = varInfo
         '図形の位置･サイズを保存
@@ -542,6 +545,16 @@ Public Sub ExecUndo()
         GetRange(udtUndoInfo(bytNo).Address).EntireRow.Hidden = False
         '図形のサイズを復元する
         Call RecoverShapeSize
+    Case E_ColReShow
+        '列を非表示する
+        GetRange(udtUndoInfo(bytNo).Address).EntireColumn.Hidden = True
+        '図形のサイズを復元する
+        Call RecoverShapeSize
+    Case E_RowReShow
+        '行を非表示する
+        GetRange(udtUndoInfo(bytNo).Address).EntireRow.Hidden = True
+        '図形のサイズを復元する
+        Call RecoverShapeSize
     Case E_EraseCol, E_EraseRow
         Dim i As Long
         '名前オブジェクトがセル参照をしているときに復元できるように回復させる
@@ -643,6 +656,7 @@ Public Sub ExecUndo()
         Select Case (Me.UndoType)
         Case E_ColSize, E_RowSize, E_ColSize2, E_RowSize2, _
              E_ColHide, E_RowHide, _
+             E_ColReShow, E_RowReShow, _
              E_MergeCell, E_MoveCell, E_CopyCell, E_PasteValue, _
              E_CellToText, E_ApplyFormat, _
              E_SplitCol, E_EraseCol, _
@@ -887,14 +901,10 @@ End Sub
 '*****************************************************************************
 Public Sub SetOnUndo()
     Select Case (Me.UndoType)
-    Case E_ColSize, E_ColSize2
+    Case E_ColSize, E_ColSize2, E_ColHide, E_ColReShow
         Call Application.OnUndo("幅の変更", "ExecUndo")
-    Case E_RowSize, E_RowSize2
+    Case E_RowSize, E_RowSize2, E_RowHide, E_RowReShow
         Call Application.OnUndo("高さの変更", "ExecUndo")
-    Case E_ColHide
-        Call Application.OnUndo("列を非表示", "ExecUndo")
-    Case E_RowHide
-        Call Application.OnUndo("行を非表示", "ExecUndo")
     Case E_ShapeSize, E_ShapeSize2
         Call Application.OnUndo("図形のサイズの変更", "ExecUndo")
     Case E_CellBorder

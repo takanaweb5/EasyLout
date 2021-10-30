@@ -20,7 +20,15 @@ On Error GoTo ErrHandle
     '選択されているオブジェクトを判定
     Select Case CheckSelection()
     Case E_Range
-        Call ChangeRowsHeight(lngSize)
+        If FPressKey = E_Shift Then
+            If lngSize < 0 Then
+                Call HideRows
+            Else
+                Call ReShowRows
+            End If
+        Else
+            Call ChangeRowsHeight(lngSize)
+        End If
     Case E_Shape
         Call ChangeShapeHeight(lngSize)
     End Select
@@ -86,23 +94,19 @@ On Error GoTo ErrHandle
         '非表示の行がある時
         If GetAddress(objSelection) <> GetAddress(objVisible) Then
             If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
-                If lngSize < 0 And FPressKey = E_Shift Then
-                    Set objSelection = objVisible
-                Else
-                    Select Case MsgBox("非表示の行を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
-                    Case vbYes
-                        If lngSize < 0 Then
-                            Call MsgBox("これ以上縮小出来ません", vbExclamation)
-                            Exit Sub
-                        End If
-                    Case vbNo
-                        '可視セルのみ選択する
-                        Call IntersectRange(Selection, objVisible).Select
-                        Set objSelection = objVisible
-                    Case vbCancel
+                Select Case MsgBox("非表示の行を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
+                Case vbYes
+                    If lngSize < 0 Then
+                        Call MsgBox("これ以上縮小出来ません", vbExclamation)
                         Exit Sub
-                    End Select
-                End If
+                    End If
+                Case vbNo
+                    '可視セルのみ選択する
+                    Call IntersectRange(Selection, objVisible).Select
+                    Set objSelection = objVisible
+                Case vbCancel
+                    Exit Sub
+                End Select
             Else
                 '可視セルのみ選択する
                 Call IntersectRange(Selection, objVisible).Select
@@ -119,21 +123,15 @@ On Error GoTo ErrHandle
     If objVisible Is Nothing Then
         Call colAddress.Add(GetAddress(objSelection))
     Else
-        If lngSize < 0 And FPressKey = E_Shift Then
-        Else
-            Set colAddress = GetSameHeightAddresses(objSelection, lngPixel)
-        End If
+        Set colAddress = GetSameHeightAddresses(objSelection, lngPixel)
     End If
     
     '***********************************************
     '変更後のサイズのチェック
     '***********************************************
-    If lngSize < 0 And FPressKey = E_Shift Then
-    Else
-        If lngPixel + lngSize < 0 Then
-            Call MsgBox("これ以上縮小出来ません", vbExclamation)
-            Exit Sub
-        End If
+    If lngPixel + lngSize < 0 Then
+        Call MsgBox("これ以上縮小出来ません", vbExclamation)
+        Exit Sub
     End If
     
     '***********************************************
@@ -149,24 +147,15 @@ On Error GoTo ErrHandle
     End If
     
     'アンドゥ用に元のサイズを保存する
-    If lngSize < 0 And FPressKey = E_Shift Then
-        Call SaveUndoInfo(E_RowHide, strSelection, GetAddress(objSelection))
-    Else
-        Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
-    End If
+    Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
     
-    'SHIFTが押下されていると非表示にする
-    If lngSize < 0 And FPressKey = E_Shift Then
-        objSelection.EntireRow.Hidden = True
-    Else
-        Dim objRange As Range
-        '同じ高さの塊ごとに高さを設定する
-        For i = 1 To colAddress.Count
-            Set objRange = GetRange(colAddress(i))
-            lngPixel = objRange.Rows(1).Height / DPIRatio + lngSize
-            objRange.RowHeight = PixelToHeight(lngPixel)
-        Next i
-    End If
+    '同じ高さの塊ごとに高さを設定する
+    Dim objRange As Range
+    For i = 1 To colAddress.Count
+        Set objRange = GetRange(colAddress(i))
+        lngPixel = objRange.Rows(1).Height / DPIRatio + lngSize
+        objRange.RowHeight = PixelToHeight(lngPixel)
+    Next i
     
     '改ページを元に戻す
     If blnDisplayPageBreaks = True Then
@@ -178,6 +167,72 @@ ErrHandle:
     If blnDisplayPageBreaks = True Then
         ActiveSheet.DisplayAutomaticPageBreaks = True
     End If
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] 行を非表示にする
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub HideRows()
+On Error GoTo ErrHandle
+    Dim objSelection As Range   '選択されたすべての列
+    Dim strSelection As String
+        
+    '選択範囲のColumnsの和集合を取り重複列を排除する
+    strSelection = GetAddress(Selection)
+    Set objSelection = Union(Selection.EntireRow, Selection.EntireRow)
+    
+    '可視列のみ取得
+    Dim objVisible  As Range
+    Set objVisible = GetVisibleRows(objSelection)
+    If objVisible Is Nothing Then
+        Exit Sub
+    End If
+    
+    'アンドゥ用に元のサイズを保存する
+    Call SaveUndoInfo(E_RowHide, strSelection, GetAddress(objVisible))
+    
+    objVisible.EntireRow.Hidden = True
+    Call SetOnUndo
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
+
+'*****************************************************************************
+'[概要] 非表示の行を再表示にする
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ReShowRows()
+On Error GoTo ErrHandle
+    Dim objSelection As Range   '選択されたすべての列
+    Dim strSelection As String
+        
+    '選択範囲のColumnsの和集合を取り重複列を排除する
+    strSelection = GetAddress(Selection)
+    Set objSelection = Union(Selection.EntireRow, Selection.EntireRow)
+    
+    '非表示列のみ取得
+    Dim objVisible  As Range
+    Set objVisible = GetVisibleRows(objSelection)
+    Set objSelection = MinusRange(objSelection, objVisible)
+    If objSelection Is Nothing Then
+        Exit Sub
+    End If
+    
+    'アンドゥ用に元のサイズを保存する
+    Call SaveUndoInfo(E_RowReShow, strSelection, GetAddress(objSelection))
+    
+    objSelection.EntireRow.Hidden = False
+    Call SetOnUndo
+    
+    '再表示した行のみ選択
+    Call IntersectRange(GetRange(strSelection), objSelection).Select
+Exit Sub
+ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
 
