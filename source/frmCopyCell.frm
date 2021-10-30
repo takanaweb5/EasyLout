@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmCopyCell 
    Caption         =   "見たまま貼付け"
-   ClientHeight    =   2700
+   ClientHeight    =   2976
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   5028
@@ -47,6 +47,7 @@ Private lngZoom      As Long
 '*****************************************************************************
 Public Sub Initialize(ByRef objFromRange As Range, ByRef objToRange As Range, ByVal blnMove As Boolean)
     chkIgnore.ControlTipText = "通常は､デフォルトのまま実行ください(コピー元をEXCEL方眼と判定した時にチェックされます)"
+    chkBlank.ControlTipText = "空白セルは、結合を解除します"
     FMove = blnMove
     
     lngDisplayObjects = ActiveWorkbook.DisplayDrawingObjects
@@ -707,7 +708,46 @@ Private Sub CopyCell()
     Next
     
     Call objWkRange.Resize(, FDstRange.Columns.Count).Copy(FDstRange)
+    If chkBlank.Value Then
+        Set objWkRange = GetBlankAndMergeRange(FDstRange)
+        If Not (objWkRange Is Nothing) Then
+            Call objWkRange.UnMerge
+            objWkRange.HorizontalAlignment = xlGeneral
+        End If
+    End If
 End Sub
+
+'*****************************************************************************
+'[概要] 空白 かつ 結合されたセルを取得する
+'[引数] 対象領域
+'[戻値] 空白 かつ 結合されたセル
+'*****************************************************************************
+Private Function GetBlankAndMergeRange(ByRef objSelection As Range) As Range
+    Dim objRange   As Range
+    Dim objCell    As Range
+    
+    '結合されたセルはUsedRange以外にはないので
+    Set objRange = IntersectRange(objSelection, GetUsedRange())
+    If objRange Is Nothing Then
+        Exit Function
+    End If
+    
+    'セルの数だけループ
+    For Each objCell In objRange
+        '空白か？
+        If objCell.Value = "" And objCell.Formula = "" Then
+            With objCell.MergeArea
+                '結合セルか？
+                If .Count > 1 Then
+                    '左上のセルか
+                    If .Row = objCell.Row And .Column = objCell.Column Then
+                        Set GetBlankAndMergeRange = UnionRange(GetBlankAndMergeRange, objCell)
+                    End If
+                End If
+            End With
+        End If
+    Next
+End Function
 
 '*****************************************************************************
 '[イベント] KeyDown

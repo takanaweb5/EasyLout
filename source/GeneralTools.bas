@@ -481,9 +481,9 @@ Public Function GetMergeRange(ByRef objSelection As Range, Optional ByVal enmMer
     End If
     
 On Error GoTo ErrHandle
-    If objRange.Count > 100000 Then
-        Call Err.Raise(C_CheckErrMsg, , "選択されたセルが多すぎます")
-    End If
+'    If objRange.Count > 100000 Then
+'        Call Err.Raise(C_CheckErrMsg, , "選択されたセルが多すぎます")
+'    End If
     
     'セルの数だけループ
     For Each objCell In objRange
