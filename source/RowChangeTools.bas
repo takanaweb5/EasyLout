@@ -891,15 +891,17 @@ On Error GoTo ErrHandle
     '*************************************************
     'êVÇµÇ¢çÇÇ≥Ç…ê›íË
     If blnCheckInsert = False Then
+        Dim lngNewPixel As Long
+        lngNewPixel = lngPixel / lngSplitCount
         If lngSplitCount = 2 Then
-            objRange.EntireRow.RowHeight = PixelToHeight(Round(lngPixel / 2))
-            objNewRow.EntireRow.RowHeight = PixelToHeight(Int(lngPixel / 2))
+            objRange.EntireRow.RowHeight = PixelToHeight(lngNewPixel)
+            objNewRow.EntireRow.RowHeight = PixelToHeight(lngPixel - lngNewPixel)
         Else
             With Range(objRange, objNewRow).EntireRow
                 If lngPixel < lngSplitCount Then
                     .RowHeight = PixelToHeight(1)
                 Else
-                    .RowHeight = PixelToHeight(lngPixel / lngSplitCount)
+                    .RowHeight = PixelToHeight(lngNewPixel)
                 End If
             End With
         End If
