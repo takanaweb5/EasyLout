@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmMoveCell
    ClientHeight    =   2970
    ClientLeft      =   48
    ClientTop       =   432
-   ClientWidth     =   5004
+   ClientWidth     =   5124
    OleObjectBlob   =   "frmMoveCell.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -101,7 +101,7 @@ Public Sub Initialize(ByVal enmType As EModeType, ByRef objFromRange As Range, B
         .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
         .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
         .Name = ActiveWorkbook.Styles("Normal").Font.Name
-        .size = ActiveWorkbook.Styles("Normal").Font.size
+        .Size = ActiveWorkbook.Styles("Normal").Font.Size
     End With
     'テキストボックスの背景を変更
     With objTextbox.Fill

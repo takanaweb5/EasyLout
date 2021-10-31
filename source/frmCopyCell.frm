@@ -4,7 +4,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmCopyCell
    ClientHeight    =   2976
    ClientLeft      =   48
    ClientTop       =   432
-   ClientWidth     =   5028
+   ClientWidth     =   5244
    OleObjectBlob   =   "frmCopyCell.frx":0000
    StartUpPosition =   1  'オーナー フォームの中央
 End
@@ -47,7 +47,7 @@ Private lngZoom      As Long
 '*****************************************************************************
 Public Sub Initialize(ByRef objFromRange As Range, ByRef objToRange As Range, ByVal blnMove As Boolean)
     chkIgnore.ControlTipText = "通常は､デフォルトのまま実行ください(コピー元をEXCEL方眼と判定した時にチェックされます)"
-    chkBlank.ControlTipText = "空白セルは、結合を解除します"
+    chkBlank.ControlTipText = "貼付け後、空白セルの結合を解除します"
     FMove = blnMove
     
     lngDisplayObjects = ActiveWorkbook.DisplayDrawingObjects
