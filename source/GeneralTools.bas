@@ -990,6 +990,8 @@ Public Sub DeleteSheet(ByRef objSheet As Worksheet)
         Call .Delete
     End With
 
+    objSheet.StandardWidth = 8
+
     'ÅŒã‚ÌƒZƒ‹‚ğC³‚·‚é
     Call objSheet.Cells.Parent.UsedRange
 End Sub
