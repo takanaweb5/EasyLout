@@ -1139,15 +1139,6 @@ Public Function GetFileExtension(ByVal strFilename As String) As String
 End Function
 
 '*****************************************************************************
-'[概要] テンポラリのCommandBarControlを取得する
-'[引数] Controlを識別するID（リボンコントロールのID）
-'[戻値] CommandBarControl
-'*****************************************************************************
-Public Function GetTmpControl(ByVal strId As String) As CommandBarControl
-    Set GetTmpControl = CommandBars.FindControl(, , strId & ThisWorkbook.Name)
-End Function
-
-'*****************************************************************************
 '[概要] Undoボタンの情報を取得する
 '[引数] なし
 '[戻値] UndoボタンのTooltipText

@@ -3,7 +3,7 @@ Option Explicit
 Option Private Module
 
 Private Type PICTDESC_BMP
-    size    As Long
+    Size    As Long
     Type    As Long
     hBitmap As LongPtr
     hPal    As LongPtr
@@ -52,13 +52,13 @@ Private Sub CreateTmpCommandBar(ByRef Ribbon As IRibbonUI)
         .Parameter = ObjPtr(Ribbon)
     End With
     
-    'チェックボックスのクローンをテンポラリに作成
-    For i = 1 To 1
-        With objCmdBar.Controls.Add(msoControlButton)
-            .Tag = "C" & i & ThisWorkbook.Name
-            .State = False '初期設定はチェックなし
-        End With
-    Next
+'    'チェックボックスのクローンをテンポラリに作成
+'    For i = 1 To 1
+'        With objCmdBar.Controls.Add(msoControlButton)
+'            .Tag = "C" & i & ThisWorkbook.Name
+'            .State = False '初期設定はチェックなし
+'        End With
+'    Next
 End Sub
 
 '*****************************************************************************
@@ -75,6 +75,15 @@ Public Function GetRibbonUI() As IRibbonUI
     Call CopyMemory(obj, Pointer, Len(Pointer))
     Set GetRibbonUI = obj
 End Function
+
+'*****************************************************************************
+'[概要] テンポラリのCommandBarControlを取得する
+'[引数] Controlを識別するID（リボンコントロールのID）
+'[戻値] CommandBarControl
+'*****************************************************************************
+'Public Function GetTmpControl(ByVal strId As String) As CommandBarControl
+'    Set GetTmpControl = CommandBars.FindControl(, , strId & ThisWorkbook.Name)
+'End Function
 
 '*****************************************************************************
 '[イベント] onLoad
@@ -249,8 +258,8 @@ End Sub
 '[イベント] onCheckAction
 '*****************************************************************************
 Private Sub onCheckAction(Control As IRibbonControl, pressed As Boolean)
-    'チェック状態を保存
-    GetTmpControl(Control.ID).State = pressed
+'    'チェック状態を保存
+'    GetTmpControl(Control.ID).State = pressed
     
     Select Case Control.ID
     Case "C1"
@@ -268,7 +277,7 @@ On Error GoTo ErrHandle
     Dim blnHide As Boolean
     blnHide = Not (ActiveWorkbook.DisplayDrawingObjects = xlHide)
     Call HideShapes(blnHide)
-    GetTmpControl("C1").State = blnHide
+'    GetTmpControl("C1").State = blnHide
     Call GetRibbonUI.InvalidateControl("C1")
 ErrHandle:
 End Sub
@@ -297,11 +306,11 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub SetChkBox()
-    If ActiveWorkbook Is Nothing Then
-        GetTmpControl("C1").State = False
-    Else
-        GetTmpControl("C1").State = (ActiveWorkbook.DisplayDrawingObjects = xlHide)
-    End If
+'    If ActiveWorkbook Is Nothing Then
+'        GetTmpControl("C1").State = False
+'    Else
+'        GetTmpControl("C1").State = (ActiveWorkbook.DisplayDrawingObjects = xlHide)
+'    End If
     Call GetRibbonUI.InvalidateControl("C1")
 End Sub
 
@@ -425,7 +434,7 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     
     Dim uPicInfo As PICTDESC_BMP
     With uPicInfo
-        .size = Len(uPicInfo)
+        .Size = Len(uPicInfo)
         .Type = PICTYPE_BITMAP
         .hBitmap = Gdip.ToHBITMAP
         .hPal = 0
