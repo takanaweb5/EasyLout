@@ -540,7 +540,7 @@ On Error GoTo ErrHandle
     Dim lngPixel(1 To 2)  As Long  '先頭列と最終列のサイズ
     Dim k                 As Long  '最終列の列番号
     
-    strSelection = Selection.Address(0, 0)
+    strSelection = GetAddress(Selection)
     Set objRange = Selection
 
     '選択エリアが複数なら対象外
@@ -1047,7 +1047,7 @@ On Error GoTo ErrHandle
     End If
     
     Set objSelection = Selection
-    strSelection = objSelection.Address(0, 0)
+    strSelection = GetAddress(Selection)
     Set objRange = objSelection.EntireColumn
     
     '終了時に選択させる行
