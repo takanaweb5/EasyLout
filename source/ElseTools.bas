@@ -46,7 +46,7 @@ Private udtPlacement() As TPlacement
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub OpenHelp()
+Private Sub OpenHelp()
     Call OpenHelpPage("Introduction.htm")
 End Sub
 '*****************************************************************************
@@ -832,8 +832,6 @@ On Error GoTo ErrHandle
     'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
     Call SetPixelInfo
     Call ShowMoveCellForm(enmModeType, objFromRange, objToRange)
-    
-    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -1006,33 +1004,31 @@ End Function
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-'Private Sub MoveShape()
-'    If FPressKey = E_ShiftAndCtrl Then
-'        Call UnSelect
-'        Exit Sub
-'    End If
-'
-'    '選択されているオブジェクトを判定
-'    If CheckSelection() <> E_Shape Then
-'        Call MsgBox("図形が選択されていません")
-'        Exit Sub
-'    End If
-'
-'    'IMEをオフにする
-'    Call SetIMEOff
-'
-'On Error GoTo ErrHandle
-'    'フォームを表示
-'    Call frmMoveShape.Show
-'    Call Application.OnRepeat("", "")
-'Exit Sub
-'ErrHandle:
-'    If blnFormLoad = True Then
-'        Call Unload(frmMoveShape)
-'    End If
-'    Call MsgBox(Err.Description, vbExclamation)
-'    Call Application.OnRepeat("", "")
-'End Sub
+Private Sub MoveShape()
+    If FPressKey = E_ShiftAndCtrl Then
+        Call UnSelect
+        Exit Sub
+    End If
+
+    '選択されているオブジェクトを判定
+    If CheckSelection() <> E_Shape Then
+        Call MsgBox("図形が選択されていません")
+        Exit Sub
+    End If
+
+    'IMEをオフにする
+    Call SetIMEOff
+
+On Error GoTo ErrHandle
+    'フォームを表示
+    Call frmMoveShape.Show
+Exit Sub
+ErrHandle:
+    If blnFormLoad = True Then
+        Call Unload(frmMoveShape)
+    End If
+    Call MsgBox(Err.Description, vbExclamation)
+End Sub
 
 '*****************************************************************************
 '[ 関数名 ]　FitShapes
@@ -1880,7 +1876,7 @@ End Sub
 '[引数] なし
 '[戻値] True or False
 '*****************************************************************************
-Public Function ChangeTextboxToComment(ByRef objTextbox As Shape) As Boolean
+Private Function ChangeTextboxToComment(ByRef objTextbox As Shape) As Boolean
     Dim objCell As Range
     Set objCell = Range(objTextbox.AlternativeText)
     Call objCell.Select
@@ -2381,7 +2377,7 @@ End Function
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub OnPopupClick()
+Private Sub OnPopupClick()
     Call frmMoveShape.OnPopupClick
 End Sub
 
@@ -2391,7 +2387,7 @@ End Sub
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub OnPopupClick2()
+Private Sub OnPopupClick2()
     Call frmEdit.OnPopupClick
 End Sub
 
@@ -2625,7 +2621,7 @@ End Sub
 '[ 引  数 ]　なし
 '[ 戻り値 ]　なし
 '*****************************************************************************
-Public Sub SetBackSpace()
+Private Sub SetBackSpace()
 On Error GoTo ErrHandle
     Call Application.OnKey("{BS}", "PressBackSpace")
 ErrHandle:
@@ -2733,7 +2729,7 @@ End Sub
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
-Public Sub PasteAppearance()
+Private Sub PasteAppearance()
     Dim CopyMode  As XlCutCopyMode
     CopyMode = Application.CutCopyMode
     
@@ -2776,8 +2772,6 @@ On Error GoTo ErrHandle
     'EXCEL2013以降で起動直後にMoveCellを実行するとボタンが固まる謎の現象を回避するためにSetPixelInfoを呼ぶ
     Call SetPixelInfo
     Call ShowCopyCellForm(objFromRange, objToRange, CopyMode = xlCut)
-    
-    Call Application.OnRepeat("", "")
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -2814,7 +2808,7 @@ End Sub
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
-Public Sub CopyFormula()
+Private Sub CopyFormula()
 On Error GoTo ErrHandle
     Dim strText      As String
     Dim objSelection As Range
@@ -2877,7 +2871,7 @@ End Function
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
-Public Sub ApplyFormat()
+Private Sub ApplyFormat()
 On Error GoTo ErrHandle
     Dim objSelection  As Range
     

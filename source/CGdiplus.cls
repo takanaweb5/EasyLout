@@ -48,7 +48,7 @@ Private Type Guid
 End Type
 
 Private Type BITMAPINFOHEADER
-    size          As Long
+    Size          As Long
     Width         As Long
     Height        As Long
     Planes        As Integer
@@ -240,7 +240,7 @@ On Error GoTo Finalization
     Dim hDC   As LongPtr
     Dim BmpInfHeader   As BITMAPINFOHEADER
     hDC = CreateCompatibleDC(0)
-    BmpInfHeader.size = 40 '40å≈íË
+    BmpInfHeader.Size = 40 '40å≈íË
 
     'ïùÇ∆çÇÇ≥ÇÃÇ›éÊìæ
     Dim lngHeight  As Long

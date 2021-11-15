@@ -12,7 +12,7 @@ End Type
 '[à¯êî] Ç»Çµ
 '[ñﬂíl] Ç»Çµ
 '*****************************************************************************
-Public Sub MergeFormatConditions()
+Private Sub MergeFormatConditions()
     Call MergeSameFormatConditions(ActiveSheet)
 End Sub
 
