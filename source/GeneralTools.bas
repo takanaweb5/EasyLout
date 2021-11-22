@@ -373,10 +373,12 @@ Private Function ArrangeRange2(ByRef objRange As Range) As Range
     Dim objArrange(1 To 3) As Range
     Dim i As Long
     
+    On Error Resume Next
     If objRange.Count = 1 Then
         Set ArrangeRange2 = objRange.MergeArea
         Exit Function
     End If
+    On Error GoTo 0
     
     If IsOnlyCell(objRange) Then
         Set ArrangeRange2 = objRange
