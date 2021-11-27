@@ -2,7 +2,7 @@ Attribute VB_Name = "basEasyLout"
 Option Explicit
 Option Private Module
 
-Private Const C_DEBUG = False 'ŠJ”­Žž‚ÍTrue‚É‚·‚é
+Private Const C_DEBUG = False
 
 Private Type PICTDESC_BMP
     Size    As Long
@@ -109,7 +109,7 @@ End Sub
 Private Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
 '    returnedVal = (GetValue(control.Id, "Visible") = 1)
     If Control.ID = "dmy" Then
-        returnedVal = (C_DEBUG = True)
+        returnedVal = C_DEBUG
     Else
         returnedVal = True
     End If
