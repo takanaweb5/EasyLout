@@ -2,6 +2,8 @@ Attribute VB_Name = "basEasyLout"
 Option Explicit
 Option Private Module
 
+Private Const C_DEBUG = False '開発時はTrueにする
+
 Private Type PICTDESC_BMP
     Size    As Long
     Type    As Long
@@ -107,7 +109,7 @@ End Sub
 Private Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
 '    returnedVal = (GetValue(control.Id, "Visible") = 1)
     If Control.ID = "dmy" Then
-        returnedVal = False
+        returnedVal = (C_DEBUG = True)
     Else
         returnedVal = True
     End If
@@ -258,13 +260,13 @@ End Sub
 '[イベント] onCheckAction
 '*****************************************************************************
 Private Sub onCheckAction(Control As IRibbonControl, pressed As Boolean)
-'    'チェック状態を保存
-'    GetTmpControl(Control.ID).State = pressed
-    
     Select Case Control.ID
     Case "C1"
         Call HideShapes(pressed)
     End Select
+
+'    'チェック状態を保存
+'    GetTmpControl(Control.ID).State = pressed
 End Sub
 
 '*****************************************************************************
@@ -274,10 +276,7 @@ End Sub
 '*****************************************************************************
 Public Sub ToggleHideShapes()
 On Error GoTo ErrHandle
-    Dim blnHide As Boolean
-    blnHide = Not (ActiveWorkbook.DisplayDrawingObjects = xlHide)
-    Call HideShapes(blnHide)
-'    GetTmpControl("C1").State = blnHide
+    Call HideShapes(ActiveWorkbook.DisplayDrawingObjects <> xlHide)
     Call GetRibbonUI.InvalidateControl("C1")
 ErrHandle:
 End Sub
@@ -306,11 +305,6 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub SetChkBox()
-'    If ActiveWorkbook Is Nothing Then
-'        GetTmpControl("C1").State = False
-'    Else
-'        GetTmpControl("C1").State = (ActiveWorkbook.DisplayDrawingObjects = xlHide)
-'    End If
     Call GetRibbonUI.InvalidateControl("C1")
 End Sub
 
@@ -446,7 +440,6 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
     Call OleCreatePictureIndirect(uPicInfo, gGuid, True, IBitmap)
     Set LoadImageFromResource = IBitmap
 End Function
-
 
 '*****************************************************************************
 '[概要] リボンのコールバック関数を実行する(開発用)
