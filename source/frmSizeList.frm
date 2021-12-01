@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 'タイプ
@@ -31,8 +30,6 @@ End Type
 Private udtSizeInfo As TSizeInfo
 Private colSizeList(1 To 3) As New Collection
 Private lngSelNo   As Long '調整用の選択されたエリアNo
-Private blnDisplayPageBreaks As Boolean '改ページ表示
-Private lngWindowView As Long  'ページビュー
 Private lngRatioNo As Long '割合を保存しているエリアNo
 Private colAddress As Collection '同じ幅の塊ごとのアドレスの配列(Undo用)
 Private Const C_MAX = 256
@@ -42,26 +39,13 @@ Private Const C_MAX = 256
 '[ 概  要 ]　フォームロード時
 '*****************************************************************************
 Private Sub UserForm_Initialize()
-    '高速化のため改ページを非表示にする
-    lngWindowView = ActiveWindow.View
-    ActiveWindow.View = xlNormalView
-    
-    If ActiveSheet.DisplayAutomaticPageBreaks = True Then
-        blnDisplayPageBreaks = True
-        ActiveSheet.DisplayAutomaticPageBreaks = False
-    End If
 End Sub
 
 '*****************************************************************************
 '[イベント]　UserForm_Terminate
-'[ 概  要 ]　改ページ表示情報を元に戻す
+'[ 概  要 ]　フォーム解放時
 '*****************************************************************************
 Private Sub UserForm_Terminate()
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
-
-'    ActiveWindow.View = lngWindowView 'Undo出来なくなる
 End Sub
 
 '*****************************************************************************

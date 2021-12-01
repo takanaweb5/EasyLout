@@ -84,16 +84,10 @@ On Error GoTo ErrHandle
     Dim i            As Long
     Dim objSelection As Range   '選択されたすべての列
     Dim strSelection As String
-    Dim lngWindowView As Long
-        
+                
     '選択範囲のColumnsの和集合を取り重複列を排除する
     strSelection = GetAddress(Selection)
     Set objSelection = Union(Selection.EntireColumn, Selection.EntireColumn)
-    
-    '標準プレビューに変更する
-    Application.ScreenUpdating = False
-    lngWindowView = ActiveWindow.View
-    ActiveWindow.View = xlNormalView
     
     '***********************************************
     '非表示の列があるかどうかの判定
@@ -103,8 +97,6 @@ On Error GoTo ErrHandle
     Set objVisible = GetVisibleCols(objSelection)
     If objVisible Is Nothing Then
         If lngSize < 0 Then
-            ActiveWindow.View = lngWindowView
-            Application.ScreenUpdating = True
             Call MsgBox("これ以上縮小出来ません", vbExclamation)
             Exit Sub
         End If
@@ -112,8 +104,6 @@ On Error GoTo ErrHandle
         '非表示の列がある時
         If GetAddress(objSelection) <> GetAddress(objVisible) Then
             If (ActiveSheet.AutoFilter Is Nothing) And (ActiveSheet.FilterMode = False) Then
-                ActiveWindow.View = lngWindowView
-                Application.ScreenUpdating = True
                 Select Case MsgBox("非表示の列を対象としますか？", vbYesNoCancel + vbQuestion + vbDefaultButton2)
                 Case vbYes
                     If lngSize < 0 Then
@@ -132,10 +122,6 @@ On Error GoTo ErrHandle
                 Call IntersectRange(Selection, objVisible).Select
                 Set objSelection = objVisible
             End If
-            
-            '標準プレビューに再度変更する
-            Application.ScreenUpdating = False
-            lngWindowView = ActiveWindow.View
         End If
     End If
     
@@ -156,8 +142,6 @@ On Error GoTo ErrHandle
     For i = 1 To colAddress.Count
         lngPixel = GetRange(colAddress(i)).Columns(1).Width / DPIRatio + lngSize
         If lngPixel < 0 Then
-            ActiveWindow.View = lngWindowView
-            Application.ScreenUpdating = True
             Call MsgBox("これ以上縮小出来ません", vbExclamation)
             Exit Sub
         End If
@@ -166,14 +150,11 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
-    Dim blnDisplayPageBreaks As Boolean  '改ページ表示
-    Application.ScreenUpdating = False
-    
-    '高速化のため改ページを非表示にする
-    If ActiveSheet.DisplayAutomaticPageBreaks = True Then
-        blnDisplayPageBreaks = True
-        ActiveSheet.DisplayAutomaticPageBreaks = False
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
     End If
+    Application.ScreenUpdating = False
     
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ColSize2, strSelection, colAddress)
@@ -184,18 +165,9 @@ On Error GoTo ErrHandle
         GetRange(colAddress(i)).ColumnWidth = PixelToWidth(lngPixel)
     Next i
     
-    '改ページを元に戻す
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
     Call SetOnUndo
-'    ActiveWindow.View = lngWindowView 'Undo出来なくなる
 Exit Sub
 ErrHandle:
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
-    ActiveWindow.View = lngWindowView
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
 

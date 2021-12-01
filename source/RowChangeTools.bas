@@ -137,14 +137,7 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
-    Dim blnDisplayPageBreaks As Boolean  '改ページ表示
     Application.ScreenUpdating = False
-    
-    '高速化のため改ページを非表示にする
-    If ActiveSheet.DisplayAutomaticPageBreaks = True Then
-        blnDisplayPageBreaks = True
-        ActiveSheet.DisplayAutomaticPageBreaks = False
-    End If
     
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
@@ -157,16 +150,9 @@ On Error GoTo ErrHandle
         objRange.RowHeight = PixelToHeight(lngPixel)
     Next i
     
-    '改ページを元に戻す
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
     Call SetOnUndo
 Exit Sub
 ErrHandle:
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
     Call MsgBox(Err.Description, vbExclamation)
 End Sub
 

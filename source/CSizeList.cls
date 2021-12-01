@@ -275,6 +275,9 @@ Private Sub spbChgSize_Change()
     End If
     
     If frmSizeList.Caption = "サイズ一覧" Then
+        '高速化のため、標準プレビューに変更する
+        ActiveWindow.View = xlNormalView
+        
         'アンドゥ用に元のサイズを保存する
         If frmSizeList.Tag = E_Col Then
             Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(Selection))
