@@ -887,13 +887,6 @@ On Error GoTo ErrHandle
     '****************************************
     '分割開始
     '****************************************
-    Dim blnDisplayPageBreaks As Boolean
-        
-    '高速化のため改ページを非表示にする
-    If ActiveSheet.DisplayAutomaticPageBreaks = True Then
-        blnDisplayPageBreaks = True
-        ActiveSheet.DisplayAutomaticPageBreaks = False
-    End If
     Application.ScreenUpdating = False
     
     'アンドゥ用に元の状態を保存する
@@ -981,16 +974,8 @@ On Error GoTo ErrHandle
         Call ResetPlacement
     End If
     Call SetOnUndo
-    
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
-    Application.ScreenUpdating = True
 Exit Sub
 ErrHandle:
-    If blnDisplayPageBreaks = True Then
-        ActiveSheet.DisplayAutomaticPageBreaks = True
-    End If
     Call MsgBox(Err.Description, vbExclamation)
     If blnCheckInsert = False Then
         Call ResetPlacement
