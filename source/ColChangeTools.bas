@@ -155,7 +155,6 @@ On Error GoTo ErrHandle
         ActiveWindow.View = xlNormalView
     End If
     Application.ScreenUpdating = False
-    
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ColSize2, strSelection, colAddress)
     
@@ -541,6 +540,10 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
     Dim colAddress  As New Collection
@@ -662,8 +665,11 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
-    
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ColSize, Selection, GetSameWidthAddresses(objSelection))
     objSelection.ColumnWidth = PixelToWidth(dblWidth / DPIRatio / lngColCount)
@@ -1510,8 +1516,11 @@ On Error GoTo ErrHandle
     '***********************************************
     '実行
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
-    
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_ColSize, objSelection, GetSameWidthAddresses(objWorkRange))
     

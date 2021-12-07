@@ -137,11 +137,13 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
-    
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_RowSize2, strSelection, colAddress)
-    
     '同じ高さの塊ごとに高さを設定する
     Dim objRange As Range
     For i = 1 To colAddress.Count
@@ -525,6 +527,10 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
     Dim colAddress  As New Collection
@@ -646,6 +652,10 @@ On Error GoTo ErrHandle
     '***********************************************
     'サイズの変更
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_RowSize, strSelection, GetSameHeightAddresses(objSelection))
@@ -1463,8 +1473,11 @@ On Error GoTo ErrHandle
     '***********************************************
     '実行
     '***********************************************
+    'ページレイアウトビューなら値がおかしくなるので、標準プレビューに変更する
+    If ActiveWindow.View = xlPageLayoutView Then
+        ActiveWindow.View = xlNormalView
+    End If
     Application.ScreenUpdating = False
-    
     'アンドゥ用に元のサイズを保存する
     Call SaveUndoInfo(E_RowSize, objSelection, GetSameHeightAddresses(objSelection))
     
