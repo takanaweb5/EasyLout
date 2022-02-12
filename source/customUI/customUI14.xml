@@ -48,9 +48,7 @@
   <button id="B216" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
   <button id="B217" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  </box>
-<!--
-  <button id="DMY36" enabled="false" label=" " showImage="false" size="normal"/>
--->
+
  <separator id="SP21"/>
  <box id="box23" boxStyle="horizontal">
   <button id="B208" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
@@ -87,38 +85,11 @@
  <dynamicMenu id="M31" label="配置/整列" imageMso="ObjectAlignMenu" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- Enabledを動的に設定するため、dynamicMenu化する
  <menu id="M31" label="配置/整列" imageMso="ObjectAlignMenu" showImage="true">
-  <button id="B311" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B312" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS311" />
-  <button id="B313" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B314" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS312" />
-  <control idMso="ObjectsAlignLeft"/>
-  <control idMso="ObjectsAlignCenterHorizontal"/>
-  <control idMso="ObjectsAlignRight"/>
-  <menuSeparator id="MS313" />
-  <control idMso="ObjectsAlignTop"/>
-  <control idMso="ObjectsAlignMiddleVertical"/>
-  <control idMso="ObjectsAlignBottom"/>
-  <menuSeparator id="MS314" />
-  <control idMso="AlignDistributeHorizontallyClassic" label="左右に等間隔で整列"/>
-  <control idMso="AlignDistributeVerticallyClassic"   label="上下に等間隔で整列"/>
-  <menuSeparator id="MS15" />
-  <button id="B315" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B316" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  </menu>
 -->  
  <dynamicMenu id="M32" label="相互変換" imageMso="ImportExport" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- Enabledを動的に設定するため、dynamicMenu化する
  <menu id="M32" label="相互変換" imageMso="ImportExport" showImage="true">
-  <button id="B321" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B322" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS321" />
-  <button id="B323" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B324" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS322" />
-  <button id="B325" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B326" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  </menu>
 -->  
  <control idMso="ShapeChangeShapeGallery" showLabel="true" label="図形変更" size="normal"/>
@@ -144,68 +115,29 @@
 </group>
 
 <group id="grp5" imageMso="Info" label="その他" centerVertically="true" autoScale="true">
+ <dynamicMenu id="M51" label="文字種の変換" imageMso="ChangeCase" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+<!-- dynamicMenu化する
  <menu id="M51" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
-  <button id="B511" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B512" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B513" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS511" />
-  <button id="B514" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B515" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS512" />
-  <button id="B516" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B517" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B518" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B519" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS513" />
-  <button id="B51a" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B51b" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </menu>
-
-<!-- 
- <splitButton id="SP51" visible="true" enabled="true" showLabel="true">
-  <button id="B521" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
--->
- <menu id="M52" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
-  <button id="B521" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B522" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B523" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B524" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </menu>
-<!-- 
- </splitButton>
--->
- <menu id="M53" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
-  <button id="B531" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B532" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS531" />
-  <button id="B533" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B534" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B535" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS532" />
-  <button id="B536" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B537" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS533" />
-  <button id="B538" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B539" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <menuSeparator id="MS534" />
- <dynamicMenu id="M531" label="標準フォントの変更" imageMso="StyleGalleryClassic" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
-<!-- フォント名を動的に設定するため、dynamicMenu化する
-  <menu id="M531" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
-   <button id="B5311" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-   <button id="B5312" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-   <button id="B5313" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
   </menu>
 -->
-  <menuSeparator id="MS535" />
-  <button id="B53A" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B53B" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </menu>
+
+ <dynamicMenu id="M52" label="入力補助" imageMso="CreateFormBlankForm" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+<!-- dynamicMenu化する
+ <menu id="M52" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
+  </menu>
+-->
+
+ <dynamicMenu id="M53" label="整理/クリア" imageMso="Clear" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+<!-- dynamicMenu化する
+ <menu id="M53" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
+  </menu>
+-->
+
+ <dynamicMenu id="M54" label="ヘルプ" imageMso="Help" showImage="true" getContent="getContent" invalidateContentOnDrop="true" size="large"/>
+<!-- dynamicMenu化する
  <menu id="M54" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getSize="basEasyLout.getSize">
-  <button id="B541" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B542" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B543" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B544" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </menu>
+  </menu>
+-->
 </group>
 
 
