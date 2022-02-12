@@ -1,0 +1,38 @@
+<menu xmlns="http://schemas.microsoft.com/office/2006/01/customui" itemSize="normal">
+  <control idMso="ObjectsAlignLeft"/>
+  <control idMso="ObjectsAlignCenterHorizontal"/>
+  <control idMso="ObjectsAlignRight"/>
+  <menuSeparator id="MS311" />
+  <control idMso="ObjectsAlignTop"/>
+  <control idMso="ObjectsAlignMiddleVertical"/>
+  <control idMso="ObjectsAlignBottom"/>
+  <menuSeparator id="MS312" />
+  <control idMso="AlignDistributeHorizontallyClassic" label="左右に等間隔で整列"/>
+  <control idMso="AlignDistributeVerticallyClassic"   label="上下に等間隔で整列"/>
+  <menuSeparator id="MS13" />
+  <button id="B311" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B312" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <menuSeparator id="MS314" />
+  <button id="B313" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B314" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <menuSeparator id="MS315" />
+  <button id="B315" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B316" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+</menu>
+
+<menu xmlns="http://schemas.microsoft.com/office/2006/01/customui" itemSize="normal">
+  <button id="B321" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B322" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <menuSeparator id="MS321" />
+  <button id="B323" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B324" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <menuSeparator id="MS322" />
+  <button id="B325" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B326" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+</menu>
+
+<menu xmlns="http://schemas.microsoft.com/office/2006/01/customui" itemSize="normal">
+  <button id="B5311" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B5312" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B5313" getVisible="basEasyLout.getVisible" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+</menu>
