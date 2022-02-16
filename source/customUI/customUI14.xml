@@ -82,12 +82,12 @@
   <toggleButton idMso="SnapToShapes" showLabel="false" label="図形に合わせる" screentip="図形に合わせる" supertip="図形移動時に図形の位置を図形に合わせます&#13;※マウス操作時のみ有効です" size="normal"/>
  </box>
  <separator id="SP32"/>
- <dynamicMenu id="M31" label="配置/整列" imageMso="ObjectAlignMenu" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M31" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- Enabledを動的に設定するため、dynamicMenu化する
  <menu id="M31" label="配置/整列" imageMso="ObjectAlignMenu" showImage="true">
  </menu>
 -->  
- <dynamicMenu id="M32" label="相互変換" imageMso="ImportExport" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M32" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- Enabledを動的に設定するため、dynamicMenu化する
  <menu id="M32" label="相互変換" imageMso="ImportExport" showImage="true">
  </menu>
@@ -115,25 +115,25 @@
 </group>
 
 <group id="grp5" imageMso="Info" label="その他" centerVertically="true" autoScale="true">
- <dynamicMenu id="M51" label="文字種の変換" imageMso="ChangeCase" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
-<!-- dynamicMenu化する
+ <dynamicMenu id="M51" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
+ <!-- dynamicMenu化する
  <menu id="M51" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
   </menu>
 -->
 
- <dynamicMenu id="M52" label="入力補助" imageMso="CreateFormBlankForm" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M52" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- dynamicMenu化する
  <menu id="M52" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
   </menu>
 -->
 
- <dynamicMenu id="M53" label="整理/クリア" imageMso="Clear" showImage="true" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M53" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- dynamicMenu化する
  <menu id="M53" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
   </menu>
 -->
 
- <dynamicMenu id="M54" label="ヘルプ" imageMso="Help" showImage="true" getContent="getContent" invalidateContentOnDrop="true" size="large"/>
+ <dynamicMenu id="M54" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
 <!-- dynamicMenu化する
  <menu id="M54" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getSize="basEasyLout.getSize">
   </menu>
