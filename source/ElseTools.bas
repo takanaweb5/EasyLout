@@ -1005,11 +1005,6 @@ End Function
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Private Sub MoveShape()
-    If FPressKey = E_ShiftAndCtrl Then
-        Call UnSelect
-        Exit Sub
-    End If
-
     '選択されているオブジェクトを判定
     If CheckSelection() <> E_Shape Then
         Call MsgBox("図形が選択されていません")
