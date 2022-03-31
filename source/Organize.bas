@@ -345,23 +345,11 @@ Private Sub ToggleA1R1C1()
 End Sub
 
 '*****************************************************************************
-'[概要] Workbookをクリアする
-'[引数] Workbook
-'[戻値] なし
-'*****************************************************************************
-Public Sub ClearBook(ByRef objWorkbook As Workbook)
-    '名前オブジェクトをすべて削除する
-    Call DeleteNames(ThisWorkbook)
-    'スタイルをすべて削除する
-    Call DeleteStyles(ThisWorkbook)
-End Sub
-
-'*****************************************************************************
 '[概要] 名前オブジェクトを削除する
 '[引数] Workbook, blnCountOnly:件数のカウントのみの時True
 '[戻値] 削除対象のオブジェクトの件数
 '*****************************************************************************
-Private Function DeleteNames(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
+Public Function DeleteNames(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
     Dim objName     As Name
     For Each objName In objWorkbook.Names
         Select Case objName.MacroType
@@ -392,7 +380,7 @@ End Function
 '[引数] Workbook, blnCountOnly:件数のカウントのみの時True
 '[戻値] 削除対象のオブジェクトの件数
 '*****************************************************************************
-Private Function DeleteStyles(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
+Public Function DeleteStyles(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
     Dim objStyle  As Style
     For Each objStyle In objWorkbook.Styles
         If objStyle.BuiltIn = False Then

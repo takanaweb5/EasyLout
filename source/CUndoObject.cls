@@ -93,10 +93,22 @@ Private udtUndoInfo(1 To 2) As TUndoInfo
 '[ 概  要 ]　デストラクタ
 '*****************************************************************************
 Private Sub Class_Terminate()
+    Call ClearBook
+End Sub
+
+'*****************************************************************************
+'[概要] Workbookをクリアする
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub ClearBook()
     Call DeleteSheet(ThisWorkbook.Worksheets("Undo1"))
     Call DeleteSheet(ThisWorkbook.Worksheets("Undo2"))
-    
-    Call ClearBook(ThisWorkbook)
+
+    '名前オブジェクトをすべて削除する
+    Call DeleteNames(ThisWorkbook)
+    'スタイルをすべて削除する
+    Call DeleteStyles(ThisWorkbook)
 End Sub
 
 '*****************************************************************************
@@ -117,16 +129,17 @@ End Property
 '*****************************************************************************
 Public Sub SaveUndoInfo(ByVal enmType As EUndoType, ByRef vSelection As Variant, Optional ByRef varInfo As Variant = Nothing)
 On Error GoTo ErrHandle
-    If VarType(vSelection) = vbString Then
-        Dim strAddress As String
-        strAddress = vSelection
+    Dim objRange As Range
+    Dim strAddress As String
+    Dim objObject As Object
+    
+    If TypeOf vSelection Is Range Then
+        Set objRange = vSelection
+        strAddress = GetAddress(objRange)
     Else
-        If TypeOf vSelection Is Range Then
-            Dim objRange As Range
-            Set objRange = vSelection
-            strAddress = GetAddress(objRange)
+        If VarType(vSelection) = vbString Then
+            strAddress = vSelection
         Else
-            Dim objObject As Object
             Set objObject = vSelection
         End If
     End If
@@ -159,7 +172,7 @@ On Error GoTo ErrHandle
     Call ActiveSheet.UsedRange  'Undo出来なくなります
     
     'Workbookをクリアする
-    Call ClearBook(ThisWorkbook)
+    Call ClearBook
     
     udtUndoInfo(bytNo).UndoType = enmType
     Set udtUndoInfo(bytNo).Worksheet = ActiveSheet
