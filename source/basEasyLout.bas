@@ -2,7 +2,7 @@ Attribute VB_Name = "basEasyLout"
 Option Explicit
 Option Private Module
 
-Private Const C_DEBUG = False
+Private Const C_DEBUG = False 'ŠJ”­Žž‚ÍTrue‚É‚·‚é
 
 Private Type PICTDESC_BMP
     Size    As Long
@@ -108,11 +108,12 @@ End Sub
 '*****************************************************************************
 Private Sub getVisible(Control As IRibbonControl, ByRef returnedVal)
 '    returnedVal = (GetValue(control.Id, "Visible") = 1)
-    If Control.ID = "dmy" Then
+    Select Case Control.ID
+    Case "dmy"
         returnedVal = C_DEBUG
-    Else
+    Case Else
         returnedVal = True
-    End If
+    End Select
 End Sub
 '
 '*****************************************************************************
@@ -239,8 +240,14 @@ On Error Resume Next
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A1:A21"))
     Case "M32"
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A23:A32"))
-    Case "M531"
-        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A34:A38"))
+    Case "M51"
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A34:A49"))
+    Case "M52"
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A51:A56"))
+    Case "M53"
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A58:A80"))
+    Case "M54"
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A82:A87"))
     End Select
 End Sub
 

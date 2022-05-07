@@ -36,53 +36,25 @@ Public Const C_CheckErrMsg = 514
 Public blnFormLoad As Boolean
 
 Private clsUndoObject  As CUndoObject  'Undo情報
-Private lngProcessId As Long   'ヘルプのプロセスID
-Private hHelp        As LongPtr   'ヘルプのハンドル
 Private udtPlacement() As TPlacement
 
 '*****************************************************************************
-'[ 関数名 ]　OpenHelp
-'[ 概  要 ]　ヘルプファイルを開く
-'[ 引  数 ]　なし
-'[ 戻り値 ]　なし
+'[概要] ヘルプファイルを開く
+'[引数] なし
+'[戻値] なし
 '*****************************************************************************
 Private Sub OpenHelp()
-    Call OpenHelpPage("Introduction.htm")
+    Call OpenHelpPage("http://takana.web5.jp/EasyLout/V5/?r=hlp")
 End Sub
+
 '*****************************************************************************
-'[ 関数名 ]　OpenHelpPage
-'[ 概  要 ]　ヘルプファイルの特定のページを開く
-'[ 引  数 ]　ページ情報
-'[ 戻り値 ]　なし
+'[概要] ヘルプファイルの特定のページを開く
+'[引数] ページ情報
+'[戻値] なし
 '*****************************************************************************
 Public Sub OpenHelpPage(ByVal Bookmark As String)
 On Error GoTo ErrHandle
-    Dim strHelpPath As String
-    Dim strMsg As String
-    
-    strHelpPath = ThisWorkbook.Path & "\" & "EasyLout.chm"
-    If Dir(strHelpPath) = "" Then
-        strMsg = "ヘルプファイルが見つかりません。" & vbLf
-        strMsg = strMsg & "EasyLout.chmファイルをEasyLout.xlaファイルと同じフォルダにコピーして下さい。"
-        Call MsgBox(strMsg, vbExclamation)
-        Exit Sub
-    End If
-    
-    'Helpがすべに起動しているかどうか判定
-    If hHelp <> 0 Then
-        Dim lngExitCode As Long
-        Call GetExitCodeProcess(hHelp, lngExitCode)
-        If lngExitCode = STILL_ACTIVE Then
-            Call AppActivate(lngProcessId)
-            Exit Sub
-        End If
-    End If
-    
-    'ヘルプファイルをオープンする
-    lngProcessId = Shell("hh.exe " & strHelpPath & "::/_RESOURCE/" & Bookmark, vbNormalFocus)
-    
-    'プロセスのハンドルを取得する
-    hHelp = OpenProcess(SYNCHRONIZE Or PROCESS_TERMINATE Or PROCESS_QUERY_INFORMATION, 0&, lngProcessId)
+    Call ThisWorkbook.FollowHyperlink(Bookmark)
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -106,7 +78,7 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub ShowVersion()
-    Call MsgBox("かんたんレイアウト" & vbLf & "  Ver 4.0")
+    Call MsgBox("かんたんレイアウト" & vbLf & "  Ver 5.0", vbQuestion)
 End Sub
 
 '*****************************************************************************

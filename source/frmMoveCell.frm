@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmMoveCell 
    Caption         =   "領域の操作"
-   ClientHeight    =   2970
+   ClientHeight    =   2976
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   5124
@@ -672,7 +672,7 @@ End Sub
 '[ 概  要 ]　ヘルプボタン押下時
 '*****************************************************************************
 Private Sub cmdHelp_Click()
-    Call OpenHelpPage("MoveCell.htm")
+    Call OpenHelpPage("http://takana.web5.jp/EasyLout/V5/MergeRange.htm#MoveCell")
 End Sub
 
 '*****************************************************************************

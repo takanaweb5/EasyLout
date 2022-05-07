@@ -660,7 +660,7 @@ End Sub
 '[ŠT—v] ƒwƒ‹ƒvƒ{ƒ^ƒ“‰Ÿ‰ºŽž
 '*****************************************************************************
 Private Sub cmdHelp_Click()
-'    Call OpenHelpPage("MoveCell.htm")
+    Call OpenHelpPage("http://takana.web5.jp/EasyLout/V5/Clipbord.htm#PasteAppearance")
 End Sub
 
 '*****************************************************************************

@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 '*****************************************************************************
@@ -44,13 +45,5 @@ End Sub
 '*****************************************************************************
 Private Sub cmdCancel_Click()
     Call Unload(Me)
-End Sub
-
-'*****************************************************************************
-'[イベント]　cmdHelp_Click
-'[ 概  要 ]　ヘルプボタン押下時
-'*****************************************************************************
-Private Sub cmdHelp_Click()
-    Call OpenHelpPage("Tips.htm#Option")
 End Sub
 
