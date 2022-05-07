@@ -247,7 +247,7 @@ On Error Resume Next
     Case "M53"
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A58:A80"))
     Case "M54"
-        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A82:A87"))
+        returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A82:A86"))
     End Select
 End Sub
 
