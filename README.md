@@ -10,6 +10,16 @@ Excelの機能に、こんなのが欲しいなぁ、あったら便利だなぁ
 
 
 
+## 紹介記事
+Qiita
+
+https://qiita.com/takahasinaoki/items/7597676b72d227b6e93b
+
+窓の杜
+
+https://forest.watch.impress.co.jp/docs/news/1413439.html
+
+
 ## LICENSE
 著作権はTAKAHASHI Naokiが有します。
 
