@@ -1757,13 +1757,13 @@ Private Function ChangeCommentToTextbox(ByRef objCell As Range) As Shape
     End With
     
     'ÉtÉHÉìÉgÇ∆ï∂éöóÒÇÃê›íË
-    Dim objFont As Font
-    Set objFont = objComment.Shape.DrawingObject.Font
+    Dim strFontName As String
+    strFontName = ActiveWorkbook.Styles("Normal").Font.Name
     With objTextbox.TextFrame2.TextRange.Font
-        .NameComplexScript = objFont.Name
-        .NameFarEast = objFont.Name
-        .Name = objFont.Name
-        .Size = objFont.Size
+        .NameComplexScript = strFontName
+        .NameFarEast = strFontName
+        .Name = strFontName
+        .Size = objComment.Shape.DrawingObject.Font.Size
     End With
     With objTextbox.TextFrame2.TextRange
         .Text = objComment.Text

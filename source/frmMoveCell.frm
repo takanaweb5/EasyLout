@@ -13,7 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
 Option Explicit
 
 Public Enum EModeType
@@ -304,7 +303,7 @@ Private Sub CopyCell()
     'ワークシートで領域のサイズを変更する
     Set objWkRange = ReSizeArea(objWkRange, ToRange.Rows.Count, ToRange.Columns.Count)
     
-    If chkOnlyValue.Value = True Then
+    If chkOnlyValue.Value Then
         '値のみコピー
         Call CopyOnlyValue(objWkRange, ToRange)
     Else
@@ -328,16 +327,27 @@ Private Sub MoveCell()
     Set objWkRange = ReSizeArea(objWkRange, ToRange.Rows.Count, ToRange.Columns.Count)
     
     '元の領域をクリア
-    With FromRange
-        Call .Clear
-        If .Worksheet.Cells(Rows.Count - 2, Columns.Count - 2).MergeCells = False Then
-            'シート上の標準的な書式に設定
-            Call .Worksheet.Cells(Rows.Count - 2, Columns.Count - 2).Copy(.Cells)
-            Call .ClearContents
-        End If
-    End With
+    If chkOnlyValue.Value Then
+        '値のみ
+        Call FromRange.UnMerge
+        Call FromRange.ClearContents
+    Else
+        With FromRange
+            Call .Clear
+            If .Worksheet.Cells(Rows.Count - 2, Columns.Count - 2).MergeCells = False Then
+                'シート上の標準的な書式に設定
+                Call .Worksheet.Cells(Rows.Count - 2, Columns.Count - 2).Copy(.Cells)
+                Call .ClearContents
+            End If
+        End With
+    End If
     
-    Call objWkRange.Copy(ToRange)
+    If chkOnlyValue.Value Then
+        '値のみ
+        Call CopyOnlyValue(objWkRange, ToRange)
+    Else
+        Call objWkRange.Copy(ToRange)
+    End If
 End Sub
 
 '*****************************************************************************
@@ -358,7 +368,7 @@ Private Sub ExchangeCell()
     Set objWkRange(2) = ReSizeArea(objWkRange(2), FromRange.Rows.Count, FromRange.Columns.Count)
     
     If chkOnlyValue.Value = True Then
-        '値のみコピー
+        '値のみ
         Call CopyOnlyValue(objWkRange(1), ToRange)
         Call CopyOnlyValue(objWkRange(2), FromRange)
     Else
@@ -390,9 +400,14 @@ Private Sub CutInsertCell()
         Call .Range(strToRange).Insert
     End With
     
-    With objWkRange.Worksheet
-        Call .Range(strActionRange).Copy(Range(strActionRange))
-    End With
+    If chkOnlyValue.Value = True Then
+        '値のみ
+        Call CopyOnlyValue(objWkRange.Worksheet.Range(strActionRange), Range(strActionRange))
+    Else
+        With objWkRange.Worksheet
+            Call .Range(strActionRange).Copy(Range(strActionRange))
+        End With
+    End If
 End Sub
 
 '*****************************************************************************
@@ -728,7 +743,7 @@ Private Sub ChangeMode()
         chkExchange.Value = False
         chkCutInsert.Value = False
         chkOnlyValue.Value = False
-        chkOnlyValue.Enabled = False
+        chkOnlyValue.Enabled = True
     Case E_Copy
         chkCopy.Value = True
         chkExchange.Value = False
@@ -744,7 +759,7 @@ Private Sub ChangeMode()
         chkExchange.Value = False
         chkCutInsert.Value = True
         chkOnlyValue.Value = False
-        chkOnlyValue.Enabled = False
+        chkOnlyValue.Enabled = True
     End Select
     blnCheck = False
     

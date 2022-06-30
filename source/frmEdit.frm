@@ -13,11 +13,9 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
 Option Explicit
 
-Private hWnd       As LongPtr
+Private hwnd       As LongPtr
 'Private OrgWndProc As Long
 Private blnZoomed  As Boolean
 Private objTmpBar  As CommandBar
@@ -27,6 +25,13 @@ Private dblAnchor2B  As Double
 Private dblAnchor2R  As Double
 Private dblAnchor3T  As Double
 Private dblAnchor3L  As Double
+
+Private IsBoxSelect As Boolean
+Private FText       As String
+Private FSelRow     As Long '矩形選択開始行
+Private FSelRowCnt  As Long '矩形選択行数
+Private FSelCol     As Long '矩形選択開始桁(バイト単位)
+Private FSelLen     As Long '矩形選択桁数(バイト単位)
 
 '*****************************************************************************
 '[イベント]　UserForm_Initialize
@@ -47,9 +52,9 @@ Private Sub UserForm_Initialize()
     '********************************************
     'ウィンドウのサイズを変更出来るように変更
     '********************************************
-    hWnd = FindWindow("ThunderDFrame", Me.Caption)
-    lngStyle = GetWindowLong(hWnd, GWL_STYLE)
-    Call SetWindowLong(hWnd, GWL_STYLE, lngStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX)
+    hwnd = FindWindow("ThunderDFrame", Me.Caption)
+    lngStyle = GetWindowLong(hwnd, GWL_STYLE)
+    Call SetWindowLong(hwnd, GWL_STYLE, lngStyle Or WS_THICKFRAME Or WS_MAXIMIZEBOX)
 
 '    '********************************************
 '    'サブクラス化してマウスホイールを有効にする
@@ -70,6 +75,7 @@ Private Sub UserForm_Initialize()
             .Text = GetRangeText(Selection)
         End If
         chkWordWrap = .WordWrap
+        .SelStart = 0
     End With
     
     '********************************************
@@ -78,6 +84,10 @@ Private Sub UserForm_Initialize()
     Set objTmpBar = CommandBars.Add(Position:=msoBarPopup, Temporary:=True)
     With objTmpBar.Controls
         With .Add()
+            .Caption = "矩形選択"
+        End With
+        With .Add()
+            .BeginGroup = True
             .Caption = "元に戻す(&U)　　　Ctrl+Z"
         End With
         With .Add()
@@ -155,12 +165,12 @@ Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
     '×ボタンでフォームを閉じる時、フォームを破棄させない
     If CloseMode = vbFormControlMenu Then
         Cancel = True
-        blnZoomed = IsZoomed(hWnd)
+        blnZoomed = IsZoomed(hwnd)
         Me.Hide
     End If
     
     'ウィンドウのサイズを元に戻す
-    Call ShowWindow(hWnd, SW_SHOWNORMAL)
+    Call ShowWindow(hwnd, SW_SHOWNORMAL)
 End Sub
 '*****************************************************************************
 '[イベント]　cmdOK_Click
@@ -168,6 +178,11 @@ End Sub
 '*****************************************************************************
 Private Sub cmdOK_Click()
 On Error GoTo ErrHandle
+    If IsBoxSelect Then
+        Call BoxSelect(False, True)
+        Exit Sub
+    End If
+    
     Dim strText         As String
     Dim objOldSelection As Range
     Dim objNewSelection As Range
@@ -190,10 +205,10 @@ On Error GoTo ErrHandle
     Call SetOnUndo
     Call objNewSelection.Select
 ErrHandle:
-    blnZoomed = IsZoomed(hWnd)
+    blnZoomed = IsZoomed(hwnd)
     Me.Hide
     'ウィンドウのサイズを元に戻す
-    Call ShowWindow(hWnd, SW_SHOWNORMAL)
+    Call ShowWindow(hwnd, SW_SHOWNORMAL)
 End Sub
 
 '*****************************************************************************
@@ -201,10 +216,15 @@ End Sub
 '[ 概  要 ]　キャンセルボタン押下時
 '*****************************************************************************
 Private Sub cmdCancel_Click()
-    blnZoomed = IsZoomed(hWnd)
+    If IsBoxSelect Then
+        Call BoxSelect(False, False)
+        Exit Sub
+    End If
+    
+    blnZoomed = IsZoomed(hwnd)
     Me.Hide
     'ウィンドウのサイズを元に戻す
-    Call ShowWindow(hWnd, SW_SHOWNORMAL)
+    Call ShowWindow(hwnd, SW_SHOWNORMAL)
 End Sub
 
 '*****************************************************************************
@@ -314,14 +334,14 @@ End Sub
 '*****************************************************************************
 Private Sub txtEdit_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     If Button = 2 Then '右ボタン
-        objTmpBar.Controls(1).Enabled = Me.CanUndo
-        objTmpBar.Controls(2).Enabled = Me.CanRedo
-        objTmpBar.Controls(3).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(1).Enabled = (txtEdit.SelLength > 0 And InStr(1, txtEdit.SelText, vbCr) > 0)
+        objTmpBar.Controls(2).Enabled = Me.CanUndo
+        objTmpBar.Controls(3).Enabled = Me.CanRedo
         objTmpBar.Controls(4).Enabled = (txtEdit.SelLength > 0)
-        objTmpBar.Controls(5).Enabled = txtEdit.CanPaste
-        objTmpBar.Controls(6).Enabled = (txtEdit.SelLength > 0)
-        objTmpBar.Controls(7).Enabled = (txtEdit.Text <> "")
-        objTmpBar.Controls(8).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(5).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(6).Enabled = txtEdit.CanPaste
+        objTmpBar.Controls(7).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(8).Enabled = (txtEdit.Text <> "")
         objTmpBar.Controls(9).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.Controls(10).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.Controls(11).Enabled = (txtEdit.SelLength > 0)
@@ -330,6 +350,7 @@ Private Sub txtEdit_MouseUp(ByVal Button As Integer, ByVal Shift As Integer, ByV
         objTmpBar.Controls(14).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.Controls(15).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.Controls(16).Enabled = (txtEdit.SelLength > 0)
+        objTmpBar.Controls(17).Enabled = (txtEdit.SelLength > 0)
         objTmpBar.ShowPopup
     End If
 End Sub
@@ -340,7 +361,7 @@ End Sub
 '*****************************************************************************
 Private Sub imgGrip_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal y As Single)
     Call ReleaseCapture
-    Call SendMessage(hWnd, WM_SYSCOMMAND, SC_SIZE Or 8, 0)
+    Call SendMessage(hwnd, WM_SYSCOMMAND, SC_SIZE Or 8, 0)
 End Sub
 
 '*****************************************************************************
@@ -360,37 +381,39 @@ On Error GoTo ErrHandle
     End Select
 
     Select Case CLng(CommandBars.ActionControl.Tag)
-    Case 1 '元に戻す
+    Case 1 '矩形選択
+        Call BoxSelect(True)
+    Case 2 '元に戻す
         Call Me.UndoAction
-    Case 2 'やり直し
+    Case 3 'やり直し
         Call Me.RedoAction
-    Case 3 '切り取り
+    Case 4 '切り取り
         Call SendKeys("^x", True)
-    Case 4 'コピー
+    Case 5 'コピー
         Call SendKeys("^c", True)
-    Case 5 '貼り付け
+    Case 6 '貼り付け
         Call SendKeys("^v", True)
-    Case 6 '削除
+    Case 7 '削除
         Call SendKeys("{DEL}", True)
-    Case 7 'すべて選択
+    Case 8 'すべて選択
         Call SendKeys("^a", True)
-    Case 8  '大文字に変換
+    Case 9  '大文字に変換
         strNewSelText = StrConvert(txtEdit.SelText, "UpperCase")
-    Case 9  '小文字に変換
+    Case 10  '小文字に変換
         strNewSelText = StrConvert(txtEdit.SelText, "LowerCase")
-    Case 10 '先頭のみ大文字に変換
+    Case 11 '先頭のみ大文字に変換
         strNewSelText = StrConvert(txtEdit.SelText, "ProperCase")
-    Case 11 'ひらがなに変換
+    Case 12 'ひらがなに変換
         strNewSelText = StrConvert(txtEdit.SelText, "Hiragana")
-    Case 12 'カタカナに変換
+    Case 13 'カタカナに変換
         strNewSelText = StrConvert(txtEdit.SelText, "Katakana")
-    Case 13 '全角に変換
+    Case 14 '全角に変換
         strNewSelText = StrConvert(txtEdit.SelText, "Wide")
-    Case 14 '半角に変換
+    Case 15 '半角に変換
         strNewSelText = StrConvert(txtEdit.SelText, "Narrow")
-    Case 15 'カタカナ以外半角に変換
+    Case 16 'カタカナ以外半角に変換
         strNewSelText = StrConvert(txtEdit.SelText, "NarrowExceptKana")
-    Case 16 'カタカナのみ全角に変換
+    Case 17 'カタカナのみ全角に変換
         strNewSelText = StrConvert(txtEdit.SelText, "WideOnlyKana")
     End Select
     
@@ -424,16 +447,126 @@ End Property
 Public Property Let Zoomed(ByVal Value As Boolean)
     'ウィンドウサイズを最大化する
     If ActiveCell.HasFormula = False And Value = True Then
-        Call ShowWindow(hWnd, SW_MAXIMIZE)
+        Call ShowWindow(hwnd, SW_MAXIMIZE)
         Me.Hide
     End If
 End Property
 
-''*****************************************************************************
-''[プロパティ]　WndProc
-''[ 概  要 ]　ウィンドウプロシジャーのハンドル
-''[ 引  数 ]　なし
-''*****************************************************************************
-'Public Property Get WndProc() As Long
-'    WndProc = OrgWndProc
-'End Property
+'*****************************************************************************
+'[概要] 矩形選択モードを開始する
+'[引数] True:矩形選択モード開始、True:Okクリック時
+'[戻値] なし
+'*****************************************************************************
+Private Sub BoxSelect(ByVal blnSet As Boolean, Optional ByVal blnOk As Boolean = False)
+    If blnSet Then
+        IsBoxSelect = True
+        Me.Caption = "矩形選択モード     １行だけ編集した場合はすべての行に適用されます"
+        txtEdit.BackColor = &HC0FFFF
+        objTmpBar.Controls(1).Visible = False
+        
+        FSelRow = txtEdit.CurLine + 1
+        FText = txtEdit.Text
+        txtEdit.Text = GetBoxText(txtEdit.SelText)
+        txtEdit.SelStart = 0
+        txtEdit.SelLength = Len(txtEdit.Text)
+    Else
+        IsBoxSelect = False
+        Me.Caption = "かんたんレイアウト"
+        txtEdit.BackColor = &H80000005
+        objTmpBar.Controls(1).Visible = True
+        
+        If blnOk Then
+            txtEdit.Text = SetBoxText()
+        Else
+            txtEdit.Text = FText
+        End If
+    End If
+End Sub
+
+'*****************************************************************************
+'[概要] 矩形選択されたテキストを取得する
+'[引数] True:矩形選択モード開始、True:Okクリック時
+'[戻値] 矩形選択されたテキスト
+'*****************************************************************************
+Private Function GetBoxText(ByVal strSelText As String) As String
+    Dim strAll() As String
+    Dim strSel() As String
+    Call GetStrArray(FText, strAll())
+    Call GetStrArray(strSelText, strSel())
+    FSelRowCnt = UBound(strSel) + 1
+    
+    Dim strLine As String
+    Dim strWk   As String
+    Dim x(1 To 2) As Long
+    strLine = strAll(FSelRow - 1)  '選択先頭行
+    strWk = Mid(strLine, 1, Len(strLine) - Len(strSel(0)))
+    x(1) = LenB(StrConv(strWk, vbFromUnicode)) + 1
+    strWk = strSel(UBound(strSel)) '選択最終行
+    x(2) = LenB(StrConv(strWk, vbFromUnicode)) + 1
+    
+    If x(1) <= x(2) Then
+        FSelCol = x(1)
+        FSelLen = x(2) - x(1)
+    Else
+        FSelCol = x(2)
+        FSelLen = x(1) - x(2)
+    End If
+    
+    Dim i As Long
+    For i = FSelRow To FSelRow + FSelRowCnt - 1
+        strWk = StrConv(strAll(i - 1), vbFromUnicode)
+        GetBoxText = GetBoxText & StrConv(MidB(strWk, FSelCol, FSelLen), vbUnicode) & vbLf
+    Next
+End Function
+
+'*****************************************************************************
+'[概要] 矩形編集されたテキストを元のテキストに反映する
+'[引数] なし
+'[戻値] 反映後のテキスト
+'*****************************************************************************
+Private Function SetBoxText() As String
+On Error Resume Next
+    Dim strAll() As String
+    Dim strSel() As String
+    Call GetStrArray(FText, strAll())
+    Call GetStrArray(txtEdit.Text, strSel())
+
+    Dim i As Long
+    Dim j As Long
+    Dim strWk As String
+    For i = FSelRow To FSelRow + FSelRowCnt - 1
+        If j > UBound(strSel) Then
+            strWk = strSel(0)
+        ElseIf UBound(strSel) = 1 And strSel(1) = "" Then
+            strWk = strSel(0)
+        Else
+            strWk = strSel(j)
+        End If
+        strAll(i - 1) = ExchangeStr(FSelCol, FSelLen, strAll(i - 1), strWk)
+        j = j + 1
+    Next
+    SetBoxText = Join(strAll, vbLf)
+End Function
+
+'*****************************************************************************
+'[概要] 特定位置の文字列を置換する
+'[引数] 置換開始桁(バイト単位),置換文字数(バイト単位),置換前の文字列,置換する文字列
+'[戻値] 置換後のテキスト
+'*****************************************************************************
+Private Function ExchangeStr(ByVal StartCol As Long, ByVal Length As Long, ByVal SrcStr As String, ByVal DstStr As String) As String
+    Dim strWk As String
+    strWk = StrConv(SrcStr, vbFromUnicode)
+    ExchangeStr = StrConv(LeftB(strWk, StartCol - 1), vbUnicode) & DstStr & StrConv(MidB(strWk, StartCol + Length), vbUnicode)
+End Function
+
+'*****************************************************************************
+'[概要] 文字列を改行で区切って配列に格納する
+'[引数] 元の文字列,改行で区切った配列(戻値)
+'[戻値] なし
+'*****************************************************************************
+Private Sub GetStrArray(ByVal strText As String, ByRef strArray As Variant)
+    strText = Replace$(strText, vbCrLf, vbCr)
+    strText = Replace$(strText, vbLf, "")
+    strArray = Split(strText, vbCr)
+End Sub
+
