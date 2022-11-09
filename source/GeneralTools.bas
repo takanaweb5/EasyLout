@@ -440,6 +440,7 @@ End Function
 '[ 戻り値 ]  objNewRangeを元の領域の選択ごとのエリアに分割したもの
 '*****************************************************************************
 Public Function ReSelectRange(ByRef objSelection As Range, ByRef objNewRange As Range) As Range
+On Error GoTo ErrHandle
     Dim objTmpRange As Range
     Dim i As Long
     Dim strAddress As String
@@ -464,6 +465,9 @@ Public Function ReSelectRange(ByRef objSelection As Range, ByRef objNewRange As 
     Else
         Set ReSelectRange = objNewRange
     End If
+Exit Function
+ErrHandle:
+    Set ReSelectRange = objNewRange
 End Function
 
 '*****************************************************************************
