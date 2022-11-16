@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmCopyCell 
    Caption         =   "見たまま貼付け"
-   ClientHeight    =   2976
+   ClientHeight    =   2628
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   5244
@@ -21,8 +21,6 @@ Private Type TRect
     Left     As Long
     Width    As Long
 End Type
-
-'Private blnCheck As Boolean
 
 Private FEnableEvents As Boolean
 Private FMove As Boolean
@@ -47,7 +45,7 @@ Private lngZoom      As Long
 '*****************************************************************************
 Public Sub Initialize(ByRef objFromRange As Range, ByRef objToRange As Range, ByVal blnMove As Boolean)
     chkIgnore.ControlTipText = "通常は､デフォルトのまま実行ください(コピー元をEXCEL方眼と判定した時にチェックされます)"
-    chkBlank.ControlTipText = "貼付け後、空白セルの結合を解除します"
+'    chkBlank.ControlTipText = "貼付け後、空白セルの結合を解除します"
     FMove = blnMove
     
     lngDisplayObjects = ActiveWorkbook.DisplayDrawingObjects
@@ -448,21 +446,21 @@ Private Sub SplitCol(ByRef objRange As Range, ByVal SplitCount As Long)
     Set objNewCol = objRange.Columns(2)
     
     '挿入列の１セル毎に罫線をコピーする
-    Call CopyBorder("右上下", objRange, objNewCol)
+    Call CopyBorder("右上下", objRange, objNewCol, True)
     
     '横方向に結合する
     Dim objMergeRange As Range
-'    Dim lngtype As Long
-'    If chkIgnore.Value Then
-'        lngtype = 2 '結合されていないセルは結合しない
-'    Else
-'        lngtype = 1 'すべて横方向に結合する
-'    End If
+    Dim lngtype As Long
+    If chkIgnore.Value Then
+        lngtype = 2 '結合されていないセルは結合しない
+    Else
+        lngtype = 1 'すべて横方向に結合する
+    End If
     
     '1行毎にLoop
     For i = 1 To objRange.Rows.Count
         If objNewCol.Cells(i, 1).MergeArea.Count = 1 Then
-            Set objMergeRange = GetMergeColRange(1, objRange.Cells(i, 1), objNewCol.Cells(i, 1))
+            Set objMergeRange = GetMergeColRange(lngtype, objRange.Cells(i, 1), objNewCol.Cells(i, 1))
             If Not (objMergeRange Is Nothing) Then
                 Call objMergeRange.Merge
             End If
@@ -473,6 +471,11 @@ Private Sub SplitCol(ByRef objRange As Range, ByVal SplitCount As Long)
     For i = 3 To SplitCount
         Call objNewCol.EntireColumn.Insert
     Next
+    
+    '境界線を消す
+    With Range(objRange, objNewCol).EntireColumn
+        .Borders(xlInsideVertical).LineStyle = xlNone
+    End With
 End Sub
 
 '*****************************************************************************
@@ -708,13 +711,6 @@ Private Sub CopyCell()
     Next
     
     Call objWkRange.Resize(, FDstRange.Columns.Count).Copy(FDstRange)
-    If chkBlank.Value Then
-        Set objWkRange = GetBlankAndMergeRange(FDstRange)
-        If Not (objWkRange Is Nothing) Then
-            Call objWkRange.UnMerge
-            objWkRange.HorizontalAlignment = xlGeneral
-        End If
-    End If
 End Sub
 
 '*****************************************************************************

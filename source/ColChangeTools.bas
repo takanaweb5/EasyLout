@@ -1156,13 +1156,13 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
-'[ 関数名 ]　CopyBorder
-'[ 概  要 ]　罫線をコピーする
-'[ 引  数 ]　罫線のタイプ(複数指定可):上下左右
-'            objFromCol：コピ－元の列、objToCol：コピー先の列
-'[ 戻り値 ]　なし
+'[概要] 罫線をコピーする
+'[引数] 罫線のタイプ(複数指定可):上下左右
+'       objFromCol：コピ－元の列、objToCol：コピー先の列
+'       blnCopyCell：CopyCellから実行された時True
+'[戻値] なし
 '*****************************************************************************
-Public Sub CopyBorder(ByVal strBorderType As String, ByRef objFromCol As Range, ByRef objToCol As Range)
+Public Sub CopyBorder(ByVal strBorderType As String, ByRef objFromCol As Range, ByRef objToCol As Range, Optional ByVal blnCopyCell As Boolean = False)
     Dim i As Long
     Dim j As Long
     Dim udtBorder(0 To 3) As TBorder '罫線の種類(上下左右)
@@ -1201,16 +1201,16 @@ Public Sub CopyBorder(ByVal strBorderType As String, ByRef objFromCol As Range, 
         '罫線を書く
         With objToCol.Rows(i)
             If InStr(1, strBorderType, "上") <> 0 Then
-                Call SetBorder(udtBorder(0), .Borders(xlEdgeTop))
+                Call SetBorder(udtBorder(0), .Borders(xlEdgeTop), blnCopyCell)
             End If
             If InStr(1, strBorderType, "下") <> 0 Then
-                Call SetBorder(udtBorder(1), .Borders(xlEdgeBottom))
+                Call SetBorder(udtBorder(1), .Borders(xlEdgeBottom), blnCopyCell)
             End If
             If InStr(1, strBorderType, "左") <> 0 Then
-                Call SetBorder(udtBorder(2), .Borders(xlEdgeLeft))
+                Call SetBorder(udtBorder(2), .Borders(xlEdgeLeft), blnCopyCell)
             End If
             If InStr(1, strBorderType, "右") <> 0 Then
-                Call SetBorder(udtBorder(3), .Borders(xlEdgeRight))
+                Call SetBorder(udtBorder(3), .Borders(xlEdgeRight), blnCopyCell)
             End If
         End With
 

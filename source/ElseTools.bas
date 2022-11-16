@@ -2122,25 +2122,26 @@ Public Function GetBorder(ByRef objBorder As Border) As TBorder
 End Function
 
 '*****************************************************************************
-'[ 関数名 ]　SetBorder
-'[ 概  要 ]　TBorder構造体をBorderオブジェクトに設定する
-'[ 引  数 ]　TBorder構造体
-'            Borderオブジェクト
-'[ 戻り値 ]　なし
+'[概要] TBorder構造体をBorderオブジェクトに設定する
+'[引数] TBorder構造体、Borderオブジェクト
+'       blnCopyCell:CopyCellから実行された時True
+'[戻値] なし
 '*****************************************************************************
-Public Sub SetBorder(ByRef udtBorder As TBorder, ByRef objBorder As Border)
+Public Sub SetBorder(ByRef udtBorder As TBorder, ByRef objBorder As Border, Optional ByVal blnCopyCell As Boolean = False)
     With objBorder
-        If .LineStyle <> udtBorder.LineStyle Then
-            .LineStyle = udtBorder.LineStyle
-        End If
-        If .ColorIndex <> udtBorder.ColorIndex Then
-            .ColorIndex = udtBorder.ColorIndex
-        End If
-        If .Weight <> udtBorder.Weight Then
-            .Weight = udtBorder.Weight
-        End If
-        If .Color <> udtBorder.Color Then
-            .Color = udtBorder.Color
+        If blnCopyCell = False Or .LineStyle = xlNone Then
+            If .LineStyle <> udtBorder.LineStyle Then
+                .LineStyle = udtBorder.LineStyle
+            End If
+            If .ColorIndex <> udtBorder.ColorIndex Then
+                .ColorIndex = udtBorder.ColorIndex
+            End If
+            If .Weight <> udtBorder.Weight Then
+                .Weight = udtBorder.Weight
+            End If
+            If .Color <> udtBorder.Color Then
+                .Color = udtBorder.Color
+            End If
         End If
     End With
 End Sub
