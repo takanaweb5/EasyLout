@@ -425,14 +425,7 @@ On Error GoTo ErrHandle
     
     Dim objRange As Range
     '’l‚Ì“ü—Í‚³‚ê‚½ƒZƒ‹‚ðŽæ“¾
-    With objSelection
-        Dim objWk(1 To 2) As Range
-        On Error Resume Next
-        Set objWk(1) = .SpecialCells(xlCellTypeConstants)
-        Set objWk(2) = .SpecialCells(xlCellTypeFormulas)
-        Set objRange = UnionRange(objWk(1), objWk(2))
-        On Error GoTo ErrHandle
-    End With
+    Set objRange = SearchValueCell(objSelection)
     If objRange Is Nothing Then
         Call objSelection.UnMerge
         Call SetOnUndo
