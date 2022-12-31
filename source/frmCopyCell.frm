@@ -237,14 +237,11 @@ Private Sub Init(ByRef objSelection As Range)
     Dim i As Long
     Set FSrcRange = objSelection
     
-    'True:セルの左側が結合セルの境界となる列
-    ReDim IsBoderCol(1 To FSrcRange.Columns.Count + 1) As Boolean
-    
-    Dim objArea As Range
-    Dim RightCol As Long 'セルの右側が結合セルの境界となる列番号
-    Dim objWkColumns As Range
     Dim Offset As Long
     Offset = objSelection.Column - 1
+    
+    'True:セルの左側が結合セルの境界となる列
+    ReDim IsBoderCol(1 To FSrcRange.Columns.Count + 1) As Boolean
     
     '選択された列数分LoopしてIsBoderCol()を設定
     IsBoderCol(1) = True
@@ -252,8 +249,8 @@ Private Sub Init(ByRef objSelection As Range)
     Dim x As Long, y As Long
     For x = 2 To FSrcRange.Columns.Count
         For y = 1 To FSrcRange.Rows.Count
-            If chkIgnore.Value Then
-                With FSrcRange.Cells(y, x).MergeArea
+            With FSrcRange.Cells(y, x).MergeArea
+                If chkIgnore.Value Then
                     '結合セルの時
                     If .Count > 1 Then
                         '左端の列にフラグをたてる
@@ -264,14 +261,12 @@ Private Sub Init(ByRef objSelection As Range)
                         '値の入力されたセルの時、フラグをたてる
                         IsBoderCol(x) = True
                     End If
-                End With
-            Else
-                With FSrcRange.Cells(y, x)
-                    If .MergeArea.Column = .Column Then
+                Else
+                    If .Column = FSrcRange.Cells(y, x).Column Then
                         IsBoderCol(x) = True
                     End If
-                End With
-            End If
+                End If
+            End With
         Next
     Next
     
@@ -450,17 +445,17 @@ Private Sub SplitCol(ByRef objRange As Range, ByVal SplitCount As Long)
     
     '横方向に結合する
     Dim objMergeRange As Range
-    Dim lngtype As Long
-    If chkIgnore.Value Then
-        lngtype = 2 '結合されていないセルは結合しない
-    Else
-        lngtype = 1 'すべて横方向に結合する
-    End If
     
     '1行毎にLoop
     For i = 1 To objRange.Rows.Count
         If objNewCol.Cells(i, 1).MergeArea.Count = 1 Then
-            Set objMergeRange = GetMergeColRange(lngtype, objRange.Cells(i, 1), objNewCol.Cells(i, 1))
+            If chkIgnore.Value Then
+                '結合されていないセルは結合しない
+                Set objMergeRange = GetMergeColRange(2, objRange.Cells(i, 1), objNewCol.Cells(i, 1))
+            Else
+                'すべて横方向に結合する
+                Set objMergeRange = GetMergeColRange(1, objRange.Cells(i, 1), objNewCol.Cells(i, 1))
+            End If
             If Not (objMergeRange Is Nothing) Then
                 Call objMergeRange.Merge
             End If
