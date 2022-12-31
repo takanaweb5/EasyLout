@@ -1,0 +1,4 @@
+# Auto detect text files and perform LF normalization 日本語
+*.bas diff=sjis
+*.cls diff=sjis
+*.frm diff=sjis
