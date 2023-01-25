@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmCopyCell 
    Caption         =   "見たまま貼付け"
-   ClientHeight    =   2628
+   ClientHeight    =   2976
    ClientLeft      =   48
    ClientTop       =   432
    ClientWidth     =   5244
@@ -688,11 +688,7 @@ Private Sub CopyCell()
 
     '移動時はコピー元をクリアする
     If FMove Then
-        With FSrcRange
-            .ClearContents
-            .UnMerge
-            .Borders.LineStyle = xlNone
-        End With
+        Call ClearRange(FSrcRange, chkOnlyValue.Value)
     End If
     
     Dim objRange As Range
@@ -705,7 +701,12 @@ Private Sub CopyCell()
         Call SplitOrEraseCol(objRange, Range(FDstColAddress(i)).Columns.Count)
     Next
     
-    Call objWkRange.Resize(, FDstRange.Columns.Count).Copy(FDstRange)
+    If chkOnlyValue.Value Then
+        '値のみ
+        Call CopyOnlyValue(objWkRange.Resize(, FDstRange.Columns.Count), FDstRange)
+    Else
+        Call objWkRange.Resize(, FDstRange.Columns.Count).Copy(FDstRange)
+    End If
 End Sub
 
 '*****************************************************************************

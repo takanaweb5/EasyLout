@@ -350,6 +350,7 @@ End Sub
 '[戻値] 削除対象のオブジェクトの件数
 '*****************************************************************************
 Public Function DeleteNames(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
+On Error Resume Next
     Dim objName     As Name
     For Each objName In objWorkbook.Names
         Select Case objName.MacroType
@@ -381,6 +382,7 @@ End Function
 '[戻値] 削除対象のオブジェクトの件数
 '*****************************************************************************
 Public Function DeleteStyles(ByRef objWorkbook As Workbook, Optional ByVal blnCountOnly As Boolean = False) As Long
+On Error Resume Next
     Dim objStyle  As Style
     For Each objStyle In objWorkbook.Styles
         If objStyle.BuiltIn = False Then
@@ -399,6 +401,7 @@ End Function
 '[戻値] なし
 '*****************************************************************************
 Private Sub DeleteViews(ByRef objWorkbook As Workbook)
+On Error Resume Next
     Dim objView  As CustomView
     For Each objView In objWorkbook.CustomViews
         Call objView.Delete

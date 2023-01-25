@@ -987,6 +987,7 @@ End Sub
 '[ 戻り値 ]　なし
 '*****************************************************************************
 Public Sub DeleteSheet(ByRef objSheet As Worksheet)
+On Error Resume Next
     Dim objShape  As Shape
     For Each objShape In objSheet.Shapes
         Call objShape.Delete
@@ -1215,3 +1216,62 @@ Public Sub ShowSelectionPane()
     End If
 End Sub
 
+'*****************************************************************************
+'[概要] 値のみコピー
+'[引数] コピー元、コピー先
+'[戻値] なし
+'*****************************************************************************
+Public Sub CopyOnlyValue(ByRef objFromRange As Range, ByRef objToRange As Range)
+    'セル結合のコピー
+    Call objToRange.UnMerge
+    Call CopyMergeRange(objFromRange, objToRange)
+    
+    '値のみコピー
+    Call objFromRange.Copy
+    Call objToRange.PasteSpecial(xlPasteFormulas, xlNone, False, False)
+End Sub
+
+'*****************************************************************************
+'[概要] 領域の結合状態のみを複写する
+'[引数] コピー元、コピー先
+'[戻値] なし
+'*****************************************************************************
+Private Sub CopyMergeRange(ByRef objFromRange As Range, ByRef objToRange As Range)
+    Dim objRange As Range
+    Dim i As Long
+    Dim j As Long
+    
+    '行の数だけループ
+    For i = 1 To objFromRange.Rows.Count
+        '列の数だけループ
+        For j = 1 To objFromRange.Columns.Count
+            With objFromRange(i, j).MergeArea
+                If .Count > 1 Then
+                    '結合セルの左上のセルなら
+                    If objFromRange(i, j).Address = .Cells(1, 1).Address Then
+                        '複写先のセルを結合
+                        Call objToRange(i, j).Resize(.Rows.Count, .Columns.Count).Merge
+                    End If
+                End If
+            End With
+        Next j
+    Next i
+End Sub
+
+'*****************************************************************************
+'[概要] 領域をクリアする
+'[引数] 対象領域、値のみ対象とする時
+'[戻値] なし
+'*****************************************************************************
+Public Sub ClearRange(ByRef objRange As Range, ByVal blnOnlyValue As Boolean)
+    If blnOnlyValue Then
+        Call objRange.UnMerge
+    Else
+        Call objRange.Clear
+        'シート上の標準的な書式に設定
+        With objRange.Worksheet.Cells(Rows.Count - 1, Columns.Count - 1)
+            If .MergeCells = False Then Call .Copy(objRange)
+        End With
+    End If
+    Call objRange.ClearContents
+End Sub
