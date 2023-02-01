@@ -127,13 +127,8 @@ End Sub
 '*****************************************************************************
 Private Sub DeleteUserStyles()
     '件数のカウント
-    Dim objStyle  As Style
     FCount = DeleteStyles(ActiveWorkbook, True)
-    If FCount = 0 Then
-        Call MsgBox("ユーザ定義のスタイルはありません")
-        Exit Sub
-    End If
-
+    
     'ホームタブ(スタイル)を表示させる
     Call GetRibbonUI.ActivateTabMso("TabHome")
     
@@ -142,6 +137,11 @@ Private Sub DeleteUserStyles()
 End Sub
 Private Sub DeleteUserStyles2()
     DoEvents
+    
+    If FCount = 0 Then
+        Call MsgBox("ユーザ定義のスタイルはありません")
+        Exit Sub
+    End If
     
     Dim strMsg As String
     strMsg = FCount & " 件 のユーザ定義スタイルが見つかりました" & vbLf
@@ -164,6 +164,9 @@ Private Sub DeleteNameObjects()
     lngCnt = DeleteNames(ActiveWorkbook, True)
     If lngCnt = 0 Then
         Call MsgBox("ユーザ定義の名前はありません")
+        Call ActiveWorkbook.Activate
+        Call ActiveWorkbook.ActiveSheet.Activate
+        Call CommandBars.ExecuteMso("NameManager")
         Exit Sub
     End If
     
@@ -193,6 +196,9 @@ Private Sub DeleteUserViews()
     lngCnt = ActiveWorkbook.CustomViews.Count
     If lngCnt = 0 Then
         Call MsgBox("ユーザ設定のビューはありません")
+        Call ActiveWorkbook.Activate
+        Call ActiveWorkbook.ActiveSheet.Activate
+        Call CommandBars.ExecuteMso("ViewCustomViews")
         Exit Sub
     End If
     
