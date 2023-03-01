@@ -1,6 +1,9 @@
 Attribute VB_Name = "OutLine"
 Option Explicit
 
+Const LEFTKIGO = "({[<（｛［＜『「【《≪"
+Const RIGHTKIGO = ")}]>）｝］＞』」】》≫.．"
+
 '*****************************************************************************
 '[概要] 直前の段落番号の次の段落番号を取得する
 '[引数] なし
@@ -35,14 +38,14 @@ Private Function GetNext(ByVal strOutLine As String) As String
     '左端の文字
     Dim strL As String
     strL = Left(strOutLine, 1)
-    If InStr(1, "（(", strL) = 0 Then
+    If InStr(1, LEFTKIGO, strL) = 0 Then
         strL = ""
     End If
 
     '右端の文字
     Dim strR As String
     strR = Right(strOutLine, 1)
-    If InStr(1, ".)．）", strR) = 0 Then
+    If InStr(1, RIGHTKIGO, strR) = 0 Then
         strR = ""
     End If
 
@@ -82,7 +85,12 @@ Private Function GetNext(ByVal strOutLine As String) As String
     If IsNumeric(strNum) Then
         strNum = CLng(strNum) + 1
     Else
-        strNum = Chr(Asc(strNum) + 1)
+        If strNum = "?" Then
+            '文字化けする特殊文字の時、文字コード+1を設定
+            GetNext = strL & ChrW(AscW(Mid(strOutLine, Len(strL) + 1, Len(strOutLine) - Len(strL & strR))) + 1) & strR
+            Exit Function
+        End If
+        strNum = ChrW(AscW(strNum) + 1)
     End If
 
     '全角の時は全角に戻す
