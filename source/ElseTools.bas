@@ -52,9 +52,9 @@ End Sub
 '[引数] ページ情報
 '[戻値] なし
 '*****************************************************************************
-Public Sub OpenHelpPage(ByVal Bookmark As String)
+Public Sub OpenHelpPage(ByVal BookMark As String)
 On Error GoTo ErrHandle
-    Call ThisWorkbook.FollowHyperlink(Bookmark)
+    Call ThisWorkbook.FollowHyperlink(BookMark)
 Exit Sub
 ErrHandle:
     Call MsgBox(Err.Description, vbExclamation)
@@ -78,7 +78,7 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub ShowVersion()
-    Call MsgBox("かんたんレイアウト" & vbLf & "  Ver 5.0", vbQuestion)
+    Call MsgBox("かんたんレイアウト" & vbLf & "  Ver 5.1", vbQuestion)
 End Sub
 
 '*****************************************************************************

@@ -2,7 +2,7 @@ Attribute VB_Name = "basEasyLout"
 Option Explicit
 Option Private Module
 
-Private Const C_DEBUG = False '開発時はTrueにする
+Private Const C_DEBUG = True '開発時はTrueにする
 
 Private Type PICTDESC_BMP
     Size    As Long
@@ -246,7 +246,7 @@ On Error Resume Next
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A51:A56"))
     Case "M53"
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A58:A80"))
-    Case "M54"
+    Case "M71"
         returnedVal = GetRangeText(ThisWorkbook.Worksheets("dynamicMenu").Range("A82:A86"))
     End Select
 End Sub
@@ -482,7 +482,7 @@ End Sub
 '[引数] ファイル名
 '[戻値] なし
 '*****************************************************************************
-Public Sub LoadBinaryFile(ByVal strFilename As String)
+Public Sub LoadBinaryFile(ByVal strFilename As String, ByRef objCell As Range)
 On Error GoTo ErrHandle
     ReDim Data(1 To FileLen(strFilename)) As Byte
 
@@ -492,9 +492,9 @@ On Error GoTo ErrHandle
 
     Dim x As Long
     For x = 1 To UBound(Data)
-        ActiveCell.Cells(1, x + 1) = Data(x)
+        objCell.Cells(1, x + 1) = Data(x)
     Next
-    ActiveCell = strFilename
+    objCell = strFilename
 ErrHandle:
 End Sub
 
@@ -516,3 +516,12 @@ Private Sub onAction2(Control As IRibbonControl)
     End If
 End Sub
 
+Sub LoadIcon()
+    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindNext.png", ThisWorkbook.Worksheets("Resource").Range("A70"))
+    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindNext16.png", ThisWorkbook.Worksheets("Resource").Range("A71"))
+    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindNext20.png", ThisWorkbook.Worksheets("Resource").Range("A72"))
+    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindPrev.png", ThisWorkbook.Worksheets("Resource").Range("A73"))
+    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindPrev16.png", ThisWorkbook.Worksheets("Resource").Range("A74"))
+    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindPrev20.png", ThisWorkbook.Worksheets("Resource").Range("A75"))
+    
+End Sub
