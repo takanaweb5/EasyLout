@@ -449,22 +449,6 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
 End Function
 
 '*****************************************************************************
-'[概要] リボンのコールバック関数を実行する(開発用)
-'[引数] なし
-'[戻値] なし
-'*****************************************************************************
-Private Sub onAction2(Control As IRibbonControl)
-    Select Case Control.ID
-    Case "Bdmy1"
-        Call GetRibbonUI.Invalidate
-    Case "Bdmy2"
-        ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
-    Case "Bdmy3"
-        Call ThisWorkbook.Save
-    End Select
-End Sub
-
-'*****************************************************************************
 '[概要] ResourceシートのPngファイルをフォルダに書き込む(開発用)
 '[引数] 書込むフォルダ
 '[戻値] なし
@@ -513,3 +497,22 @@ On Error GoTo ErrHandle
     ActiveCell = strFilename
 ErrHandle:
 End Sub
+
+'*****************************************************************************
+'[概要] リボンのコールバック関数を実行する(開発用)
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub onAction2(Control As IRibbonControl)
+    If C_DEBUG Then
+        Select Case Control.ID
+        Case "Bdmy1"
+            Call GetRibbonUI.Invalidate
+        Case "Bdmy2"
+            ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
+        Case "Bdmy3"
+            Call ThisWorkbook.Save
+        End Select
+    End If
+End Sub
+
