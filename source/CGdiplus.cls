@@ -48,7 +48,7 @@ Private Type Guid
 End Type
 
 Private Type BITMAPINFOHEADER
-    Size          As Long
+    size          As Long
     Width         As Long
     Height        As Long
     Planes        As Integer
@@ -70,12 +70,12 @@ Private Type BITMAPDATA
     Reserved    As LongPtr
 End Type
 
-Private Const DIB_RGB_COLORS = 0&
-Private Declare PtrSafe Function CreateCompatibleDC Lib "gdi32" (ByVal hDC As LongPtr) As LongPtr
-Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
-Private Declare PtrSafe Function DeleteDC Lib "gdi32" (ByVal hDC As LongPtr) As Long
-Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
-Private Declare PtrSafe Function GetDIBits Lib "gdi32" (ByVal aHDC As LongPtr, ByVal hBitmapptr As LongPtr, ByVal nStartScan As Long, ByVal nNumScans As Long, ByRef lpBits As Any, ByRef lpBI As Any, ByVal wUsage As Long) As Long
+Private Type PICTDESC_BMP
+    size    As Long
+    Type    As Long
+    hBitmap As LongPtr
+    hPal    As LongPtr
+End Type
 
 Private Declare PtrSafe Function GdipSaveImageToStream Lib "gdiplus" (ByVal image As LongPtr, ByVal Stream As LongPtr, ByRef clsidEncoder As Guid, ByVal encoderParams As LongPtr) As Long
 Private Declare PtrSafe Function GdipSaveImageToFile Lib "gdiplus.dll" (ByVal image As LongPtr, ByVal Filename As LongPtr, ByRef clsidEncoder As Guid, ByVal encoderParams As LongPtr) As Long
@@ -112,7 +112,15 @@ Private Declare PtrSafe Function GdipSetPixelOffsetMode Lib "gdiplus" (ByVal gra
 Private Declare PtrSafe Function GdipBitmapLockBits Lib "gdiplus" (ByVal bitmap As LongPtr, ByRef RECT As Any, ByVal flags As Long, ByVal PixelFormat As Long, ByRef lockedBitmapData As Any) As Long
 Private Declare PtrSafe Function GdipBitmapUnlockBits Lib "gdiplus" (ByVal bitmap As LongPtr, ByRef lockedBitmapData As Any) As Long
 Private Declare PtrSafe Function GdipCreateFromHDC Lib "gdiplus" (ByVal hDC As LongPtr, ByRef graphics As LongPtr) As Long
+
+Private Declare PtrSafe Function CreateCompatibleDC Lib "gdi32" (ByVal hDC As LongPtr) As LongPtr
+Private Declare PtrSafe Function DeleteDC Lib "gdi32" (ByVal hDC As LongPtr) As Long
+Private Declare PtrSafe Function GetDIBits Lib "gdi32" (ByVal aHDC As LongPtr, ByVal hBitmapptr As LongPtr, ByVal nStartScan As Long, ByVal nNumScans As Long, ByRef lpBits As Any, ByRef lpBI As Any, ByVal wUsage As Long) As Long
+Private Declare PtrSafe Function GetDC Lib "user32" (ByVal hwnd As Long) As Long
+Private Declare PtrSafe Function ReleaseDC Lib "user32" (ByVal hwnd As LongPtr, ByVal hDC As LongPtr) As Long
+Private Declare PtrSafe Function CreateStreamOnHGlobal Lib "ole32" (ByVal hGlobal As LongPtr, ByVal fDeleteOnRelease As Long, ppstm As Any) As Long
 Private Declare PtrSafe Function CLSIDFromString Lib "ole32" (ByVal lpszCLSID As LongPtr, ByRef pclsid As Guid) As Long
+Private Declare PtrSafe Function OleCreatePictureIndirect Lib "oleaut32.dll" (ByRef PicDesc As Any, ByRef RefIID As Guid, ByVal fPictureOwnsHandle As Long, ByRef IPic As IPicture) As Long
 
 Private Enum ImageLockMode
     ImageLockModeRead = 1
@@ -132,18 +140,20 @@ Private Enum InterpolationMode
     InterpolationModeHighQualityBicubic = 7&
 End Enum
 
-Private Const CLSID_Suffix As String = "-1A04-11D3-9A73-0000F81EF32E}"
-Private Const CLSID_BMP    As String = "{557CF400" & CLSID_Suffix
-Private Const CLSID_JPG    As String = "{557CF401" & CLSID_Suffix
-Private Const CLSID_GIF    As String = "{557CF402" & CLSID_Suffix
-Private Const CLSID_EMF    As String = "{557CF403" & CLSID_Suffix
-Private Const CLSID_WMF    As String = "{557CF404" & CLSID_Suffix
-Private Const CLSID_TIF    As String = "{557CF405" & CLSID_Suffix
-Private Const CLSID_PNG    As String = "{557CF406" & CLSID_Suffix
-Private Const CLSID_ICO    As String = "{557CF407" & CLSID_Suffix
+Private Const CLSID_BMP    As String = "{557CF400-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_JPG    As String = "{557CF401-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_GIF    As String = "{557CF402-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_EMF    As String = "{557CF403-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_WMF    As String = "{557CF404-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_TIF    As String = "{557CF405-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_PNG    As String = "{557CF406-1A04-11D3-9A73-0000F81EF32E}"
+Private Const CLSID_ICO    As String = "{557CF407-1A04-11D3-9A73-0000F81EF32E}"
+Private Const IID_IPictureDisp As String = "{7BF80981-BF32-101A-8BBB-00AA00300CAB}"
 Private Const PixelOffsetModeHalf = 4
 Private Const PixelFormat32bppARGB = &H26200A
 Private Const S_OK = 0
+Private Const PICTYPE_BITMAP = 1
+Private Const DIB_RGB_COLORS = 0&
 
 Private FGdiPlus As LongPtr
 Private FGdiImage As LongPtr
@@ -155,7 +165,7 @@ Private Sub Class_Initialize()
     Dim GdiInput As GdiplusStartupInput
     GdiInput.GdiplusVersion = 1&
     If GdiplusStartup(FGdiPlus, GdiInput) <> S_OK Then
-        Call Err.Raise(513, "GdiplusStartupエラー")
+        Call Err.Raise(513, , "GdiplusStartupエラー")
     End If
 End Sub
 
@@ -172,9 +182,7 @@ End Sub
 '[引数] なし
 '*****************************************************************************
 Public Property Get Width() As Long
-    Dim lngWidth As Long
-    Call GdipGetImageWidth(FGdiImage, lngWidth)
-    Width = lngWidth
+    Call GdipGetImageWidth(FGdiImage, Width)
 End Property
 
 '*****************************************************************************
@@ -182,9 +190,7 @@ End Property
 '[引数] なし
 '*****************************************************************************
 Public Property Get Height() As Long
-    Dim lngHeight As Long
-    Call GdipGetImageHeight(FGdiImage, lngHeight)
-    Height = lngHeight
+    Call GdipGetImageHeight(FGdiImage, Height)
 End Property
 
 '*****************************************************************************
@@ -194,10 +200,23 @@ End Property
 '*****************************************************************************
 Public Sub CreateFromFile(ByVal strFile As String, Optional lngWidth As Long = 0, Optional lngHeight As Long = 0)
     If GdipLoadImageFromFile(ByVal StrPtr(strFile), FGdiImage) <> S_OK Then
-        Call Err.Raise(513, "GdipLoadImageFromFileエラー")
+        Call Err.Raise(513, , "GdipLoadImageFromFileエラー")
     End If
     Call GdipBitmapSetResolution(FGdiImage, 96#, 96#) '標準のDPIに設定
     Call Me.Resize(lngWidth, lngHeight)
+End Sub
+
+'*****************************************************************************
+'[概要] hGlobalハンドルからGdiImageオブジェクトを作成
+'[引数] hGlobalハンドル、幅・高さ
+'[戻値] なし
+'*****************************************************************************
+Public Sub CreateFromHGlobal(ByVal hGlobal As LongPtr, Optional lngWidth As Long = 0, Optional lngHeight As Long = 0)
+    Dim Stream As IUnknown
+    If CreateStreamOnHGlobal(hGlobal, 0, Stream) <> 0 Then
+        Call Err.Raise(513, , "CreateStreamOnHGlobalエラー")
+    End If
+    Call CreateFromStream(Stream, lngWidth, lngHeight)
 End Sub
 
 '*****************************************************************************
@@ -207,7 +226,7 @@ End Sub
 '*****************************************************************************
 Public Sub CreateFromStream(ByVal Stream As IUnknown, Optional lngWidth As Long = 0, Optional lngHeight As Long = 0)
     If GdipLoadImageFromStream(ObjPtr(Stream), FGdiImage) <> S_OK Then
-        Call Err.Raise(513, "GdipLoadImageFromStreamエラー")
+        Call Err.Raise(513, , "GdipLoadImageFromStreamエラー")
     End If
     Call GdipBitmapSetResolution(FGdiImage, 96#, 96#) '標準のDPIに設定
     Call Me.Resize(lngWidth, lngHeight)
@@ -226,7 +245,7 @@ Public Sub CreateFromHBITMAP(ByVal hBitmap As LongPtr, Optional lngWidth As Long
 
 '    ※アルファチャネルが反映されないため却下
 '    If GdipCreateBitmapFromHBITMAP(hBitmap, 0&, FGdiImage) <> S_OK Then
-'        Call Err.Raise(513, "GdipCreateBitmapFromHBITMAPエラー")
+'        Call Err.Raise(513, , "GdipCreateBitmapFromHBITMAPエラー")
 '    End If
 End Sub
 
@@ -240,7 +259,7 @@ On Error GoTo Finalization
     Dim hDC   As LongPtr
     Dim BmpInfHeader   As BITMAPINFOHEADER
     hDC = CreateCompatibleDC(0)
-    BmpInfHeader.Size = 40 '40固定
+    BmpInfHeader.size = 40 '40固定
 
     '幅と高さのみ取得
     Dim lngHeight  As Long
@@ -271,7 +290,7 @@ End Sub
 Public Sub CreateFromPixels(ByRef Pixels() As Long)
     'GdiImageオブジェクトを作成
     If GdipCreateBitmapFromScan0(UBound(Pixels, 1), UBound(Pixels, 2), 0, PixelFormat32bppARGB, ByVal 0, FGdiImage) <> S_OK Then
-        Call Err.Raise(513, "GdipCreateBitmapFromScan0エラー")
+        Call Err.Raise(513, , "GdipCreateBitmapFromScan0エラー")
     End If
     Call GdipBitmapSetResolution(FGdiImage, 96#, 96#) '標準のDPIに設定
     Call BitmapLockBits(Pixels(), ImageLockModeWrite)
@@ -323,7 +342,7 @@ Private Sub BitmapLockBits(ByRef Pixels() As Long, ByVal lngImageLockMode As Ima
     End With
     
     If GdipBitmapLockBits(FGdiImage, ByVal 0, ImageLockModeUserInputBuf Or lngImageLockMode, PixelFormat32bppARGB, BmpData) <> S_OK Then
-        Call Err.Raise(513, "GdipBitmapLockBitsエラー")
+        Call Err.Raise(513, , "GdipBitmapLockBitsエラー")
     End If
     Call GdipBitmapUnlockBits(FGdiImage, BmpData)
 End Sub
@@ -334,11 +353,29 @@ End Sub
 '[戻値] ビットマップハンドル
 '*****************************************************************************
 Public Function ToHBITMAP() As LongPtr
-    Dim hBitmap As LongPtr
-    If GdipCreateHBITMAPFromBitmap(FGdiImage, hBitmap, 0) <> S_OK Then
-        Call Err.Raise(513, "GdipCreateHBITMAPFromBitmapエラー")
+    '-1は白
+    If GdipCreateHBITMAPFromBitmap(FGdiImage, ToHBITMAP, -1) <> S_OK Then
+        Call Err.Raise(513, , "GdipCreateHBITMAPFromBitmapエラー")
     End If
-    ToHBITMAP = hBitmap
+End Function
+
+'*****************************************************************************
+'[概要] GdiImageからIPictureを作成
+'[引数] なし
+'[戻値] IPicture
+'*****************************************************************************
+Public Function ToIPicture() As IPicture
+    Dim uPicInfo As PICTDESC_BMP
+    With uPicInfo
+        .size = Len(uPicInfo)
+        .Type = PICTYPE_BITMAP
+        .hBitmap = Me.ToHBITMAP
+        .hPal = 0
+    End With
+
+    Dim gGuid As Guid
+    Call CLSIDFromString(StrPtr(IID_IPictureDisp), gGuid)
+    Call OleCreatePictureIndirect(uPicInfo, gGuid, True, ToIPicture)
 End Function
 
 '*****************************************************************************
@@ -350,7 +387,7 @@ Public Sub ToPNGStream(ByRef Stream As IUnknown)
     Dim gGuid As Guid
     Call CLSIDFromString(StrPtr(CLSID_PNG), gGuid)
     If GdipSaveImageToStream(FGdiImage, ByVal ObjPtr(Stream), gGuid, 0) <> S_OK Then
-        Call Err.Raise(513, "GdipSaveImageToStreamエラー")
+        Call Err.Raise(513, , "GdipSaveImageToStreamエラー")
     End If
 End Sub
 
@@ -363,7 +400,7 @@ Public Sub SaveToPNGFile(ByVal strFile As String)
     Dim gGuid As Guid
     Call CLSIDFromString(StrPtr(CLSID_PNG), gGuid)
     If GdipSaveImageToFile(FGdiImage, ByVal StrPtr(strFile), gGuid, 0) <> S_OK Then
-        Call Err.Raise(513, "GdipSaveImageToFileエラー")
+        Call Err.Raise(513, , "GdipSaveImageToFileエラー")
     End If
 End Sub
 
@@ -384,7 +421,7 @@ On Error GoTo Finalization
     '新しいサイズのBitmapオブジェクトを作成
     Dim hNewBmp  As LongPtr
     If GdipCreateBitmapFromScan0(lngWidth, lngHeight, 0, PixelFormat32bppARGB, ByVal 0&, hNewBmp) <> S_OK Then
-        Call Err.Raise(513, "GdipCreateBitmapFromScan0エラー")
+        Call Err.Raise(513, , "GdipCreateBitmapFromScan0エラー")
     End If
  
     'サイズを変更
