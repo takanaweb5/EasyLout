@@ -11,15 +11,58 @@ Public FFillColor As Long '塗りつぶし色
 '[戻値] なし
 '*****************************************************************************
 Public Sub FillColor()
-    Dim objSelection As Range
-    Set objSelection = Selection
-    'アンドゥ用に元の情報を保存する
-    Call SaveUndoInfo(E_FillRange, GetAddress(Selection))
-    Call objSelection.Select '選択範囲を戻す(なぜか全選択される事象が起きることがある)
+    Select Case CheckSelection()
+    Case E_Range
+        Dim objSelection As Range
+        Set objSelection = Selection
+        'アンドゥ用に元の情報を保存する
+        Call SaveUndoInfo(E_FillRange, GetAddress(Selection))
+        Call objSelection.Select '選択範囲を戻す(なぜか全選択される事象が起きることがある)
+    Case E_Shape
+        Dim objShapeRange As ShapeRange
+        Set objShapeRange = HasInteriorShapes(Selection.ShapeRange)
+        If objShapeRange Is Nothing Then
+            Exit Sub
+        End If
+        'アンドゥ用に元の情報を保存する
+        Call SaveUndoInfo(E_FillShape, objShapeRange)
+        Call objShapeRange.Select
+        '塗りつぶしありとなしが混在する時は、そのままでは塗りつぶしなしの図形に色がつかないので
+        'いったんすべての図形をクリアする
+        Selection.Interior.ColorIndex = xlNone
+    End Select
+    
     Selection.Interior.Color = FFillColor
     Call SetOnUndo
     Call GetRibbonUI.InvalidateControl("B631")
 End Sub
+
+'*****************************************************************************
+'[概要] ShapeRangeのうちInteriorが有効なShapeRangeのみ返す
+'[引数] ShapeRange
+'[戻値] Interiorを持つShapeRange
+'*****************************************************************************
+Private Function HasInteriorShapes(ByRef objShapeRange As ShapeRange) As ShapeRange
+    Dim i As Long, j As Long
+    Dim Dummy
+    ReDim lngIDArray(1 To objShapeRange.Count) As Variant
+    
+    '図形の数だけループ
+    For j = 1 To objShapeRange.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
+        On Error Resume Next
+        Dummy = objShapeRange(j).DrawingObject.Interior.Color
+        Dummy = objShapeRange(j).ID
+        If Err.Number = 0 Then
+            i = i + 1
+            lngIDArray(i) = objShapeRange(j).ID
+        End If
+        On Error GoTo 0
+    Next
+    If i > 0 Then
+        ReDim Preserve lngIDArray(1 To i)
+        Set HasInteriorShapes = GetShapeRangeFromID(lngIDArray)
+    End If
+End Function
 
 '*****************************************************************************
 '[概要] 選択されセルにBookmarkを設定/解除する
@@ -55,18 +98,6 @@ ErrHandle:
     Call GetRibbonUI.InvalidateControl("B621")
     Call GetRibbonUI.InvalidateControl("C2")
 End Sub
-
-'*****************************************************************************
-'[概要] galleryのインデックスから該当ColorIndexを取得
-'[引数] galleryのインデックス
-'[戻値] ColorIndex
-'*****************************************************************************
-'Public Function GetBookmarkColorIndex(ByVal lngItemIndex As Long) As Long
-'    If lngItemIndex = 0 Then
-'        lngItemIndex = DEFAULTBOOKMARKINDEX
-'    End If
-'    GetBookmarkColorIndex = ThisWorkbook.Worksheets("Color").Range("B2:B41").Cells(lngItemIndex, 1).Value
-'End Function
 
 '*****************************************************************************
 '[概要] 次のBookmarkに移動
@@ -353,12 +384,6 @@ On Error GoTo ErrHandle
         For Each objRange In colRange
             ArrangeRange(objRange).Interior.ColorIndex = xlNone
         Next
-'        For i = 1 To ActiveWorkbook.Worksheets.Count
-'            Set objRange = GetBookmarks(ActiveWorkbook.Worksheets(i))
-'            If Not (objRange Is Nothing) Then
-'                ArrangeRange(objRange).Interior.ColorIndex = xlNone
-'            End If
-'        Next
     End If
 ErrHandle:
     Application.FindFormat.Clear

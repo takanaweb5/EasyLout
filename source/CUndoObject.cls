@@ -10,6 +10,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public Enum EUndoType  'アンドゥタイプ
+    E_None        '初期値
     E_ColSize     '列幅変更
     E_ColSize2    '列幅変更
     E_ColHide     '列非表示
@@ -37,6 +38,8 @@ Public Enum EUndoType  'アンドゥタイプ
     E_ShapeSize   '図形のサイズ変更
     E_ShapeSize2  '図形のサイズ変更
     E_CellValue   'セルの値の変更
+    E_FillRange   '塗りつぶし(セル)
+    E_FillShape   '塗りつぶし(図形)
     E_FilterERR   'フィルタ設定時はエラー
     E_UndoERR     '例外発生時はエラー
 End Enum
@@ -50,6 +53,7 @@ Private Type TShapes  'Shape(Comment以外)
     Left     As Double
     Width    As Double
     Rotation As Long
+    Color    As Long
     Recover  As Boolean
 End Type
 
@@ -80,13 +84,12 @@ Private Type TUndoInfo  'Undo情報
     RangeCount     As Long
     Address        As String
     SelectCell     As String
-    SelectShapes() As Variant
+    SelectShapes() As Long
     SpiltCount     As Long
 End Type
 
-Private strClipText   As String  'クリップボードの中身(テキスト形式)
-Private bytNo         As Byte '1 or 2
-Private udtUndoInfo(1 To 2) As TUndoInfo
+Private strClipText  As String  'クリップボードの中身(テキスト形式)
+Private udtUndoInfo  As TUndoInfo
 
 '*****************************************************************************
 '[イベント]　Class_Terminate
@@ -102,8 +105,7 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub ClearBook()
-    Call DeleteSheet(ThisWorkbook.Worksheets("Undo1"))
-    Call DeleteSheet(ThisWorkbook.Worksheets("Undo2"))
+    Call DeleteSheet(ThisWorkbook.Worksheets("Undo"))
 
     '名前オブジェクトをすべて削除する
     Call DeleteNames(ThisWorkbook)
@@ -117,7 +119,7 @@ End Sub
 '[ 引  数 ]　なし
 '*****************************************************************************
 Public Property Get UndoType() As EUndoType
-    UndoType = udtUndoInfo(bytNo).UndoType
+    UndoType = udtUndoInfo.UndoType
 End Property
 
 '*****************************************************************************
@@ -147,25 +149,17 @@ On Error GoTo ErrHandle
     'クリップボードの中身を保存
     Call SaveClipbordText
     
-    If bytNo <> 0 Then
-        If udtUndoInfo(bytNo).UndoType = enmType Then
-            Select Case enmType
-            Case E_ColSize2, E_RowSize2, E_CellBorder
-                If IsBeat(strAddress) = True Then
-                    Exit Sub
-                End If
-            Case E_ShapeSize2
-                If IsBeat(objObject) = True Then
-                    Exit Sub
-                End If
-            End Select
-        End If
-    End If
-    
-    If bytNo = 1 Then
-        bytNo = 2
-    Else
-        bytNo = 1
+    If udtUndoInfo.UndoType = enmType Then
+        Select Case enmType
+        Case E_ColSize2, E_RowSize2, E_CellBorder
+            If IsBeat(strAddress) = True Then
+                Exit Sub
+            End If
+        Case E_ShapeSize2
+            If IsBeat(objObject) = True Then
+                Exit Sub
+            End If
+        End Select
     End If
     
     '最後のセルを修正する
@@ -174,14 +168,14 @@ On Error GoTo ErrHandle
     'Workbookをクリアする
     Call ClearBook
     
-    udtUndoInfo(bytNo).UndoType = enmType
-    Set udtUndoInfo(bytNo).Worksheet = ActiveSheet
-    Set udtUndoInfo(bytNo).UndoSheet = ThisWorkbook.Worksheets("Undo" & bytNo)
+    udtUndoInfo.UndoType = enmType
+    Set udtUndoInfo.Worksheet = ActiveSheet
+    Set udtUndoInfo.UndoSheet = ThisWorkbook.Worksheets("Undo")
     
     Select Case (enmType)
     Case E_SplitCol, E_SplitRow
-        udtUndoInfo(bytNo).SelectCell = strAddress
-        udtUndoInfo(bytNo).SpiltCount = varInfo
+        udtUndoInfo.SelectCell = strAddress
+        udtUndoInfo.SpiltCount = varInfo
         'ワークシ－トを保存
         Call BackupSheet(ActiveSheet)
         '図形の位置･サイズを保存
@@ -196,7 +190,7 @@ On Error GoTo ErrHandle
             Call BackupRangeSize(GetSameHeightAddresses(objRange))
         End If
     Case E_EraseCol, E_EraseRow
-        udtUndoInfo(bytNo).SelectCell = strAddress
+        udtUndoInfo.SelectCell = strAddress
         'ワークシ－トを保存
         Call BackupSheet(ActiveSheet)
         '図形の位置･サイズを保存
@@ -207,19 +201,19 @@ On Error GoTo ErrHandle
         Call BackupRangeSize(varInfo)
     Case E_ColSize, E_RowSize, _
          E_ColSize2, E_RowSize2
-        udtUndoInfo(bytNo).SelectCell = strAddress
+        udtUndoInfo.SelectCell = strAddress
         '列の幅を保存
         Call BackupRangeSize(varInfo)
         '図形の位置･サイズを保存
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
     Case E_ColHide, E_ColReShow, _
          E_RowHide, E_RowReShow
-        udtUndoInfo(bytNo).SelectCell = strAddress
-        udtUndoInfo(bytNo).Address = varInfo
+        udtUndoInfo.SelectCell = strAddress
+        udtUndoInfo.Address = varInfo
         '図形の位置･サイズを保存
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
     Case E_CopyCell, E_MoveCell
-        udtUndoInfo(bytNo).SelectCell = strAddress
+        udtUndoInfo.SelectCell = strAddress
         '図形の位置･サイズを保存
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
@@ -227,13 +221,13 @@ On Error GoTo ErrHandle
         'コメントの位置･サイズを保存
         Call BackupComment
     Case E_MergeCell, E_CellBorder, E_CommentToRule, E_RuleToComment
-        udtUndoInfo(bytNo).SelectCell = strAddress
+        udtUndoInfo.SelectCell = strAddress
         '変更前のセルを保存
         Call BackupSheet(ActiveSheet)
         'コメントの位置･サイズを保存
         Call BackupComment
     Case E_CellToText
-        udtUndoInfo(bytNo).SelectCell = strAddress
+        udtUndoInfo.SelectCell = strAddress
         '図形の名前を保存(追加されたテキストボックスを削除出来るように)
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
@@ -244,7 +238,7 @@ On Error GoTo ErrHandle
         'テキストボックスを保存
         Call BackupTextbox(objObject)
     Case E_CommentToText
-        udtUndoInfo(bytNo).SelectCell = strAddress
+        udtUndoInfo.SelectCell = strAddress
         '図形の名前を保存(追加されたテキストボックスを削除出来るように)
         Call BackupShapeSize(GetSheeetShapeRange(ActiveSheet))
         '変更前のセルを保存
@@ -254,17 +248,19 @@ On Error GoTo ErrHandle
     Case E_ShapeSize, E_ShapeSize2
         '図形の位置･サイズを保存
         Call BackupShapeSize(objObject)
-    Case E_CellValue, E_PasteValue, E_ApplyFormat
-        udtUndoInfo(bytNo).SelectCell = strAddress
+    Case E_CellValue, E_PasteValue, E_ApplyFormat, E_FillRange
+        udtUndoInfo.SelectCell = strAddress
         'セルを保存
         Call BackupSheet(ActiveSheet)
+    Case E_FillShape
+        '図形の塗りつぶし色を保存
+        Call BackupShapeColor(objObject)
     Case E_FilterERR
     '何もしない
     End Select
 Exit Sub
 ErrHandle:
-    bytNo = 1
-    udtUndoInfo(1).UndoType = E_UndoERR
+    udtUndoInfo.UndoType = E_UndoERR
 End Sub
 
 '*****************************************************************************
@@ -282,16 +278,16 @@ On Error GoTo ErrHandle
     End If
     
     If VarType(vSelection) = vbString Then
-        If udtUndoInfo(bytNo).SelectCell <> vSelection Then
+        If udtUndoInfo.SelectCell <> vSelection Then
             Exit Function
         End If
     ElseIf TypeOf vSelection Is ShapeRange Then
-        If udtUndoInfo(bytNo).ShapeCount <> vSelection.Count Then
+        If udtUndoInfo.ShapeCount <> vSelection.Count Then
             Exit Function
         End If
         '図形の数だけループ
         For i = 1 To vSelection.Count
-            With udtUndoInfo(bytNo)
+            With udtUndoInfo
                 If .SelectShapes(i) <> vSelection(i).ID Then
                     Exit Function
                 End If
@@ -365,7 +361,7 @@ End Sub
 Private Sub BackupTextbox(ByRef objTextbox As ShapeRange)
     Dim objShape As Shape
     
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         'Undoシートに変更前のテキストボックスを保存
         .ShapeCount = objTextbox.Count
         If .ShapeCount > 1 Then
@@ -403,7 +399,7 @@ On Error GoTo ErrHandle
     '図形をコピーの対象外にする
     Application.CopyObjectsWithCells = False
  
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         Call DeleteSheet(.UndoSheet)
         Call objWorksheet.Cells.Copy(.UndoSheet.Cells)
     End With
@@ -422,7 +418,7 @@ End Sub
 '*****************************************************************************
 Private Sub BackupRangeSize(ByRef colSelection As Variant)
     Dim i     As Long
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         ReDim Preserve .RangeSize(1 To colSelection.Count)
         For i = 1 To colSelection.Count
             .RangeSize(i).Address = colSelection(i)
@@ -447,7 +443,7 @@ Private Sub BackupShapeSize(ByRef objSelection As ShapeRange)
     Dim i          As Long
     Dim j          As Long
    
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         If objSelection Is Nothing Then
             .ShapeCount = 0
             Exit Sub
@@ -467,19 +463,19 @@ Private Sub BackupShapeSize(ByRef objSelection As ShapeRange)
         With objSelection(j)
             If .Type <> msoComment Then
                 i = i + 1
-                udtUndoInfo(bytNo).SelectShapes(i) = .ID
-                udtUndoInfo(bytNo).Shapes(i).ID = .ID
-                udtUndoInfo(bytNo).Shapes(i).Name = .Name
-                udtUndoInfo(bytNo).Shapes(i).Type = .Type
-                udtUndoInfo(bytNo).Shapes(i).Rotation = .Rotation
-                udtUndoInfo(bytNo).Shapes(i).Height = .Height
-                udtUndoInfo(bytNo).Shapes(i).Width = .Width
-                udtUndoInfo(bytNo).Shapes(i).Top = .Top
-                udtUndoInfo(bytNo).Shapes(i).Left = .Left
+                udtUndoInfo.SelectShapes(i) = .ID
+                udtUndoInfo.Shapes(i).ID = .ID
+                udtUndoInfo.Shapes(i).Name = .Name
+                udtUndoInfo.Shapes(i).Type = .Type
+                udtUndoInfo.Shapes(i).Rotation = .Rotation
+                udtUndoInfo.Shapes(i).Height = .Height
+                udtUndoInfo.Shapes(i).Width = .Width
+                udtUndoInfo.Shapes(i).Top = .Top
+                udtUndoInfo.Shapes(i).Left = .Left
             End If
         End With
     Next
-    udtUndoInfo(bytNo).ShapeCount = i
+    udtUndoInfo.ShapeCount = i
 End Sub
 
 '*****************************************************************************
@@ -491,9 +487,9 @@ End Sub
 Private Sub BackupComment()
     Dim i            As Long
     Dim objWorksheet As Worksheet
-    Set objWorksheet = udtUndoInfo(bytNo).UndoSheet
+    Set objWorksheet = udtUndoInfo.UndoSheet
     
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         .CommentCount = objWorksheet.Comments.Count
         If .CommentCount = 0 Then
             Exit Sub
@@ -503,15 +499,45 @@ Private Sub BackupComment()
     
     'Undoシート上のコメント単位にループ
     For i = 1 To objWorksheet.Comments.Count
-        udtUndoInfo(bytNo).Comments(i).Address = objWorksheet.Comments(i).Parent.Address
-        With udtUndoInfo(bytNo).Worksheet.Range(objWorksheet.Comments(i).Parent.Address).Comment.Shape
-            udtUndoInfo(bytNo).Comments(i).Name = .Name
-            udtUndoInfo(bytNo).Comments(i).Height = .Height
-            udtUndoInfo(bytNo).Comments(i).Width = .Width
-            udtUndoInfo(bytNo).Comments(i).Top = .Top
-            udtUndoInfo(bytNo).Comments(i).Left = .Left
+        udtUndoInfo.Comments(i).Address = objWorksheet.Comments(i).Parent.Address
+        With udtUndoInfo.Worksheet.Range(objWorksheet.Comments(i).Parent.Address).Comment.Shape
+            udtUndoInfo.Comments(i).Name = .Name
+            udtUndoInfo.Comments(i).Height = .Height
+            udtUndoInfo.Comments(i).Width = .Width
+            udtUndoInfo.Comments(i).Top = .Top
+            udtUndoInfo.Comments(i).Left = .Left
         End With
     Next i
+End Sub
+
+'*****************************************************************************
+'[概要] 図形の塗りつぶし色を保存する
+'[引数] 保存対象の図形
+'[戻値] なし
+'*****************************************************************************
+Private Sub BackupShapeColor(ByRef objSelection As ShapeRange)
+    Dim i As Long
+    With udtUndoInfo
+        .ShapeCount = objSelection.Count
+        
+        ReDim .Shapes(1 To .ShapeCount)
+        ReDim .SelectShapes(1 To .ShapeCount)
+    End With
+    
+    '図形の数だけループ
+    For i = 1 To objSelection.Count 'For each構文だとExcel2007で型違いとなる(たぶんバグ)
+        With objSelection(i)
+            udtUndoInfo.SelectShapes(i) = .ID
+            udtUndoInfo.Shapes(i).ID = .ID
+            udtUndoInfo.Shapes(i).Name = .Name
+            udtUndoInfo.Shapes(i).Type = .Type
+            If .DrawingObject.Interior.ColorIndex = xlNone Then
+                udtUndoInfo.Shapes(i).Color = -1
+            Else
+                udtUndoInfo.Shapes(i).Color = .DrawingObject.Interior.Color
+            End If
+        End With
+    Next
 End Sub
 
 '*****************************************************************************
@@ -550,29 +576,29 @@ Public Sub ExecUndo()
         Call RecoverShapeSize
     Case E_ColHide
         '列を再表示する
-        GetRange(udtUndoInfo(bytNo).Address).EntireColumn.Hidden = False
+        GetRange(udtUndoInfo.Address).EntireColumn.Hidden = False
         '図形のサイズを復元する
         Call RecoverShapeSize
     Case E_RowHide
         '行を再表示する
-        GetRange(udtUndoInfo(bytNo).Address).EntireRow.Hidden = False
+        GetRange(udtUndoInfo.Address).EntireRow.Hidden = False
         '図形のサイズを復元する
         Call RecoverShapeSize
     Case E_ColReShow
         '列を非表示する
-        GetRange(udtUndoInfo(bytNo).Address).EntireColumn.Hidden = True
+        GetRange(udtUndoInfo.Address).EntireColumn.Hidden = True
         '図形のサイズを復元する
         Call RecoverShapeSize
     Case E_RowReShow
         '行を非表示する
-        GetRange(udtUndoInfo(bytNo).Address).EntireRow.Hidden = True
+        GetRange(udtUndoInfo.Address).EntireRow.Hidden = True
         '図形のサイズを復元する
         Call RecoverShapeSize
     Case E_EraseCol, E_EraseRow
         Dim i As Long
         '名前オブジェクトがセル参照をしているときに復元できるように回復させる
         If Me.UndoType = E_EraseCol Then
-            With udtUndoInfo(bytNo)
+            With udtUndoInfo
                 lngNo = .Worksheet.Range(.SelectCell).Column
                 '元のシートの削除された列の数だけ挿入
                 For i = lngNo To lngNo + .Worksheet.Range(.SelectCell).Columns.Count - 1
@@ -580,7 +606,7 @@ Public Sub ExecUndo()
                 Next i
             End With
         Else
-            With udtUndoInfo(bytNo)
+            With udtUndoInfo
                 lngNo = .Worksheet.Range(.SelectCell).Row
                 '元のシートの削除された列の数だけ挿入
                 For i = lngNo To lngNo + .Worksheet.Range(.SelectCell).Rows.Count - 1
@@ -599,13 +625,13 @@ Public Sub ExecUndo()
     Case E_SplitCol, E_SplitRow
         '名前オブジェクトがセル参照をしているときに復元できるように回復させる
         If Me.UndoType = E_SplitCol Then
-            With udtUndoInfo(bytNo)
+            With udtUndoInfo
                 lngNo = .Worksheet.Range(.SelectCell).Column
                 '元のシートの挿入された列を削除
                 Call .Worksheet.Range(.Worksheet.Columns(lngNo + 1), .Worksheet.Columns(lngNo + .SpiltCount - 1)).Delete
             End With
         Else
-            With udtUndoInfo(bytNo)
+            With udtUndoInfo
                 lngNo = .Worksheet.Range(.SelectCell).Row
                 '元のシートの挿入された行を削除
                 Call .Worksheet.Range(.Worksheet.Rows(lngNo + 1), .Worksheet.Rows(lngNo + .SpiltCount - 1)).Delete
@@ -658,13 +684,16 @@ Public Sub ExecUndo()
     Case E_ShapeSize, E_ShapeSize2
         '図形のサイズを復元する
         Call RecoverShapeSize
-    Case E_CellValue, E_PasteValue, E_ApplyFormat
+    Case E_CellValue, E_PasteValue, E_ApplyFormat, E_FillRange
         'セルを復元
         Call RecoverSheet
+    Case E_FillShape
+        '図形の塗りつぶし色を復元する
+        Call RecoverShapeColor
     End Select
     
     '復元対象になったセルやオブジェクトの選択
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         Call .Worksheet.Activate
         Select Case (Me.UndoType)
         Case E_ColSize, E_RowSize, E_ColSize2, E_RowSize2, _
@@ -677,10 +706,10 @@ Public Sub ExecUndo()
              E_CellValue, _
              E_CommentToText, _
              E_CommentToRule, _
-             E_RuleToComment
-'            Call .Worksheet.Range(.SelectCell).Select
+             E_RuleToComment, _
+             E_FillRange
             Call GetRange(.SelectCell).Select
-        Case E_ShapeSize, E_ShapeSize2
+        Case E_ShapeSize, E_ShapeSize2, E_FillShape
             Call GetShapeRangeFromID(.SelectShapes).Select
         Case E_TextToCell
         End Select
@@ -691,6 +720,8 @@ Public Sub ExecUndo()
 
     '最後のセルを修正する
     Call ActiveSheet.UsedRange  'Undo出来なくなります
+    
+    udtUndoInfo.UndoType = E_None
 End Sub
 
 '*****************************************************************************
@@ -702,26 +733,26 @@ End Sub
 Private Sub RecoverTextbox()
     Dim objTextbox   As Object
     
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         'テキストボックスを復元
         Set objTextbox = .UndoSheet.Shapes(1)
         Call objTextbox.Cut
         Call .Worksheet.Paste
     End With
     
-'    With udtUndoInfo(bytNo).Worksheet.Shapes
+'    With udtUndoInfo.Worksheet.Shapes
 '        Set objTextbox = .Item(.Count)
 '    End With
 
     Set objTextbox = Selection
     
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         'テキストボックスの位置を復元
         objTextbox.Top = .Shapes(1).Top
         objTextbox.Left = .Shapes(1).Left
     End With
     
-    If udtUndoInfo(bytNo).ShapeCount > 1 Then
+    If udtUndoInfo.ShapeCount > 1 Then
         Call objTextbox.Ungroup
     End If
 End Sub
@@ -739,7 +770,7 @@ Private Sub RecoverSheet()
     '図形をコピーの対象外にする
     Application.CopyObjectsWithCells = False
  
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         'Undoシートから変更前のセルに移動
 '        Call .Worksheet.Cells.UnMerge
         Call .UndoSheet.Cells.Copy(.Worksheet.Cells) 'CutだとExcel2007で幅が復元されない
@@ -764,14 +795,14 @@ Private Sub DeleteNewShapes()
     Dim objShape     As Shape
     Dim blnHit       As Boolean
     
-    Set objWorksheet = udtUndoInfo(bytNo).Worksheet
+    Set objWorksheet = udtUndoInfo.Worksheet
     
     'コメント以外のオブジェクトで保存対象でなかったものは削除する
     For Each objShape In objWorksheet.Shapes
         If objShape.Type <> msoComment Then
             blnHit = False
-            For i = 1 To udtUndoInfo(bytNo).ShapeCount
-                If objShape.ID = udtUndoInfo(bytNo).Shapes(i).ID Then
+            For i = 1 To udtUndoInfo.ShapeCount
+                If objShape.ID = udtUndoInfo.Shapes(i).ID Then
                     blnHit = True
                     Exit For
                 End If
@@ -793,10 +824,10 @@ Private Sub RecoverRangeSize()
     Dim i            As Long
     Dim objWorksheet As Worksheet
     
-    Set objWorksheet = udtUndoInfo(bytNo).Worksheet
+    Set objWorksheet = udtUndoInfo.Worksheet
     
-    For i = 1 To udtUndoInfo(bytNo).RangeCount
-        With udtUndoInfo(bytNo).RangeSize(i)
+    For i = 1 To udtUndoInfo.RangeCount
+        With udtUndoInfo.RangeSize(i)
             Select Case (Me.UndoType)
             Case E_SplitCol, E_EraseCol, E_ColSize, E_ColSize2
                 objWorksheet.Range(.Address).ColumnWidth = .Size
@@ -818,11 +849,11 @@ Private Sub RecoverShapeSize()
     Dim objWorksheet As Worksheet
     Dim objShape     As Shape
     
-    Set objWorksheet = udtUndoInfo(bytNo).Worksheet
+    Set objWorksheet = udtUndoInfo.Worksheet
     
     For Each objShape In objWorksheet.Shapes
-        For i = 1 To udtUndoInfo(bytNo).ShapeCount
-            With udtUndoInfo(bytNo).Shapes(i)
+        For i = 1 To udtUndoInfo.ShapeCount
+            With udtUndoInfo.Shapes(i)
                 If .ID = objShape.ID Then
                     objShape.Height = .Height
                     objShape.Width = .Width
@@ -844,8 +875,8 @@ Private Sub RecoverShapeSize()
         Next
     Next
 
-    For i = 1 To udtUndoInfo(bytNo).ShapeCount
-        With udtUndoInfo(bytNo).Shapes(i)
+    For i = 1 To udtUndoInfo.ShapeCount
+        With udtUndoInfo.Shapes(i)
             If .Recover = False Then
                 Call MsgBox(.Name & "が復元されませんでした")
             End If
@@ -864,30 +895,30 @@ Private Sub RecoverComments()
     Dim objWorksheet As Worksheet
     Dim objComment   As Comment
     
-    Set objWorksheet = udtUndoInfo(bytNo).Worksheet
+    Set objWorksheet = udtUndoInfo.Worksheet
     
     '保存されたコメントの数だけループ
-    For i = 1 To udtUndoInfo(bytNo).CommentCount
+    For i = 1 To udtUndoInfo.CommentCount
         For Each objComment In objWorksheet.Comments
-            If udtUndoInfo(bytNo).Comments(i).Address = objComment.Parent.Address Then
-                udtUndoInfo(bytNo).Comments(i).Recover = True
+            If udtUndoInfo.Comments(i).Address = objComment.Parent.Address Then
+                udtUndoInfo.Comments(i).Recover = True
                 Exit For
             End If
         Next objComment
         
-        If udtUndoInfo(bytNo).Comments(i).Recover = True Then
+        If udtUndoInfo.Comments(i).Recover = True Then
             With objComment.Shape
-                .Height = udtUndoInfo(bytNo).Comments(i).Height
-                .Width = udtUndoInfo(bytNo).Comments(i).Width
-                .Top = udtUndoInfo(bytNo).Comments(i).Top
-                .Left = udtUndoInfo(bytNo).Comments(i).Left
+                .Height = udtUndoInfo.Comments(i).Height
+                .Width = udtUndoInfo.Comments(i).Width
+                .Top = udtUndoInfo.Comments(i).Top
+                .Left = udtUndoInfo.Comments(i).Left
             End With
         End If
     Next i
     
     '復元もれのチェック(Debug用)
-    For i = 1 To udtUndoInfo(bytNo).CommentCount
-        With udtUndoInfo(bytNo).Comments(i)
+    For i = 1 To udtUndoInfo.CommentCount
+        With udtUndoInfo.Comments(i)
             If .Recover = False Then
                 Call MsgBox(.Name & "(" & .Address & ")" & "が復元されませんでした")
             End If
@@ -896,12 +927,38 @@ Private Sub RecoverComments()
 End Sub
 
 '*****************************************************************************
+'[概要] 図形の塗りつぶし色を復元する
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub RecoverShapeColor()
+    Dim i As Long
+    Dim objWorksheet As Worksheet
+    Dim objShape     As Shape
+    Set objWorksheet = udtUndoInfo.Worksheet
+    For Each objShape In objWorksheet.Shapes
+        For i = 1 To udtUndoInfo.ShapeCount
+            With udtUndoInfo.Shapes(i)
+                If .ID = objShape.ID Then
+                    If .Color = -1 Then
+                        objShape.DrawingObject.Interior.ColorIndex = xlNone
+                    Else
+                        objShape.DrawingObject.Interior.Color = .Color
+                    End If
+                    Exit For
+                End If
+            End With
+        Next
+    Next
+End Sub
+
+'*****************************************************************************
 '[概要] 入力規則を削除する
 '[引数] なし
 '[戻値] なし
 '*****************************************************************************
 Private Sub DeleteInputRules()
-    With udtUndoInfo(bytNo)
+    With udtUndoInfo
         Call .Worksheet.Range(.SelectCell).Validation.Delete
     End With
 End Sub
@@ -954,6 +1011,8 @@ Public Sub SetOnUndo()
         Call Application.OnUndo("入力規則をコメントに変換", "ExecUndo")
     Case E_CellValue
         Call Application.OnUndo("セルの値を変更", "ExecUndo")
+    Case E_FillRange, E_FillShape
+        Call Application.OnUndo("塗りつぶし", "ExecUndo")
     Case E_FilterERR
         Call Application.OnUndo("フィルタ使用中の操作はUndo出来ません", "ExecUndo")
     Case E_UndoERR

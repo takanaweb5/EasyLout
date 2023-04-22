@@ -4,27 +4,7 @@ Option Private Module
 
 Private Const C_DEBUG = True '開発時はTrueにする
 
-Private Type PICTDESC_BMP
-    Size    As Long
-    Type    As Long
-    hBitmap As LongPtr
-    hPal    As LongPtr
-End Type
-
-Private Type Guid
-    Data1 As Long
-    Data2 As Integer
-    Data3 As Integer
-    Data4(7) As Byte
-End Type
-
-Private Declare PtrSafe Function CreateStreamOnHGlobal Lib "ole32" (ByVal hGlobal As LongPtr, ByVal fDeleteOnRelease As Long, ppstm As Any) As Long
-Private Declare PtrSafe Function CLSIDFromString Lib "ole32" (ByVal lpszCLSID As LongPtr, ByRef pclsid As Guid) As Long
-Private Declare PtrSafe Function OleCreatePictureIndirect Lib "oleaut32.dll" (ByRef PicDesc As Any, ByRef RefIID As Guid, ByVal fPictureOwnsHandle As Long, ByRef IPic As IPicture) As Long
-
-Private Const PICTYPE_BITMAP = 1
-Private Const IID_IPictureDisp As String = "{7BF80981-BF32-101A-8BBB-00AA00300CAB}"
-
+Private Const C_ICONSIZE = 18 'galleryアイコンのサイズ
 Public FCommand  As String
 Public FParam    As Variant
 Public FPressKey As EPressKey
@@ -33,6 +13,26 @@ Public Enum EPressKey
     E_Ctrl = 2
     E_ShiftAndCtrl = 3
 End Enum
+
+'*****************************************************************************
+'[イベント] onLoad
+'*****************************************************************************
+Private Sub onLoad(Ribbon As IRibbonUI)
+    'リボンUIをテンポラリのコマンドバーに保存する
+    '(モジュール変数に保存した場合は、例外やコードの強制停止で値が損なわれるため)
+    Call CreateTmpCommandBar(Ribbon)
+    Call SetDefaultColor
+End Sub
+
+'*****************************************************************************
+'[概要] 塗りつぶしのデフォルト色を設定
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub SetDefaultColor()
+    FFillColor = rgbYellow
+    FBMarkColor = &HFFFFCC '薄い水色
+End Sub
 
 '*****************************************************************************
 '[概要] IRibbonUIを保存するCommandBarを作成する
@@ -54,13 +54,10 @@ Private Sub CreateTmpCommandBar(ByRef Ribbon As IRibbonUI)
         .Parameter = ObjPtr(Ribbon)
     End With
     
-'    'チェックボックスのクローンをテンポラリに作成
-'    For i = 1 To 1
-'        With objCmdBar.Controls.Add(msoControlButton)
-'            .Tag = "C" & i & ThisWorkbook.Name
-'            .State = False '初期設定はチェックなし
-'        End With
-'    Next
+    With objCmdBar.Controls.Add(msoControlButton)
+        .Tag = "C2" & ThisWorkbook.Name
+        .State = False '初期設定はチェックなし
+    End With
 End Sub
 
 '*****************************************************************************
@@ -83,24 +80,15 @@ End Function
 '[引数] Controlを識別するID（リボンコントロールのID）
 '[戻値] CommandBarControl
 '*****************************************************************************
-'Public Function GetTmpControl(ByVal strId As String) As CommandBarControl
-'    Set GetTmpControl = CommandBars.FindControl(, , strId & ThisWorkbook.Name)
-'End Function
-
-'*****************************************************************************
-'[イベント] onLoad
-'*****************************************************************************
-Private Sub onLoad(Ribbon As IRibbonUI)
-    'リボンUIをテンポラリのコマンドバーに保存する
-    '(モジュール変数に保存した場合は、例外やコードの強制停止で値が損なわれるため)
-    Call CreateTmpCommandBar(Ribbon)
-End Sub
+Public Function GetTmpControl(ByVal strId As String) As CommandBarControl
+    Set GetTmpControl = CommandBars.FindControl(, , strId & ThisWorkbook.Name)
+End Function
 
 '*****************************************************************************
 '[イベント] loadImage
 '*****************************************************************************
 Private Sub loadImage(imageID As String, ByRef returnedVal)
-  returnedVal = imageID
+    returnedVal = imageID
 End Sub
 
 '*****************************************************************************
@@ -137,10 +125,59 @@ Private Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
         returnedVal = IsCommnetSelect
     Case "B326" '入力規則をコメントに変換
         returnedVal = Not (GetInputRules(True) Is Nothing)
+    Case "B632" '選択セルの色を取得
+        Select Case CheckSelection()
+        Case E_Range
+            returnedVal = IsOnlyColorCell()
+        Case E_Shape
+            returnedVal = IsOnlyColorShape()
+        Case Else
+            returnedVal = False
+        End Select
     Case Else
         returnedVal = True
     End Select
 End Sub
+
+'*****************************************************************************
+'[概要] 選択されているセルが同一色で、塗りつぶしありかどうか
+'[引数] なし
+'[戻値] True:条件を満たすとき
+'*****************************************************************************
+Private Function IsOnlyColorCell() As Boolean
+    IsOnlyColorCell = (GetColor(Selection.Interior) <> xlNone)
+End Function
+
+'*****************************************************************************
+'[概要] 選択されている図形が同一色で、塗りつぶしありかどうか
+'[引数] なし
+'[戻値] True:条件を満たすとき
+'*****************************************************************************
+Private Function IsOnlyColorShape() As Boolean
+On Error GoTo ErrHandle
+    IsOnlyColorShape = (GetColor(Selection.Interior) <> xlNone)
+    Exit Function
+ErrHandle:
+    IsOnlyColorShape = False
+End Function
+
+'*****************************************************************************
+'[概要] Interiorオブジェクトの色を取得
+'[引数] Interiorオブジェクト
+'[戻値] 色、xlNoneの時は色なし
+'*****************************************************************************
+Private Function GetColor(ByRef objInterior As Interior) As Long
+    If IsNull(Selection.Interior.ColorIndex) Then
+        GetColor = xlNone
+        Exit Function
+    End If
+    Select Case objInterior.ColorIndex
+    Case xlNone, xlAutomatic
+        GetColor = xlNone
+    Case Else
+        GetColor = objInterior.Color
+    End Select
+End Function
 
 '*****************************************************************************
 '[概要] コメントが選択されているかどうか
@@ -168,10 +205,15 @@ End Sub
 '*****************************************************************************
 Private Sub getLabel(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "Label")
-    
     Select Case Control.ID
     Case "B5311"
         returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
+    Case "B632"
+        If CheckSelection() = E_Shape Then
+            returnedVal = "選択図形の色を取得"
+        Else
+            returnedVal = "選択セルの色を取得"
+        End If
     End Select
 End Sub
 
@@ -180,10 +222,13 @@ End Sub
 '*****************************************************************************
 Private Sub getScreentip(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "Screentip")
-    
     Select Case Control.ID
     Case "B5311"
         returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
+    Case "B621"
+        returnedVal = Replace(returnedVal, "{COLOR}", GetColorStr(FBMarkColor))
+    Case "B631"
+        returnedVal = Replace(returnedVal, "{COLOR}", GetColorStr(FFillColor))
     End Select
 End Sub
 
@@ -192,12 +237,32 @@ End Sub
 '*****************************************************************************
 Private Sub getSupertip(Control As IRibbonControl, ByRef returnedVal)
     returnedVal = GetValue(Control.ID, "Supertip")
-
     Select Case Control.ID
     Case "B5311"
         returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
     End Select
 End Sub
+
+'*****************************************************************************
+'[概要] RGB値を色を表現する文字に変換
+'[引数] RGB値
+'[戻値] 例：赤、ColorIndexにない値の時は16進数「#FFCC00」
+'*****************************************************************************
+Private Function GetColorStr(ByVal lngRGB As Long) As String
+    Dim lngColor As Long
+    Dim i As Long
+    For i = 1 To 40
+        lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(i, 1).Value
+        If lngRGB = lngColor Then
+            GetColorStr = ThisWorkbook.Worksheets("Color").Range("C2:C41").Cells(i, 1).Value
+            Exit Function
+        End If
+    Next
+    
+    '見つからなかった時は16進数
+    GetColorStr = "#" & WorksheetFunction.Dec2Hex(lngRGB, 6)
+End Function
+
 
 '*****************************************************************************
 '[イベント] getShowImage
@@ -210,6 +275,12 @@ End Sub
 '[イベント] getImage
 '*****************************************************************************
 Private Sub getImage(Control As IRibbonControl, ByRef returnedVal)
+    Select Case Control.ID
+    Case "B631"
+        Set returnedVal = CreateColorImage()
+        Exit Sub
+    End Select
+    
     Dim Str As String
     Str = GetValue(Control.ID, "ImageMso")
     If Str <> "" Then
@@ -222,6 +293,44 @@ Private Sub getImage(Control As IRibbonControl, ByRef returnedVal)
         Set returnedVal = GetImageFromResource(Str)
     End If
 End Sub
+
+'*****************************************************************************
+'[概要] 塗りつぶしボタンのアイコンを作成する
+'[引数] なし
+'[戻値] IPicture
+'*****************************************************************************
+Private Function CreateColorImage() As IPicture
+    Dim ICONSIZE As Long
+    
+    'DPIから 16Pixel or 20Pixelのアイコンを使用するか判定 ※Windowsの標準は96DPI
+    Select Case GetDPI()
+    Case Is < 120
+        ICONSIZE = 16
+    Case 120
+        ICONSIZE = 20
+    Case Else
+        ICONSIZE = 32
+    End Select
+        
+    Dim lngColor As Long
+    ReDim Pixels(1 To ICONSIZE, 1 To ICONSIZE) As Long
+    Dim x As Long, y As Long
+    lngColor = BGR2RGB(FFillColor) + &HFF000000 '該当色 + α(不透明)
+    For y = 2 To ICONSIZE - 1
+        For x = 2 To ICONSIZE - 1
+            If (x = 2) Or (x = ICONSIZE - 1) Or (y = 2) Or (y = ICONSIZE - 1) Then
+                Pixels(y, x) = &HFFC0C0C0 '囲い(25%灰色)
+            Else
+                Pixels(y, x) = lngColor
+            End If
+        Next
+    Next
+
+    Dim objGdip As New CGdiplus
+    Call objGdip.CreateFromPixels(Pixels())
+    Set CreateColorImage = objGdip.ToIPicture
+ErrHandle:
+End Function
 
 '*****************************************************************************
 '[イベント] getSize
@@ -260,6 +369,8 @@ Private Sub getPressed(Control As IRibbonControl, ByRef returnedVal)
     Case "C1"
         On Error Resume Next
         returnedVal = (ActiveWorkbook.DisplayDrawingObjects = xlHide)
+    Case "C2"
+        returnedVal = GetTmpControl("C2").State
     End Select
 End Sub
 
@@ -270,10 +381,10 @@ Private Sub onCheckAction(Control As IRibbonControl, pressed As Boolean)
     Select Case Control.ID
     Case "C1"
         Call HideShapes(pressed)
+    Case "C2"
+        'チェック状態を保存
+        GetTmpControl("C2").State = pressed
     End Select
-
-'    'チェック状態を保存
-'    GetTmpControl(Control.ID).State = pressed
 End Sub
 
 '*****************************************************************************
@@ -425,28 +536,228 @@ Private Function LoadImageFromResource(ByRef objRow As Range) As IPicture
          Data(x) = objRow.Cells(1, x + 1)
     Next
     
-    Dim Stream As IUnknown
-    If CreateStreamOnHGlobal(VarPtr(Data(1)), 0, Stream) <> 0 Then
-        Call Err.Raise(513, "CreateStreamOnHGlobalエラー")
-    End If
-
     Dim Gdip As New CGdiplus
-    Call Gdip.CreateFromStream(Stream)
-    
-    Dim uPicInfo As PICTDESC_BMP
-    With uPicInfo
-        .Size = Len(uPicInfo)
-        .Type = PICTYPE_BITMAP
-        .hBitmap = Gdip.ToHBITMAP
-        .hPal = 0
-    End With
-
-    Dim gGuid As Guid
-    Call CLSIDFromString(StrPtr(IID_IPictureDisp), gGuid)
-    Dim IBitmap As IPicture
-    Call OleCreatePictureIndirect(uPicInfo, gGuid, True, IBitmap)
-    Set LoadImageFromResource = IBitmap
+    Call Gdip.CreateFromHGlobal(VarPtr(Data(1)))
+    Set LoadImageFromResource = Gdip.ToIPicture
 End Function
+
+'*****************************************************************************
+'[概要] アクティブセルにファイルを読込む(開発用)
+'[引数] ファイル名
+'[戻値] なし
+'*****************************************************************************
+Public Sub LoadBinaryFile(ByVal strFilename As String, ByRef objCell As Range)
+On Error GoTo ErrHandle
+    ReDim Data(1 To FileLen(strFilename)) As Byte
+
+    Open strFilename For Binary Access Read As #1
+    Get #1, , Data
+    Close #1
+
+    Dim x As Long
+    For x = 1 To UBound(Data)
+        objCell.Cells(1, x + 1) = Data(x)
+    Next
+    objCell = strFilename
+ErrHandle:
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemWidth
+'*****************************************************************************
+Sub getItemWidth(Control As IRibbonControl, ByRef Width)
+    Width = C_ICONSIZE
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemHeight
+'*****************************************************************************
+Sub getItemHeight(Control As IRibbonControl, ByRef Height)
+    Height = C_ICONSIZE
+End Sub
+
+'*****************************************************************************
+'[イベント] getSelectedItemID
+'*****************************************************************************
+'Sub getSelectedItemID(Control As IRibbonControl, ByRef returnedVal)
+'End Sub
+
+'*****************************************************************************
+'[イベント] getSelectedItemIndex
+'*****************************************************************************
+Sub getSelectedItemIndex(Control As IRibbonControl, ByRef returnedVal)
+    Select Case Control.ID
+    Case "G621"
+        Dim lngColor As Long
+        Dim i As Long
+        For i = 0 To 39
+            lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(i + 1, 1).Value
+            If lngColor = FBMarkColor Then
+                returnedVal = i
+                Exit Sub
+            End If
+        Next
+    Case "G62"
+'        Dim lngColorIndex As Long
+'        Dim objInterior As Interior
+'        Set objInterior = Selection.Interior
+'
+'        If VarType(objInterior.ColorIndex) <> vbNull Then
+'            Dim i As Long
+'            For i = 1 To 40
+'                If objInterior.ColorIndex = ThisWorkbook.Worksheets("Color").Range("B2:B41").Cells(i, 1).Value Then
+'                    If objInterior.Color - ActiveWorkbook.Colors(objInterior.ColorIndex) = 0 Then
+'                        index = i - 1
+'                        Exit Sub
+'                    End If
+'                End If
+'            Next
+'        End If
+'        index = -1
+'        Application.WarnOnFunctionNameConflict = False
+'        Application.GenerateTableRefs = xlGenerateTableRefStruct
+    End Select
+'    Debug.Print index
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemCount
+'*****************************************************************************
+Sub getItemCount(Control As IRibbonControl, ByRef Count)
+    Count = 40
+    Call GetRibbonUI.InvalidateControl("B632")
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemID
+'*****************************************************************************
+Sub getItemID(Control As IRibbonControl, Index As Integer, ByRef itemID)
+    Dim lngColorIndex As Long
+    lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
+    itemID = Control.ID & "_I" & Format(lngColorIndex, "00")  ' IDは重複してはいけない
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemSupertip
+'*****************************************************************************
+Sub getItemSupertip(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
+'    If index >= 40 Then Exit Sub
+    Dim lngColorIndex As Long
+    lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
+    If ActiveWorkbook.Colors(lngColorIndex) - ThisWorkbook.Worksheets("Color").Cells(Index + 2, 4) = 0 Then
+        returnedVal = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 3)
+    Else
+        returnedVal = "カスタマイズされた色"
+    End If
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemImage
+'*****************************************************************************
+Sub getItemImage(Control As IRibbonControl, Index As Integer, ByRef image)
+    Select Case Index
+    Case 0 To 39
+        Dim lngColorIndex As Long
+        lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
+        Set image = GetColorPicture(ActiveWorkbook.Colors(lngColorIndex))
+    End Select
+End Sub
+
+'*****************************************************************************
+'[概要] galleryアイテム用のカラーのイメージを動的に作成する
+'[引数] RGBカラー(例：&HFF0000)
+'[戻値] IPicture
+'*****************************************************************************
+Public Function GetColorPicture(ByVal lngColor As Long) As IPicture
+    Dim Pixels(1 To C_ICONSIZE, 1 To C_ICONSIZE) As Long
+    Dim x As Long, y As Long
+
+    lngColor = BGR2RGB(lngColor) + &HFF000000 '該当色 + α(不透明)
+    For y = 2 To C_ICONSIZE - 1
+        For x = 2 To C_ICONSIZE - 1
+            If (x = 2) Or (x = C_ICONSIZE - 1) Or (y = 2) Or (y = C_ICONSIZE - 1) Then
+                Pixels(y, x) = &HFF808080 '囲い(50%灰色)
+            Else
+                Pixels(y, x) = lngColor
+            End If
+        Next
+    Next
+
+    Dim objGdip As New CGdiplus
+    Call objGdip.CreateFromPixels(Pixels())
+    Set GetColorPicture = objGdip.ToIPicture
+End Function
+
+'*****************************************************************************
+'[概要] BGR -> RGB に変換
+'[引数] BGRカラー(例：&HFF0000)
+'[戻値] RGBカラー(例：&H0000FF)
+'*****************************************************************************
+Private Function BGR2RGB(ByVal lngColor As Long) As Long
+    Dim strBGR As String
+    strBGR = WorksheetFunction.Dec2Hex(lngColor, 6)
+    Dim R As String, G As String, B As String
+    B = Mid(strBGR, 1, 2)
+    G = Mid(strBGR, 3, 2)
+    R = Mid(strBGR, 5, 2)
+    BGR2RGB = "&H" & R & G & B
+End Function
+
+''*****************************************************************************
+''[イベント] getItemLabel
+''*****************************************************************************
+'Sub getItemLabel(Control As IRibbonControl, index As Integer, ByRef returnedVal)
+'    returnedVal = ""
+'End Sub
+'
+''*****************************************************************************
+''[イベント] getItemScreentip
+''*****************************************************************************
+'Sub getItemScreentip(Control As IRibbonControl, index As Integer, ByRef returnedVal)
+'    returnedVal = ""
+'End Sub
+
+'*****************************************************************************
+'[イベント] galleryのアイテムをクリックした時
+'*****************************************************************************
+Sub gallery_onAction(Control As IRibbonControl, itemID As String, Index As Integer)
+    Select Case Control.ID
+    Case "G621"
+        FBMarkColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(Index + 1, 1).Value
+        Call GetRibbonUI.InvalidateControl("B621")
+    Case "G631"
+        FFillColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(Index + 1, 1).Value
+        Call FillColor
+    End Select
+End Sub
+
+'*****************************************************************************
+'[概要] 選択セル(または図形)の色を取得
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub PickupColor()
+    FFillColor = Selection.Interior.Color
+    Call GetRibbonUI.InvalidateControl("B631")
+End Sub
+
+'*****************************************************************************
+'[概要] リボンのコールバック関数を実行する(開発用)
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub onAction2(Control As IRibbonControl)
+    If C_DEBUG Then
+        Select Case Control.ID
+        Case "Bdmy1"
+            Call GetRibbonUI.Invalidate
+        Case "Bdmy2"
+            ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
+        Case "Bdmy3"
+            Call ThisWorkbook.Save
+        End Select
+    End If
+End Sub
 
 '*****************************************************************************
 '[概要] ResourceシートのPngファイルをフォルダに書き込む(開発用)
@@ -477,51 +788,8 @@ Public Sub SavePngFiles(ByVal strFolder As String)
     Next
 End Sub
 
-'*****************************************************************************
-'[概要] アクティブセルにファイルを読込む(開発用)
-'[引数] ファイル名
-'[戻値] なし
-'*****************************************************************************
-Public Sub LoadBinaryFile(ByVal strFilename As String, ByRef objCell As Range)
-On Error GoTo ErrHandle
-    ReDim Data(1 To FileLen(strFilename)) As Byte
+'Sub LoadIcon()
+'    Call LoadBinaryFile("FindNext.png", ThisWorkbook.Worksheets("Resource").Range("A70"))
+'End Sub
 
-    Open strFilename For Binary Access Read As #1
-    Get #1, , Data
-    Close #1
 
-    Dim x As Long
-    For x = 1 To UBound(Data)
-        objCell.Cells(1, x + 1) = Data(x)
-    Next
-    objCell = strFilename
-ErrHandle:
-End Sub
-
-'*****************************************************************************
-'[概要] リボンのコールバック関数を実行する(開発用)
-'[引数] なし
-'[戻値] なし
-'*****************************************************************************
-Private Sub onAction2(Control As IRibbonControl)
-    If C_DEBUG Then
-        Select Case Control.ID
-        Case "Bdmy1"
-            Call GetRibbonUI.Invalidate
-        Case "Bdmy2"
-            ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
-        Case "Bdmy3"
-            Call ThisWorkbook.Save
-        End Select
-    End If
-End Sub
-
-Sub LoadIcon()
-    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindNext.png", ThisWorkbook.Worksheets("Resource").Range("A70"))
-    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindNext16.png", ThisWorkbook.Worksheets("Resource").Range("A71"))
-    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindNext20.png", ThisWorkbook.Worksheets("Resource").Range("A72"))
-    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindPrev.png", ThisWorkbook.Worksheets("Resource").Range("A73"))
-    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindPrev16.png", ThisWorkbook.Worksheets("Resource").Range("A74"))
-    Call LoadBinaryFile("D:\GitHub\EasyLout\source\icons\FindPrev20.png", ThisWorkbook.Worksheets("Resource").Range("A75"))
-    
-End Sub
