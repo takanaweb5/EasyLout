@@ -7,16 +7,16 @@
  <button id="B101" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <separator id="SP11"/>
  <box id="box11" boxStyle="vertical">
-  <button id="B102" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B103" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B102" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B103" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <splitButton id="SP12" visible="true" enabled="true" showLabel="true">
   <button idMso="UnmergeCells" getShowLabel="basEasyLout.getShowLabel" label="結合解除" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
  <menu id="M12" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
   <button id="B104" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  </menu>
  </splitButton>
-
  </box>
+
  <buttonGroup id="buttonGroup11">
   <button id="B105" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
   <button id="B106" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
@@ -30,60 +30,60 @@
 </group>
 
 <group id="grp2" label="行・列" centerVertically="true" autoScale="false">
- <box id="box21" boxStyle="horizontal">
-  <button id="B201" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B202" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B203" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B204" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B205" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B206" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B207" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </box>
- <box id="box22" boxStyle="horizontal">
-  <button id="B211" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B212" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B213" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B214" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B215" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B216" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B217" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </box>
+ <buttonGroup id="buttonGroup21">
+  <button id="B201" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B202" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B203" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B204" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B205" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B206" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B207" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+ </buttonGroup>
+ <buttonGroup id="buttonGroup22">
+  <button id="B211" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B212" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B213" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B214" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B215" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B216" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B217" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+ </buttonGroup>
 
  <separator id="SP21"/>
- <box id="box23" boxStyle="horizontal">
-  <button id="B208" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B209" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <control idMso="SheetColumnsInsert" showLabel="false" label="列の挿入" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage"/>
-  <control idMso="SheetColumnsDelete" showLabel="false" label="列の削除" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage"/>
- </box>
- <box id="box24" boxStyle="horizontal">
-  <button id="B218" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B219" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <control idMso="SheetRowsInsert" showLabel="false" label="行の挿入" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage"/>
-  <control idMso="SheetRowsDelete" showLabel="false" label="行の削除" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage"/>
- </box>
+ <buttonGroup id="buttonGroup23">
+  <button id="B208" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B209" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <control idMso="SheetColumnsInsert" showLabel="false" label="列の挿入" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+  <control idMso="SheetColumnsDelete" showLabel="false" label="列の削除" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+ </buttonGroup>
+ <buttonGroup id="buttonGroup24">
+  <button id="B218" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B219" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <control idMso="SheetRowsInsert" showLabel="false" label="行の挿入" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+  <control idMso="SheetRowsDelete" showLabel="false" label="行の削除" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+ </buttonGroup>
  <separator id="SP22"/>
- <box id="box25" boxStyle="horizontal">
-  <button idMso="BorderInsideVertical"   showLabel="false" label="縦罫線" screentip="縦罫線" supertip="縦罫線の描画と消去のトグル&#13;※Excel標準機能" size="normal"/>
- </box>
- <box id="box26" boxStyle="horizontal">
-  <button idMso="BorderInsideHorizontal" showLabel="false" label="横罫線" screentip="横罫線" supertip="横罫線の描画と消去のトグル&#13;※Excel標準機能" size="normal"/>
- </box>
+ <buttonGroup id="buttonGroup25">
+  <button idMso="BorderInsideVertical"   showLabel="false" label="縦罫線" screentip="縦罫線" supertip="縦罫線の描画と消去のトグル&#13;※Excel標準機能"/>
+ </buttonGroup>
+ <buttonGroup id="buttonGroup26">
+  <button idMso="BorderInsideHorizontal" showLabel="false" label="横罫線" screentip="横罫線" supertip="横罫線の描画と消去のトグル&#13;※Excel標準機能"/>
+ </buttonGroup>
 </group>
 
 <group id="grp3" label="図形" imageMso="DrawingCanvasExpand" centerVertically="false" autoScale="false">
   <button id="B301" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <separator id="SP31"/>
-  <checkBox id="C1" getPressed="getPressed" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" onAction="basEasyLout.onCheckAction"/>
+  <checkBox id="C1" getPressed="basEasyLout.getPressed" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" onAction="basEasyLout.onCheckAction"/>
   <button id="B302" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- <box id="box31" boxStyle="horizontal">
+ <buttonGroup id="buttonGroup31">
   <control idMso="ViewGridlinesToggleExcel" showLabel="false" label="枠線の表示"/>
-  <toggleButton idMso="SnapToGrid"   showLabel="false" label="枠線に合わせる" screentip="枠線に合わせる" supertip="図形移動時に図形の位置を枠線に合わせます" size="normal"/>
-  <toggleButton idMso="SnapToShapes" showLabel="false" label="図形に合わせる" screentip="図形に合わせる" supertip="図形移動時に図形の位置を図形に合わせます&#13;※マウス操作時のみ有効です" size="normal"/>
- </box>
+  <toggleButton idMso="SnapToGrid"   showLabel="false" label="枠線に合わせる" screentip="枠線に合わせる" supertip="図形移動時に図形の位置を枠線に合わせます"/>
+  <toggleButton idMso="SnapToShapes" showLabel="false" label="図形に合わせる" screentip="図形に合わせる" supertip="図形移動時に図形の位置を図形に合わせます&#13;※マウス操作時のみ有効です"/>
+ </buttonGroup>
  <separator id="SP32"/>
- <dynamicMenu id="M31" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
- <dynamicMenu id="M32" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M31" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M32" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
  <control idMso="ShapeChangeShapeGallery" showLabel="true" label="図形変更" size="normal"/>
 </group>
 
@@ -97,41 +97,65 @@
  </menu>
  </splitButton>
   <button id="B421" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- <box id="box41" boxStyle="horizontal">
-  <button idMso="PasteNoBorders" showLabel="false" label="罫線を除くすべて" size="normal" screentip="罫線を除くすべて" supertip="罫線を除くすべてを貼付け" />
-  <control idMso="PasteFormatting" showLabel="false" label="書式の貼付け" size="normal"/>
-  <control idMso="PasteValues" showLabel="false" label="値の貼付け" size="normal"/>
-  <control idMso="PasteAsHyperlink" showLabel="false" label="ハイパーリンクとして貼付け" size="normal"/>
-  <control idMso="PasteFormulas" showLabel="false" label="数式の貼付け" size="normal"/>
- </box>
+ <buttonGroup id="buttonGroup41">
+  <button idMso="PasteNoBorders" showLabel="false" label="罫線を除くすべて" screentip="罫線を除くすべて" supertip="罫線を除くすべてを貼付け" />
+  <control idMso="PasteFormatting" showLabel="false" label="書式の貼付け"/>
+  <control idMso="PasteValues" showLabel="false" label="値の貼付け"/>
+  <control idMso="PasteAsHyperlink" showLabel="false" label="ハイパーリンクとして貼付け"/>
+  <control idMso="PasteFormulas" showLabel="false" label="数式の貼付け"/>
+ </buttonGroup>
 </group>
 
 <group id="grp5" imageMso="Info" label="その他" centerVertically="true" autoScale="true">
- <dynamicMenu id="M51" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
- <dynamicMenu id="M52" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
- <dynamicMenu id="M53" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M51" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M52" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M53" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
 </group>
 
-<group id="grp6" label="ブックマーク" imageMso="BookmarkInsert" centerVertically="true" autoScale="false">
- <checkBox id="C2" getPressed="getPressed" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" onAction="basEasyLout.onCheckAction"/>
+<group id="grp6" label="ブックマーク他" imageMso="BookmarkInsert" centerVertically="true" autoScale="false">
  <box id="box61" boxStyle="horizontal">
-  <button id="B601" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B602" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B603" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B604" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
- </box>
- <box id="box62" boxStyle="horizontal">
   <control idMso="FindDialogExcel" showLabel="false"/>
-  <button id="B606" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <button id="B607" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B611" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B612" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <labelControl id="l61" label="│"/>
+  <control idMso="GoToSpecial" imageMso="GoTo" showLabel="false"/>
+ </box>
+ <buttonGroup id="buttonGroup61">
+  <button id="B621" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <gallery id="G621" showItemLabel="false" columns="8" invalidateContentOnDrop="true" onAction="basEasyLout.gallery_onAction"
+   getItemWidth="basEasyLout.getItemWidth"
+   getItemHeight="basEasyLout.getItemHeight"
+   getItemCount="basEasyLout.getItemCount"
+   getItemID="basEasyLout.getItemID"
+   getItemSupertip="basEasyLout.getItemSupertip"
+   getItemImage="basEasyLout.getItemImage"
+   getSelectedItemIndex="basEasyLout.getSelectedItemIndex"/>
+  <button id="B622" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B623" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <button id="B624" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+ </buttonGroup>
+ <box id="box63" boxStyle="horizontal">
+ <buttonGroup id="buttonGroup51">
+  <button id="B631" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  <gallery id="G631" showItemLabel="false" columns="8" invalidateContentOnDrop="true" onAction="basEasyLout.gallery_onAction"
+   getItemWidth="basEasyLout.getItemWidth"
+   getItemHeight="basEasyLout.getItemHeight"
+   getItemCount="basEasyLout.getItemCount"
+   getItemID="basEasyLout.getItemID"
+   getItemSupertip="basEasyLout.getItemSupertip"
+   getItemImage="basEasyLout.getItemImage">
+  <button id="B632" getEnabled="basEasyLout.getEnabled" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
+  </gallery>
+ </buttonGroup>
+  <checkBox id="C2" getPressed="basEasyLout.getPressed" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" onAction="basEasyLout.onCheckAction"/>
  </box>
 </group>
 
 <group id="grp7" imageMso="Help" label="ヘルプ" centerVertically="true" autoScale="false">
- <dynamicMenu id="M71" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getSize="basEasyLout.getSize" getContent="getContent" invalidateContentOnDrop="true"/>
+ <dynamicMenu id="M71" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getSize="basEasyLout.getSize" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
 </group>
 
-<group id="dmy" getVisible="getVisible" centerVertically="true">
+<group id="dmy" getVisible="basEasyLout.getVisible" centerVertically="true">
   <button id="Bdmy1" label="再表示"  onAction="onAction2"/>
   <button id="Bdmy2" label="Addin"   onAction="onAction2"/>
   <button id="Bdmy3" label="Save"   onAction="onAction2"/>
