@@ -1,0 +1,513 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Title>かんたんレイアウト</Title>
+  <Author>TAKAHASHI Naoki</Author>
+  <Description>列の幅や行の高さをかんたんに変更することが出来ます</Description>
+  <LastAuthor>高橋直生</LastAuthor>
+  <Created>2023-04-22T05:10:51Z</Created>
+  <LastSaved>2023-04-22T05:04:50Z</LastSaved>
+  <Slides>5.0</Slides>
+  <Version>15.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>9396</WindowHeight>
+  <WindowWidth>23040</WindowWidth>
+  <WindowTopX>0</WindowTopX>
+  <WindowTopY>0</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s29">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s30">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <NumberFormat ss:Format="00"/>
+  </Style>
+  <Style ss:ID="s31">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#000000" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s32">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#993300" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s33">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#333300" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s34">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#003300" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s35">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#003366" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s36">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#000080" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s37">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#333399" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s38">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#333333" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s39">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#800000" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s40">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FF6600" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s41">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#808000" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s42">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#008000" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s43">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#008080" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s44">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#0000FF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s45">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#666699" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s46">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#808080" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s47">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FF0000" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s48">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FF9900" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s49">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#99CC00" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s50">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#339966" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s51">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#33CCCC" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s52">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#3366FF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s53">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#800080" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s54">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#969696" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s55">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FF00FF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s56">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FFCC00" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s57">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FFFF00" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s58">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#00FF00" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s59">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#00FFFF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s60">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#00CCFF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s61">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#993366" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s62">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s63">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FF99CC" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s64">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FFCC99" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s65">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FFFF99" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s66">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#CCFFCC" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s67">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#CCFFFF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s68">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#99CCFF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s69">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#CC99FF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s70">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Color="#000000"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Color">
+  <Table ss:ExpandedColumnCount="5" ss:ExpandedRowCount="41" x:FullColumns="1"
+   x:FullRows="1" ss:StyleID="s29" ss:DefaultRowHeight="12">
+   <Column ss:StyleID="s29" ss:Width="19.2"/>
+   <Column ss:StyleID="s30" ss:Width="35.4"/>
+   <Column ss:StyleID="s29" ss:Width="75"/>
+   <Column ss:StyleID="s29" ss:Width="51.6"/>
+   <Row>
+    <Cell><Data ss:Type="String">No</Data></Cell>
+    <Cell><Data ss:Type="String">Index</Data></Cell>
+    <Cell><PhoneticText xmlns="urn:schemas-microsoft-com:office:excel">イロ</PhoneticText><Data
+      ss:Type="String">色</Data></Cell>
+    <Cell><Data ss:Type="String">HEX</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="String">黒</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H000000</Data></Cell>
+    <Cell ss:StyleID="s31"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="Number">53</Data></Cell>
+    <Cell><Data ss:Type="String">茶</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H003399</Data></Cell>
+    <Cell ss:StyleID="s32"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">3</Data></Cell>
+    <Cell><Data ss:Type="Number">52</Data></Cell>
+    <Cell><Data ss:Type="String">オリーブ</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H003333</Data></Cell>
+    <Cell ss:StyleID="s33"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">4</Data></Cell>
+    <Cell><Data ss:Type="Number">51</Data></Cell>
+    <Cell><Data ss:Type="String">濃い緑</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H003300</Data></Cell>
+    <Cell ss:StyleID="s34"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">5</Data></Cell>
+    <Cell><Data ss:Type="Number">49</Data></Cell>
+    <Cell><Data ss:Type="String">濃い青緑</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H663300</Data></Cell>
+    <Cell ss:StyleID="s35"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">6</Data></Cell>
+    <Cell><Data ss:Type="Number">11</Data></Cell>
+    <Cell><Data ss:Type="String">濃い青</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H800000</Data></Cell>
+    <Cell ss:StyleID="s36"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">7</Data></Cell>
+    <Cell><Data ss:Type="Number">55</Data></Cell>
+    <Cell><Data ss:Type="String">インディゴ</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H993333</Data></Cell>
+    <Cell ss:StyleID="s37"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">8</Data></Cell>
+    <Cell><Data ss:Type="Number">56</Data></Cell>
+    <Cell><Data ss:Type="String">80%灰色</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H333333</Data></Cell>
+    <Cell ss:StyleID="s38"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">9</Data></Cell>
+    <Cell><Data ss:Type="Number">9</Data></Cell>
+    <Cell><Data ss:Type="String">濃い赤</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H000080</Data></Cell>
+    <Cell ss:StyleID="s39"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">10</Data></Cell>
+    <Cell><Data ss:Type="Number">46</Data></Cell>
+    <Cell><Data ss:Type="String">オレンジ</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H0066FF</Data></Cell>
+    <Cell ss:StyleID="s40"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">11</Data></Cell>
+    <Cell><Data ss:Type="Number">12</Data></Cell>
+    <Cell><Data ss:Type="String">濃い黄</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H008080</Data></Cell>
+    <Cell ss:StyleID="s41"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">12</Data></Cell>
+    <Cell><Data ss:Type="Number">10</Data></Cell>
+    <Cell><Data ss:Type="String">緑</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H008000</Data></Cell>
+    <Cell ss:StyleID="s42"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">13</Data></Cell>
+    <Cell><Data ss:Type="Number">14</Data></Cell>
+    <Cell><Data ss:Type="String">青緑</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H808000</Data></Cell>
+    <Cell ss:StyleID="s43"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">14</Data></Cell>
+    <Cell><Data ss:Type="Number">5</Data></Cell>
+    <Cell><Data ss:Type="String">青</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFF0000</Data></Cell>
+    <Cell ss:StyleID="s44"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">15</Data></Cell>
+    <Cell><Data ss:Type="Number">47</Data></Cell>
+    <Cell><Data ss:Type="String">ブルーグレー</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H996666</Data></Cell>
+    <Cell ss:StyleID="s45"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">16</Data></Cell>
+    <Cell><Data ss:Type="Number">16</Data></Cell>
+    <Cell><Data ss:Type="String">50%灰色</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H808080</Data></Cell>
+    <Cell ss:StyleID="s46"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">17</Data></Cell>
+    <Cell><Data ss:Type="Number">3</Data></Cell>
+    <Cell><Data ss:Type="String">赤</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H0000FF</Data></Cell>
+    <Cell ss:StyleID="s47"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">18</Data></Cell>
+    <Cell><Data ss:Type="Number">45</Data></Cell>
+    <Cell><Data ss:Type="String">薄いオレンジ</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H0099FF</Data></Cell>
+    <Cell ss:StyleID="s48"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">19</Data></Cell>
+    <Cell><Data ss:Type="Number">43</Data></Cell>
+    <Cell><Data ss:Type="String">ライム</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H00CC99</Data></Cell>
+    <Cell ss:StyleID="s49"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">20</Data></Cell>
+    <Cell><Data ss:Type="Number">50</Data></Cell>
+    <Cell><Data ss:Type="String">シーグリーン</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H669933</Data></Cell>
+    <Cell ss:StyleID="s50"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">21</Data></Cell>
+    <Cell><Data ss:Type="Number">42</Data></Cell>
+    <Cell><Data ss:Type="String">アクア</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HCCCC33</Data></Cell>
+    <Cell ss:StyleID="s51"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">22</Data></Cell>
+    <Cell><Data ss:Type="Number">41</Data></Cell>
+    <Cell><Data ss:Type="String">薄い青</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFF6633</Data></Cell>
+    <Cell ss:StyleID="s52"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">23</Data></Cell>
+    <Cell><Data ss:Type="Number">13</Data></Cell>
+    <Cell><Data ss:Type="String">紫</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H800080</Data></Cell>
+    <Cell ss:StyleID="s53"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">24</Data></Cell>
+    <Cell><Data ss:Type="Number">48</Data></Cell>
+    <Cell><Data ss:Type="String">40%灰色</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H969696</Data></Cell>
+    <Cell ss:StyleID="s54"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">25</Data></Cell>
+    <Cell><Data ss:Type="Number">7</Data></Cell>
+    <Cell><Data ss:Type="String">ピンク</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFF00FF</Data></Cell>
+    <Cell ss:StyleID="s55"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">26</Data></Cell>
+    <Cell><Data ss:Type="Number">44</Data></Cell>
+    <Cell><Data ss:Type="String">ゴールド</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H00CCFF</Data></Cell>
+    <Cell ss:StyleID="s56"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">27</Data></Cell>
+    <Cell><Data ss:Type="Number">6</Data></Cell>
+    <Cell><Data ss:Type="String">黄</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H00FFFF</Data></Cell>
+    <Cell ss:StyleID="s57"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">28</Data></Cell>
+    <Cell><Data ss:Type="Number">4</Data></Cell>
+    <Cell><Data ss:Type="String">明るい緑</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H00FF00</Data></Cell>
+    <Cell ss:StyleID="s58"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">29</Data></Cell>
+    <Cell><Data ss:Type="Number">8</Data></Cell>
+    <Cell><Data ss:Type="String">水色</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFFFF00</Data></Cell>
+    <Cell ss:StyleID="s59"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">30</Data></Cell>
+    <Cell><Data ss:Type="Number">33</Data></Cell>
+    <Cell><Data ss:Type="String">スカイブルー</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFFCC00</Data></Cell>
+    <Cell ss:StyleID="s60"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">31</Data></Cell>
+    <Cell><Data ss:Type="Number">54</Data></Cell>
+    <Cell><Data ss:Type="String">プラム</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H663399</Data></Cell>
+    <Cell ss:StyleID="s61"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">32</Data></Cell>
+    <Cell><Data ss:Type="Number">15</Data></Cell>
+    <Cell><Data ss:Type="String">25%灰色</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HC0C0C0</Data></Cell>
+    <Cell ss:StyleID="s62"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">33</Data></Cell>
+    <Cell><Data ss:Type="Number">38</Data></Cell>
+    <Cell><Data ss:Type="String">ローズ</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HCC99FF</Data></Cell>
+    <Cell ss:StyleID="s63"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">34</Data></Cell>
+    <Cell><Data ss:Type="Number">40</Data></Cell>
+    <Cell><Data ss:Type="String">ベージュ</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H99CCFF</Data></Cell>
+    <Cell ss:StyleID="s64"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">35</Data></Cell>
+    <Cell><Data ss:Type="Number">36</Data></Cell>
+    <Cell><Data ss:Type="String">薄い黄</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;H99FFFF</Data></Cell>
+    <Cell ss:StyleID="s65"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">36</Data></Cell>
+    <Cell><Data ss:Type="Number">35</Data></Cell>
+    <Cell><Data ss:Type="String">薄い緑</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HCCFFCC</Data></Cell>
+    <Cell ss:StyleID="s66"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">37</Data></Cell>
+    <Cell><Data ss:Type="Number">34</Data></Cell>
+    <Cell><Data ss:Type="String">薄い水色</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFFFFCC</Data></Cell>
+    <Cell ss:StyleID="s67"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">38</Data></Cell>
+    <Cell><Data ss:Type="Number">37</Data></Cell>
+    <Cell><Data ss:Type="String">ペールブルー</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFFCC99</Data></Cell>
+    <Cell ss:StyleID="s68"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">39</Data></Cell>
+    <Cell><Data ss:Type="Number">39</Data></Cell>
+    <Cell><Data ss:Type="String">ラベンダー</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFF99CC</Data></Cell>
+    <Cell ss:StyleID="s69"/>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">40</Data></Cell>
+    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="String">白</Data></Cell>
+    <Cell><Data ss:Type="String">&amp;HFFFFFF</Data></Cell>
+    <Cell ss:StyleID="s70"/>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Selected/>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
