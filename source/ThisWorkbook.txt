@@ -41,5 +41,7 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
     Call Application.OnKey("+^{v}")
     Call Application.OnKey("{BS}")
     Call Application.OnKey("^6")
+    Call Application.OnKey("{F3}")
+    Call Application.OnKey("+{F3}")
 End Sub
 

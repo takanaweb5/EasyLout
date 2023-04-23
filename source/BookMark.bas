@@ -106,16 +106,15 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub NextOrPrevBookmark(ByVal xlDirection As XlSearchDirection)
+    '[Shift]または[Ctrl]Keyが押下されていれば、逆方向に検索
     If xlDirection = xlNext Then
-        '[Shift]または[Ctrl]Keyが押下されていれば、前方に移動
-        If GetKeyState(vbKeyShift) < 0 Or GetKeyState(vbKeyControl) < 0 Then
+        If FPressKey <> 0 Then
             Call JumpBookmark(xlPrevious)
         Else
             Call JumpBookmark(xlNext)
         End If
     Else
-        '[Shift]または[Ctrl]Keyが押下されていれば、後方に移動
-        If GetKeyState(vbKeyShift) < 0 Or GetKeyState(vbKeyControl) < 0 Then
+        If FPressKey <> 0 Then
             Call JumpBookmark(xlNext)
         Else
             Call JumpBookmark(xlPrevious)
@@ -434,19 +433,39 @@ End Function
 '[引数] 検索方向
 '[戻値] なし
 '*****************************************************************************
-Private Sub FindNext(ByVal xlDirection As XlSearchDirection)
+Private Sub FindNext()
+    FPressKey = 0
+    Call FindNextOrPrev(xlNext)
+End Sub
+
+'*****************************************************************************
+'[概要] 次を検索
+'[引数] 検索方向
+'[戻値] なし
+'*****************************************************************************
+Private Sub FindPrev()
+    FPressKey = 0
+    Call FindNextOrPrev(xlPrevious)
+End Sub
+
+'*****************************************************************************
+'[概要] 次または前を検索
+'[引数] 検索方向
+'[戻値] なし
+'*****************************************************************************
+Private Sub FindNextOrPrev(ByVal xlDirection As XlSearchDirection)
 On Error GoTo ErrHandle
     Dim objCell As Range
     
     '[Shift]または[Ctrl]Keyが押下されていれば、逆方向に検索
     If xlDirection = xlNext Then
-        If GetKeyState(vbKeyShift) < 0 Or GetKeyState(vbKeyControl) < 0 Then
+        If FPressKey <> 0 Then
             Set objCell = Cells.FindPrevious(ActiveCell)
         Else
             Set objCell = Cells.FindNext(ActiveCell)
         End If
     Else
-        If GetKeyState(vbKeyShift) < 0 Or GetKeyState(vbKeyControl) < 0 Then
+        If FPressKey <> 0 Then
             Set objCell = Cells.FindNext(ActiveCell)
         Else
             Set objCell = Cells.FindPrevious(ActiveCell)

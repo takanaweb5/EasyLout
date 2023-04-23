@@ -403,6 +403,8 @@ End Sub
 '[イベント] onAction
 '*****************************************************************************
 Private Sub onAction(Control As IRibbonControl)
+    'キーの再定義 Excelのバグ?でキーが無効になることがあるため
+    Call SetKeys
     Call SetChkBox
     
     FCommand = GetValue(Control.ID, "Action")
