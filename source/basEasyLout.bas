@@ -726,7 +726,15 @@ Sub gallery_onAction(Control As IRibbonControl, itemID As String, Index As Integ
     Select Case Control.ID
     Case "G621"
         FBMarkColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(Index + 1, 1).Value
+        If TypeOf Selection Is Range Then
+            With Selection.Interior
+                .Color = FBMarkColor
+                .Pattern = xlSolid
+                .PatternColor = C_PatternColor
+            End With
+        End If
         Call GetRibbonUI.InvalidateControl("B621")
+        Call GetRibbonUI.InvalidateControl("C2")
     Case "G631"
         FFillColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(Index + 1, 1).Value
         Call FillColor
