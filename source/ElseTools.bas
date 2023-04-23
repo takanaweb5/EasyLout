@@ -1674,8 +1674,8 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
         .Weight = DPIRatio
         .DashStyle = msoLineSolid
         .Style = msoLineSingle
-        .ForeColor.Rgb = 0
-        .BackColor.Rgb = Rgb(255, 255, 255)
+        .ForeColor.RGB = 0
+        .BackColor.RGB = RGB(255, 255, 255)
     End With
     With objRange
         If .Borders(xlEdgeTop).LineStyle = xlNone Or _
@@ -1767,8 +1767,8 @@ Private Function ChangeCommentToTextbox(ByRef objCell As Range) As Shape
         .Weight = DPIRatio
         .DashStyle = msoLineSolid
         .Style = msoLineSingle
-        .ForeColor.Rgb = 0
-        .BackColor.Rgb = Rgb(255, 255, 255)
+        .ForeColor.RGB = 0
+        .BackColor.RGB = RGB(255, 255, 255)
         .Visible = msoTrue
     End With
     
@@ -2166,9 +2166,6 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Public Sub SetOnUndo()
-    'キーの再定義 Excelのバグ?でキーが無効になることがあるため
-    Call SetKeys
-
     Call clsUndoObject.SetOnUndo
     Call Application.OnTime(Now(), "SetOnRepeat")
 End Sub
@@ -2611,12 +2608,14 @@ End Sub
 Public Sub SetKeys()
 On Error GoTo ErrHandle
     Dim strOption As String
-    Dim blnKeys(1 To 4) As Boolean
+    Dim blnKeys(1 To 6) As Boolean
     
     blnKeys(1) = GetSetting(REGKEY, "KEY", "OpenEdit", True)
     blnKeys(2) = GetSetting(REGKEY, "KEY", "CopyText", True)
     blnKeys(3) = GetSetting(REGKEY, "KEY", "PasteText", True)
     blnKeys(4) = GetSetting(REGKEY, "KEY", "BackSpace", True)
+    blnKeys(5) = GetSetting(REGKEY, "KEY", "FindNext", True)
+    blnKeys(6) = GetSetting(REGKEY, "KEY", "FindPrev", True)
     
     If blnKeys(1) = True Then
         Call Application.OnKey("+{F2}", "OpenEdit")
@@ -2640,6 +2639,18 @@ On Error GoTo ErrHandle
         Call Application.OnKey("{BS}", "PressBackSpace")
     Else
         Call Application.OnKey("{BS}")
+    End If
+
+    If blnKeys(5) = True Then
+        Call Application.OnKey("{F3}", "FindNext")
+    Else
+        Call Application.OnKey("{F3}")
+    End If
+
+    If blnKeys(6) = True Then
+        Call Application.OnKey("+{F3}", "FindPrev")
+    Else
+        Call Application.OnKey("+{F3}")
     End If
 
     Call Application.OnKey("+ ", "SelectRow")
