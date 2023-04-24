@@ -2,7 +2,7 @@ Attribute VB_Name = "BookMark"
 Option Explicit
 Option Private Module
 
-Public Const C_PatternColor = &H123456  '‰½‚Å‚à—Ç‚¢(Œˆ‚ß‚Ì–â‘è‚¾‚¯)
+Public Const C_PatternColor = &H800080  '‰½‚Å‚à—Ç‚¢(Œˆ‚ß‚Ì–â‘è‚¾‚¯)
 Public FBMarkColor As Long
 Public FFillColor As Long '“h‚è‚Â‚Ô‚µF
     
