@@ -12,6 +12,7 @@ Public FFillColor As Long 'ìhÇËÇ¬Ç‘ÇµêF
 '[ñﬂíl] Ç»Çµ
 '*****************************************************************************
 Public Sub FillColor()
+On Error GoTo ErrHandle
     Select Case CheckSelection()
     Case E_Range
         Dim objSelection As Range
@@ -35,6 +36,7 @@ Public Sub FillColor()
     
     Selection.Interior.Color = FFillColor
     Call SetOnUndo
+ErrHandle:
     Call GetRibbonUI.InvalidateControl("B631")
 End Sub
 

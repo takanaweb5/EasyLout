@@ -411,12 +411,15 @@ Private Sub onAction(Control As IRibbonControl)
     FParam = GetValue(Control.ID, "Parameter")
     FPressKey = IIf(GetKeyState(vbKeyShift) < 0, 1, 0) + IIf(GetKeyState(vbKeyControl) < 0, 2, 0)
     
-    On Error Resume Next
+On Error GoTo ErrHandle
     If FParam <> "" Then
         Call Application.Run(FCommand, FParam)
     Else
         Call Application.Run(FCommand)
     End If
+Exit Sub
+ErrHandle:
+    Call MsgBox(Err.Description, vbExclamation)
 End Sub
 
 '*****************************************************************************

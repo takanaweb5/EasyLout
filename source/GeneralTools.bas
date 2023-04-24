@@ -18,9 +18,9 @@ Public Declare PtrSafe Function LoadCursor Lib "user32.dll" Alias "LoadCursorA" 
 Public Declare PtrSafe Function SetCursor Lib "user32.dll" (ByVal hCursor As LongPtr) As LongPtr
 Public Declare PtrSafe Function GetKeyState Lib "user32" (ByVal lngVirtKey As Long) As Integer
 'Public Declare PtrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Longptr, ByVal hwnd As Longptr, ByVal MSG As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As LongPtr, ByVal msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare PtrSafe Function SendMessage Lib "user32.dll" Alias "SendMessageA" (ByVal hwnd As LongPtr, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
 Public Declare PtrSafe Function ImmGetContext Lib "imm32.dll" (ByVal hwnd As LongPtr) As LongPtr
-Public Declare PtrSafe Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As LongPtr, ByVal b As Long) As Long
+Public Declare PtrSafe Function ImmSetOpenStatus Lib "imm32.dll" (ByVal himc As LongPtr, ByVal B As Long) As Long
 Public Declare PtrSafe Function ImmReleaseContext Lib "imm32.dll" (ByVal hwnd As LongPtr, ByVal himc As LongPtr) As Long
 Public Declare PtrSafe Function ReleaseCapture Lib "user32.dll" () As Long
 Public Declare PtrSafe Function GetDeviceCaps Lib "gdi32" (ByVal hDC As LongPtr, ByVal nIndex As Long) As Long
@@ -863,15 +863,7 @@ End Function
 '[戻値] True:単一のセル、False:複数のセル
 '*****************************************************************************
 Public Function IsOnlyCell(ByRef objRange As Range) As Boolean
-    If objRange.Areas.Count > 1 Then
-        Exit Function
-    End If
-    If objRange.Count = 1 Then
-        IsOnlyCell = True
-        Exit Function
-    End If
-    
-    IsOnlyCell = (objRange.Address = objRange(1, 1).MergeArea.Address)
+    IsOnlyCell = (objRange.Address(0, 0) = objRange(1, 1).MergeArea.Address(0, 0))
 End Function
 
 '*****************************************************************************
