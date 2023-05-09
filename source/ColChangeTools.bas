@@ -808,7 +808,7 @@ On Error GoTo ErrHandle
             '•¡”‚ÌƒZƒ‹‚É’l‚ª‚ ‚éŽž˜AŒ‹‚·‚é
             Set objMergeCell = objRange.Rows(i)
             If WorksheetFunction.CountA(objMergeCell) > 1 Then
-                strValues = Replace$(GetRangeText(objMergeCell), vbTab, " ")
+                strValues = Replace$(GetRangeText(objMergeCell), vbTab, GetSetting(REGKEY, "KEY", "Delimiter", " "))
             Else
                 strValues = ""
             End If

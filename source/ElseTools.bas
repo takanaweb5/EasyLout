@@ -191,7 +191,7 @@ Private Sub MergeArea(ByRef objRange As Range)
     '**************************************
     '各行の文字列を改行で、各列の文字列を空白で区切って連結する
     '**************************************
-    strValues = Replace$(GetRangeText(objRange), vbTab, " ")
+    strValues = Replace$(GetRangeText(objRange), vbTab, GetSetting(REGKEY, "KEY", "Delimiter", " "))
     
     '**************************************
     'セルを結合して値を設定

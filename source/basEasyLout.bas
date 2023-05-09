@@ -64,7 +64,7 @@ Private Sub CreateTmpCommandBar(ByRef Ribbon As IRibbonUI)
     
     With objCmdBar.Controls.Add(msoControlButton)
         .Tag = "C2" & ThisWorkbook.Name
-        .State = False '初期設定はチェックなし
+        .State = True '初期設定はチェックあり
     End With
     With objCmdBar.Controls.Add(msoControlButton)
         .Tag = "FillColor" & ThisWorkbook.Name
@@ -689,7 +689,7 @@ End Sub
 Sub getItemID(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
     Dim lngColorIndex As Long
     lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
-    returnedVal = Control.ID & "_I" & Format(lngColorIndex, "00")  ' IDは重複してはいけない
+    returnedVal = Control.ID & "_I" & Format(lngColorIndex, "00") 'IDは重複してはいけない
 End Sub
 
 '*****************************************************************************
@@ -709,9 +709,9 @@ Sub getItemSupertip(Control As IRibbonControl, Index As Integer, ByRef returnedV
                                                  & Mid(.Columns(4), 5, 2) _
                                                  & Mid(.Columns(4), 3, 2)
             End With
-        Case 46, 47 '塗りつぶしのみ
+        Case 46, 47
             returnedVal = "無効"
-        Case Else '塗りつぶしのみ
+        Case Else
             Dim Keys() As Variant
             Keys = FPickupColors.Keys
             returnedVal = GetColorHex(Keys(Index - 48))

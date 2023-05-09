@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmOption 
    Caption         =   "ƒIƒvƒVƒ‡ƒ“"
-   ClientHeight    =   2904
+   ClientHeight    =   4188
    ClientLeft      =   48
    ClientTop       =   336
    ClientWidth     =   4980
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Option Explicit
 
 '*****************************************************************************
@@ -26,6 +27,8 @@ Private Sub UserForm_Initialize()
     chkCheck4 = GetSetting(REGKEY, "KEY", "BackSpace", True)
     chkCheck5 = GetSetting(REGKEY, "KEY", "FindNext", True)
     chkCheck6 = GetSetting(REGKEY, "KEY", "FindPrev", True)
+    txtFont.Text = GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT)
+    txtDelimiter.Text = GetSetting(REGKEY, "KEY", "Delimiter", " ")
 End Sub
 
 '*****************************************************************************
@@ -39,6 +42,8 @@ Private Sub cmdOK_Click()
     Call SaveSetting(REGKEY, "KEY", "BackSpace", chkCheck4)
     Call SaveSetting(REGKEY, "KEY", "FindNext", chkCheck5)
     Call SaveSetting(REGKEY, "KEY", "FindPrev", chkCheck6)
+    Call SaveSetting(REGKEY, "KEY", "FontName", txtFont.Text)
+    Call SaveSetting(REGKEY, "KEY", "Delimiter", txtDelimiter.Text)
     Call Unload(Me)
 End Sub
 
