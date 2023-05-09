@@ -122,7 +122,7 @@
  </box>
  <buttonGroup id="buttonGroup61">
   <button id="B621" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <gallery id="G621" showItemLabel="false" columns="8" invalidateContentOnDrop="true" onAction="basEasyLout.gallery_onAction"
+  <gallery id="G621" showItemLabel="false" columns="8" invalidateContentOnDrop="false" onAction="basEasyLout.gallery_onAction"
    getItemWidth="basEasyLout.getItemWidth"
    getItemHeight="basEasyLout.getItemHeight"
    getItemCount="basEasyLout.getItemCount"

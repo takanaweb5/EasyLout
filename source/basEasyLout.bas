@@ -14,6 +14,15 @@ Public Enum EPressKey
     E_ShiftAndCtrl = 3
 End Enum
 
+Public Enum EValueType
+    E_FillColor
+    E_BMarkColor
+End Enum
+
+Private FValues As Variant
+Private FIcons(0 To 47) As IPicture
+Private FPickupColors As Object
+
 '*****************************************************************************
 '[イベント] onLoad
 '*****************************************************************************
@@ -21,18 +30,17 @@ Private Sub onLoad(Ribbon As IRibbonUI)
     'リボンUIをテンポラリのコマンドバーに保存する
     '(モジュール変数に保存した場合は、例外やコードの強制停止で値が損なわれるため)
     Call CreateTmpCommandBar(Ribbon)
-    Call SetDefaultColor
 End Sub
 
-'*****************************************************************************
-'[概要] 塗りつぶしのデフォルト色を設定
-'[引数] なし
-'[戻値] なし
-'*****************************************************************************
-Private Sub SetDefaultColor()
-    FFillColor = rgbYellow
-    FBMarkColor = &HFFFFCC '薄い水色
-End Sub
+''*****************************************************************************
+''[概要] 塗りつぶしのデフォルト色を設定
+''[引数] なし
+''[戻値] なし
+''*****************************************************************************
+'Private Sub SetDefaultColor()
+'    FillColor = rgbYellow
+'    BMarkColor = &HFFFFCC '薄い水色
+'End Sub
 
 '*****************************************************************************
 '[概要] IRibbonUIを保存するCommandBarを作成する
@@ -58,6 +66,14 @@ Private Sub CreateTmpCommandBar(ByRef Ribbon As IRibbonUI)
         .Tag = "C2" & ThisWorkbook.Name
         .State = False '初期設定はチェックなし
     End With
+    With objCmdBar.Controls.Add(msoControlButton)
+        .Tag = "FillColor" & ThisWorkbook.Name
+        .Parameter = rgbYellow
+    End With
+    With objCmdBar.Controls.Add(msoControlButton)
+        .Tag = "BMarkColor" & ThisWorkbook.Name
+        .Parameter = &HFFFFCC   '薄い水色
+    End With
 End Sub
 
 '*****************************************************************************
@@ -82,6 +98,20 @@ End Function
 '*****************************************************************************
 Public Function GetTmpControl(ByVal strId As String) As CommandBarControl
     Set GetTmpControl = CommandBars.FindControl(, , strId & ThisWorkbook.Name)
+End Function
+
+'*****************************************************************************
+'[概要] 保存した値を取得する
+'[引数] 値のタイプ
+'[戻値] 保存した色
+'*****************************************************************************
+Public Function FColor(ByVal eType As EValueType) As Long
+    Select Case eType
+    Case E_FillColor
+        FColor = CommandBars.FindControl(, , "FillColor" & ThisWorkbook.Name).Parameter
+    Case E_BMarkColor
+        FColor = CommandBars.FindControl(, , "BMarkColor" & ThisWorkbook.Name).Parameter
+    End Select
 End Function
 
 '*****************************************************************************
@@ -128,9 +158,9 @@ Private Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
     Case "B632" '選択セルの色を取得
         Select Case CheckSelection()
         Case E_Range
-            returnedVal = IsOnlyColorCell()
+            returnedVal = IsOnlyColor()
         Case E_Shape
-            returnedVal = IsOnlyColorShape()
+            returnedVal = IsOnlyColor()
         Case Else
             returnedVal = False
         End Select
@@ -140,25 +170,16 @@ Private Sub getEnabled(Control As IRibbonControl, ByRef returnedVal)
 End Sub
 
 '*****************************************************************************
-'[概要] 選択されているセルが同一色で、塗りつぶしありかどうか
+'[概要] 選択されているセル(図形)が同一色で、塗りつぶしありかどうか
 '[引数] なし
 '[戻値] True:条件を満たすとき
 '*****************************************************************************
-Private Function IsOnlyColorCell() As Boolean
-    IsOnlyColorCell = (GetColor(Selection.Interior) <> xlNone)
-End Function
-
-'*****************************************************************************
-'[概要] 選択されている図形が同一色で、塗りつぶしありかどうか
-'[引数] なし
-'[戻値] True:条件を満たすとき
-'*****************************************************************************
-Private Function IsOnlyColorShape() As Boolean
+Private Function IsOnlyColor() As Boolean
 On Error GoTo ErrHandle
-    IsOnlyColorShape = (GetColor(Selection.Interior) <> xlNone)
+    IsOnlyColor = (GetColor(Selection.Interior) <> xlNone)
     Exit Function
 ErrHandle:
-    IsOnlyColorShape = False
+    IsOnlyColor = False
 End Function
 
 '*****************************************************************************
@@ -209,6 +230,7 @@ Private Sub getLabel(Control As IRibbonControl, ByRef returnedVal)
     Case "B5311"
         returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
     Case "B632"
+'        returnedVal = "選択セル(図形)の色を取得"
         If CheckSelection() = E_Shape Then
             returnedVal = "選択図形の色を取得"
         Else
@@ -226,9 +248,9 @@ Private Sub getScreentip(Control As IRibbonControl, ByRef returnedVal)
     Case "B5311"
         returnedVal = Replace(returnedVal, "{FONTNAME}", GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT))
     Case "B621"
-        returnedVal = Replace(returnedVal, "{COLOR}", GetColorStr(FBMarkColor))
+        returnedVal = Replace(returnedVal, "{COLOR}", GetColorStr(FColor(E_BMarkColor)))
     Case "B631"
-        returnedVal = Replace(returnedVal, "{COLOR}", GetColorStr(FFillColor))
+        returnedVal = Replace(returnedVal, "{COLOR}", Trim(GetColorStr(FColor(E_FillColor)) & " " & GetColorHex(FColor(E_FillColor))))
     End Select
 End Sub
 
@@ -251,18 +273,23 @@ End Sub
 Private Function GetColorStr(ByVal lngRGB As Long) As String
     Dim lngColor As Long
     Dim i As Long
-    For i = 1 To 40
-        lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(i, 1).Value
+    For i = 1 To 46
+        lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i, 1).Value
         If lngRGB = lngColor Then
-            GetColorStr = ThisWorkbook.Worksheets("Color").Range("C2:C41").Cells(i, 1).Value
+            GetColorStr = ThisWorkbook.Worksheets("Color").Range("C2:C47").Cells(i, 1).Value
             Exit Function
         End If
     Next
-    
-    '見つからなかった時は16進数
-    GetColorStr = "#" & WorksheetFunction.Dec2Hex(lngRGB, 6)
 End Function
 
+'*****************************************************************************
+'[概要] RGB値を色を表現する16進表現を取得
+'[引数] RGB値
+'[戻値] 例：#FFCC00
+'*****************************************************************************
+Private Function GetColorHex(ByVal lngRGB As Long) As String
+    GetColorHex = "#" & WorksheetFunction.Dec2Hex(BGR2RGB(lngRGB), 6)
+End Function
 
 '*****************************************************************************
 '[イベント] getShowImage
@@ -315,7 +342,7 @@ Private Function CreateColorImage() As IPicture
     Dim lngColor As Long
     ReDim Pixels(1 To ICONSIZE, 1 To ICONSIZE) As Long
     Dim x As Long, y As Long
-    lngColor = BGR2RGB(FFillColor) + &HFF000000 '該当色 + α(不透明)
+    lngColor = BGR2RGB(FColor(E_FillColor)) + &HFF000000  '該当色 + α(不透明)
     For y = 2 To ICONSIZE - 1
         For x = 2 To ICONSIZE - 1
             If (x = 2) Or (x = ICONSIZE - 1) Or (y = 2) Or (y = ICONSIZE - 1) Then
@@ -342,7 +369,7 @@ End Sub
 '*****************************************************************************
 '[イベント] getContent 動的にメニューを作成する
 '*****************************************************************************
-Private Sub getContent(Control As IRibbonControl, ByRef returnedVal) '
+Private Sub getContent(Control As IRibbonControl, ByRef returnedVal)
 On Error Resume Next
     Select Case Control.ID
     Case "M31"
@@ -442,18 +469,17 @@ Private Function GetValue(ByVal ID As String, ByVal strCol As String) As Variant
     
     GetValue = ""
     
-    Static vValues As Variant
-    If VarType(vValues) = vbEmpty Then
-        vValues = ThisWorkbook.Worksheets("Commands").UsedRange
+    If VarType(FValues) = vbEmpty Then
+        FValues = ThisWorkbook.Worksheets("Commands").UsedRange
     End If
         
     '列数LOOP
-    For x = 1 To UBound(vValues, 2)
-        If vValues(1, x) = strCol Then
+    For x = 1 To UBound(FValues, 2)
+        If FValues(1, x) = strCol Then
             '行数LOOP
-            For y = 2 To UBound(vValues, 1)
-                If vValues(y, 3) = ID Then
-                    GetValue = vValues(y, x)
+            For y = 2 To UBound(FValues, 1)
+                If FValues(y, 3) = ID Then
+                    GetValue = FValues(y, x)
                     Exit Function
                 End If
             Next
@@ -570,15 +596,15 @@ End Sub
 '*****************************************************************************
 '[イベント] getItemWidth
 '*****************************************************************************
-Sub getItemWidth(Control As IRibbonControl, ByRef Width)
-    Width = C_ICONSIZE
+Sub getItemWidth(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = C_ICONSIZE
 End Sub
 
 '*****************************************************************************
 '[イベント] getItemHeight
 '*****************************************************************************
-Sub getItemHeight(Control As IRibbonControl, ByRef Height)
-    Height = C_ICONSIZE
+Sub getItemHeight(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = C_ICONSIZE
 End Sub
 
 '*****************************************************************************
@@ -596,8 +622,8 @@ Sub getSelectedItemIndex(Control As IRibbonControl, ByRef returnedVal)
         Dim lngColor As Long
         Dim i As Long
         For i = 0 To 39
-            lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(i + 1, 1).Value
-            If lngColor = FBMarkColor Then
+            lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i + 1, 1).Value
+            If lngColor = FColor(E_BMarkColor) Then
                 returnedVal = i
                 Exit Sub
             End If
@@ -610,7 +636,7 @@ Sub getSelectedItemIndex(Control As IRibbonControl, ByRef returnedVal)
 '        If VarType(objInterior.ColorIndex) <> vbNull Then
 '            Dim i As Long
 '            For i = 1 To 40
-'                If objInterior.ColorIndex = ThisWorkbook.Worksheets("Color").Range("B2:B41").Cells(i, 1).Value Then
+'                If objInterior.ColorIndex = ThisWorkbook.Worksheets("Color").Range("B2:B47").Cells(i, 1).Value Then
 '                    If objInterior.Color - ActiveWorkbook.Colors(objInterior.ColorIndex) = 0 Then
 '                        index = i - 1
 '                        Exit Sub
@@ -628,43 +654,82 @@ End Sub
 '*****************************************************************************
 '[イベント] getItemCount
 '*****************************************************************************
-Sub getItemCount(Control As IRibbonControl, ByRef Count)
-    Count = 40
-    Call GetRibbonUI.InvalidateControl("B632")
+Sub getItemCount(Control As IRibbonControl, ByRef returnedVal)
+    If FIcons(0) Is Nothing Then
+        Dim lngColorIndex As Long
+        Dim i As Long
+        For i = 0 To 45
+            lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(i + 2, 2)
+            Set FIcons(i) = GetColorPicture(ActiveWorkbook.Colors(lngColorIndex))
+        Next
+        '無効用の透明アイコンの作成
+        Dim Pixels(1 To C_ICONSIZE, 1 To C_ICONSIZE) As Long
+        Dim objGdip As New CGdiplus
+        Call objGdip.CreateFromPixels(Pixels())
+        Set FIcons(46) = objGdip.ToIPicture
+        Set FIcons(47) = objGdip.ToIPicture
+    End If
+    
+    Select Case Control.ID
+    Case "G621"
+        returnedVal = 46
+    Case "G631"
+        If FPickupColors Is Nothing Then
+            returnedVal = 46
+        Else
+            returnedVal = 48 + FPickupColors.Count
+        End If
+        Call GetRibbonUI.InvalidateControl("B632")
+    End Select
 End Sub
 
 '*****************************************************************************
 '[イベント] getItemID
 '*****************************************************************************
-Sub getItemID(Control As IRibbonControl, Index As Integer, ByRef itemID)
+Sub getItemID(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
     Dim lngColorIndex As Long
     lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
-    itemID = Control.ID & "_I" & Format(lngColorIndex, "00")  ' IDは重複してはいけない
+    returnedVal = Control.ID & "_I" & Format(lngColorIndex, "00")  ' IDは重複してはいけない
 End Sub
 
 '*****************************************************************************
 '[イベント] getItemSupertip
 '*****************************************************************************
 Sub getItemSupertip(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
-'    If index >= 40 Then Exit Sub
-    Dim lngColorIndex As Long
-    lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
-    If ActiveWorkbook.Colors(lngColorIndex) - ThisWorkbook.Worksheets("Color").Cells(Index + 2, 4) = 0 Then
-        returnedVal = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 3)
-    Else
-        returnedVal = "カスタマイズされた色"
-    End If
+    Select Case Control.ID
+    Case "G621"
+        With ThisWorkbook.Worksheets("Color").Rows(Index + 2)
+            returnedVal = .Columns(3)
+        End With
+    Case "G631"
+        Select Case Index
+        Case 0 To 45
+            With ThisWorkbook.Worksheets("Color").Rows(Index + 2)
+                returnedVal = .Columns(3) & " #" & Mid(.Columns(4), 7, 2) _
+                                                 & Mid(.Columns(4), 5, 2) _
+                                                 & Mid(.Columns(4), 3, 2)
+            End With
+        Case 46, 47 '塗りつぶしのみ
+            returnedVal = "無効"
+        Case Else '塗りつぶしのみ
+            Dim Keys() As Variant
+            Keys = FPickupColors.Keys
+            returnedVal = GetColorHex(Keys(Index - 48))
+        End Select
+    End Select
 End Sub
 
 '*****************************************************************************
 '[イベント] getItemImage
 '*****************************************************************************
-Sub getItemImage(Control As IRibbonControl, Index As Integer, ByRef image)
+Sub getItemImage(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
     Select Case Index
-    Case 0 To 39
-        Dim lngColorIndex As Long
-        lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
-        Set image = GetColorPicture(ActiveWorkbook.Colors(lngColorIndex))
+    Case 0 To 47
+        Set returnedVal = FIcons(Index)
+    Case Else
+        Dim Items() As Variant
+        Items = FPickupColors.Items
+        Set returnedVal = Items(Index - 48)
     End Select
 End Sub
 
@@ -728,10 +793,10 @@ End Function
 Sub gallery_onAction(Control As IRibbonControl, itemID As String, Index As Integer)
     Select Case Control.ID
     Case "G621"
-        FBMarkColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(Index + 1, 1).Value
+        GetTmpControl("BMarkColor").Parameter = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(Index + 1, 1).Value
         If TypeOf Selection Is Range Then
             With Selection.Interior
-                .Color = FBMarkColor
+                .Color = FColor(E_BMarkColor)
                 .Pattern = xlSolid
                 .PatternColor = C_PatternColor
             End With
@@ -739,8 +804,17 @@ Sub gallery_onAction(Control As IRibbonControl, itemID As String, Index As Integ
         Call GetRibbonUI.InvalidateControl("B621")
         Call GetRibbonUI.InvalidateControl("C2")
     Case "G631"
-        FFillColor = ThisWorkbook.Worksheets("Color").Range("D2:D41").Cells(Index + 1, 1).Value
-        Call FillColor
+        Select Case Index
+        Case 0 To 45
+            GetTmpControl("FillColor").Parameter = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(Index + 1, 1).Value
+            Call FillColor
+        Case 46, 47
+        Case Else
+            Dim Keys() As Variant
+            Keys = FPickupColors.Keys
+            GetTmpControl("FillColor").Parameter = Keys(Index - 48)
+            Call FillColor
+        End Select
     End Select
 End Sub
 
@@ -750,8 +824,29 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub PickupColor()
-    FFillColor = Selection.Interior.Color
+    GetTmpControl("FillColor").Parameter = Selection.Interior.Color
     Call GetRibbonUI.InvalidateControl("B631")
+    
+    Dim i As Long
+    Dim lngColor As Long
+    Dim lngFillColor As Long
+    lngFillColor = FColor(E_FillColor)
+    For i = 1 To 46
+        lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i, 1).Value
+        If lngFillColor = lngColor Then
+            Exit Sub
+        End If
+    Next
+    
+    If FPickupColors Is Nothing Then
+        Set FPickupColors = CreateObject("Scripting.Dictionary")
+    End If
+    
+    If FPickupColors.Exists(lngFillColor) Then
+        Exit Sub
+    End If
+    
+    Call FPickupColors.Add(lngFillColor, GetColorPicture(lngFillColor))
 End Sub
 
 '*****************************************************************************
@@ -763,6 +858,7 @@ Private Sub onAction2(Control As IRibbonControl)
     If C_DEBUG Then
         Select Case Control.ID
         Case "Bdmy1"
+            FValues = Empty
             Call GetRibbonUI.Invalidate
         Case "Bdmy2"
             ThisWorkbook.IsAddin = Not ThisWorkbook.IsAddin
@@ -804,5 +900,4 @@ End Sub
 'Sub LoadIcon()
 '    Call LoadBinaryFile("FindNext.png", ThisWorkbook.Worksheets("Resource").Range("A70"))
 'End Sub
-
 

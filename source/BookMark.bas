@@ -3,8 +3,8 @@ Option Explicit
 Option Private Module
 
 Public Const C_PatternColor = &H800080  '何でも良い(決めの問題だけ)
-Public FBMarkColor As Long
-Public FFillColor As Long '塗りつぶし色
+'Public FBMarkColor As Long
+'Public FFillColor As Long '塗りつぶし色
     
 '*****************************************************************************
 '[概要] 選択セル(または図形)の塗りつぶし
@@ -34,7 +34,7 @@ On Error GoTo ErrHandle
         Selection.Interior.ColorIndex = xlNone
     End Select
     
-    Selection.Interior.Color = FFillColor
+    Selection.Interior.Color = FColor(E_FillColor)
     Call SetOnUndo
 ErrHandle:
     Call GetRibbonUI.InvalidateControl("B631")
@@ -93,7 +93,7 @@ On Error GoTo ErrHandle
     End With
     
     With objRange.Interior
-        .Color = FBMarkColor
+        .Color = FColor(E_BMarkColor)
         .Pattern = xlSolid
         .PatternColor = C_PatternColor
     End With
@@ -281,7 +281,9 @@ On Error GoTo ErrHandle
     Dim j2 As Long
     Dim objRange As Range
     Dim objActiveSheetRange As Range
-    Dim colRange As Collection
+    Dim colRange  As Collection
+    Dim colRange2 As Collection
+    Dim lngActiveIdx As Long
     
     Application.FindFormat.Clear
     With Application.FindFormat.Interior
@@ -298,23 +300,27 @@ On Error GoTo ErrHandle
             Exit Sub
         End If
     End If
+     
+    '複数セルを選択している時
+    If Not IsOnlyCell(Selection) Then
+        Set objRange = IntersectRange(Selection, objActiveSheetRange)
+        If Not (objRange Is Nothing) Then
+            Call objRange.Select
+            If MsgBox("選択範囲中の " & objRange.Count & " 個のブックマークを削除します" & vbLf & "よろしいですか？", vbOKCancel + vbQuestion) <> vbCancel Then
+                ArrangeRange(objRange).Interior.ColorIndex = xlNone
+            End If
+            Application.FindFormat.Clear
+            Exit Sub
+        End If
+    End If
     
+    Set colRange = New Collection
     'アクティブシートのみ対象の時
     If GetTmpControl("C2").State = False Then
-        '複数セルを選択している時
-        If Not IsOnlyCell(Selection) Then
-            Set objRange = IntersectRange(Selection, objActiveSheetRange)
-            If Not (objRange Is Nothing) Then
-                If MsgBox("選択範囲中の " & objRange.Count & " 個のブックマークを削除します" & vbLf & "よろしいですか？", vbOKCancel + vbQuestion) <> vbCancel Then
-                    ArrangeRange(objRange).Interior.ColorIndex = xlNone
-                End If
-                Application.FindFormat.Clear
-                Exit Sub
-            End If
-        End If
         j1 = objActiveSheetRange.Count
+        Call colRange.Add(objActiveSheetRange)
+        lngActiveIdx = 1
     Else
-        Set colRange = New Collection
         'すべてのブックマークの数を計算
         For i = 1 To ActiveWorkbook.Worksheets.Count
             If i = ActiveWorkbook.ActiveSheet.Index Then
@@ -325,6 +331,9 @@ On Error GoTo ErrHandle
             If Not (objRange Is Nothing) Then
                 j1 = j1 + objRange.Count
                 Call colRange.Add(objRange)
+                If i = ActiveWorkbook.ActiveSheet.Index Then
+                    lngActiveIdx = colRange.Count
+                End If
             End If
         Next
     End If
@@ -334,29 +343,35 @@ On Error GoTo ErrHandle
         Exit Sub
     End If
     
+    Dim lngColor As Long
+    Dim objCell As Range
     '選択セルが単一のブックマークのセルの時
     If IsOnlyCell(Selection) And _
        Not (IntersectRange(Selection, objActiveSheetRange) Is Nothing) Then
-        '選択セルと同色のブックマークの数を計算
-        Application.FindFormat.Interior.Color = ActiveCell.Interior.Color
-        If GetTmpControl("C2").State = False Then
-            '他のシートを対象としない時
-            Set objActiveSheetRange = GetBookmarks(ActiveWorkbook.ActiveSheet)
-            If Not (objActiveSheetRange Is Nothing) Then
-                j2 = objActiveSheetRange.Count
-            End If
-        Else
-            Set colRange = New Collection
-            For i = 1 To ActiveWorkbook.Worksheets.Count
-                Set objRange = GetBookmarks(ActiveWorkbook.Worksheets(i))
-                If Not (objRange Is Nothing) Then
-                    j2 = j2 + objRange.Count
-                    Call colRange.Add(objRange)
+        lngColor = ActiveCell.Interior.Color
+        
+        Set colRange2 = New Collection
+        For i = 1 To colRange.Count
+            Set objRange = Nothing
+            For Each objCell In colRange(i)
+                If objCell.Interior.Color = lngColor Then
+                    Set objRange = UnionRange(objRange, objCell)
+                    j2 = j2 + 1
                 End If
             Next
-        End If
+            If Not (objRange Is Nothing) Then
+                Call colRange2.Add(objRange)
+                If i = lngActiveIdx Then
+                    Set objActiveSheetRange = objRange
+                End If
+            End If
+        Next
     Else
         j2 = j1
+        Set colRange2 = colRange
+    End If
+    If Not (objActiveSheetRange Is Nothing) Then
+        Call objActiveSheetRange.Select
     End If
     
     '****************************************
@@ -378,15 +393,9 @@ On Error GoTo ErrHandle
     'すべてのブックマークを削除
     '****************************************
     Application.ScreenUpdating = False
-    
-    'アクティブシートのみ対象の時
-    If GetTmpControl("C2").State = False Then
-        ArrangeRange(objActiveSheetRange).Interior.ColorIndex = xlNone
-    Else
-        For Each objRange In colRange
-            ArrangeRange(objRange).Interior.ColorIndex = xlNone
-        Next
-    End If
+    For Each objRange In colRange2
+        ArrangeRange(objRange).Interior.ColorIndex = xlNone
+    Next
 ErrHandle:
     Application.FindFormat.Clear
 End Sub

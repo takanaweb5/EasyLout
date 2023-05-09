@@ -401,6 +401,7 @@ On Error GoTo ErrHandle
  
     With udtUndoInfo
         Call DeleteSheet(.UndoSheet)
+        '重たくなるのはクリップボード監視のapiが原因
         Call objWorksheet.Cells.Copy(.UndoSheet.Cells)
     End With
     Application.CopyObjectsWithCells = blnCopyObjectsWithCells
