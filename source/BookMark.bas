@@ -3,9 +3,7 @@ Option Explicit
 Option Private Module
 
 Public Const C_PatternColor = &H800080  '何でも良い(決めの問題だけ)
-'Public FBMarkColor As Long
-'Public FFillColor As Long '塗りつぶし色
-    
+
 '*****************************************************************************
 '[概要] 選択セル(または図形)の塗りつぶし
 '[引数] なし
@@ -37,7 +35,6 @@ On Error GoTo ErrHandle
     Selection.Interior.Color = FColor(E_FillColor)
     Call SetOnUndo
 ErrHandle:
-    Call GetRibbonUI.InvalidateControl("B631")
 End Sub
 
 '*****************************************************************************
@@ -98,7 +95,7 @@ On Error GoTo ErrHandle
         .PatternColor = C_PatternColor
     End With
 ErrHandle:
-    Call GetRibbonUI.InvalidateControl("B621")
+'    Call GetRibbonUI.InvalidateControl("B621")
     Call GetRibbonUI.InvalidateControl("C2")
 End Sub
 

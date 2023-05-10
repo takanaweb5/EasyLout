@@ -450,6 +450,264 @@ ErrHandle:
 End Sub
 
 '*****************************************************************************
+'[イベント] getItemWidth
+'*****************************************************************************
+Sub getItemWidth(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = C_ICONSIZE
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemHeight
+'*****************************************************************************
+Sub getItemHeight(Control As IRibbonControl, ByRef returnedVal)
+    returnedVal = C_ICONSIZE
+End Sub
+
+'*****************************************************************************
+'[イベント] getSelectedItemID
+'*****************************************************************************
+'Sub getSelectedItemID(Control As IRibbonControl, ByRef returnedVal)
+'End Sub
+
+'*****************************************************************************
+'[イベント] getSelectedItemIndex
+'*****************************************************************************
+Sub getSelectedItemIndex(Control As IRibbonControl, ByRef returnedVal)
+    Select Case Control.ID
+    Case "G621"
+        Dim lngColor As Long
+        Dim i As Long
+        For i = 0 To 39
+            lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i + 1, 1).Value
+            If lngColor = FColor(E_BMarkColor) Then
+                returnedVal = i
+                Exit Sub
+            End If
+        Next
+    Case "G62"
+'        Dim lngColorIndex As Long
+'        Dim objInterior As Interior
+'        Set objInterior = Selection.Interior
+'
+'        If VarType(objInterior.ColorIndex) <> vbNull Then
+'            Dim i As Long
+'            For i = 1 To 40
+'                If objInterior.ColorIndex = ThisWorkbook.Worksheets("Color").Range("B2:B47").Cells(i, 1).Value Then
+'                    If objInterior.Color - ActiveWorkbook.Colors(objInterior.ColorIndex) = 0 Then
+'                        index = i - 1
+'                        Exit Sub
+'                    End If
+'                End If
+'            Next
+'        End If
+'        index = -1
+'        Application.WarnOnFunctionNameConflict = False
+'        Application.GenerateTableRefs = xlGenerateTableRefStruct
+    End Select
+'    Debug.Print index
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemCount
+'*****************************************************************************
+Sub getItemCount(Control As IRibbonControl, ByRef returnedVal)
+    If FIcons(0) Is Nothing Then
+        Dim lngColorIndex As Long
+        Dim i As Long
+        For i = 0 To 45
+            lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(i + 2, 2)
+            Set FIcons(i) = GetColorPicture(ActiveWorkbook.Colors(lngColorIndex))
+        Next
+        '無効用の透明アイコンの作成
+        Dim Pixels(1 To C_ICONSIZE, 1 To C_ICONSIZE) As Long
+        Dim objGdip As New CGdiplus
+        Call objGdip.CreateFromPixels(Pixels())
+        Set FIcons(46) = objGdip.ToIPicture
+        Set FIcons(47) = objGdip.ToIPicture
+    End If
+    
+    Select Case Control.ID
+    Case "G621"
+        returnedVal = 46
+    Case "G631"
+        If FPickupColors Is Nothing Then
+            returnedVal = 46
+        Else
+            returnedVal = 48 + FPickupColors.Count
+        End If
+'        Call GetRibbonUI.InvalidateControl("B632")
+    End Select
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemID
+'*****************************************************************************
+Sub getItemID(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
+    Dim lngColorIndex As Long
+    lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
+    returnedVal = Control.ID & "_I" & Format(lngColorIndex, "00") 'IDは重複してはいけない
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemSupertip
+'*****************************************************************************
+Sub getItemSupertip(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
+    Select Case Control.ID
+    Case "G621"
+        With ThisWorkbook.Worksheets("Color").Rows(Index + 2)
+            returnedVal = .Columns(3)
+        End With
+    Case "G631"
+        Select Case Index
+        Case 0 To 45
+            With ThisWorkbook.Worksheets("Color").Rows(Index + 2)
+                returnedVal = .Columns(3) & " #" & Mid(.Columns(4), 7, 2) _
+                                                 & Mid(.Columns(4), 5, 2) _
+                                                 & Mid(.Columns(4), 3, 2)
+            End With
+        Case 46, 47
+            returnedVal = "無効"
+        Case Else
+            Dim Keys() As Variant
+            Keys = FPickupColors.Keys
+            returnedVal = GetColorHex(Keys(Index - 48))
+        End Select
+    End Select
+End Sub
+
+'*****************************************************************************
+'[イベント] getItemImage
+'*****************************************************************************
+Sub getItemImage(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
+    Select Case Index
+    Case 0 To 47
+        Set returnedVal = FIcons(Index)
+    Case Else
+        Dim Items() As Variant
+        Items = FPickupColors.Items
+        Set returnedVal = Items(Index - 48)
+    End Select
+End Sub
+
+'*****************************************************************************
+'[概要] galleryアイテム用のカラーのイメージを動的に作成する
+'[引数] RGBカラー(例：&HFF0000)
+'[戻値] IPicture
+'*****************************************************************************
+Public Function GetColorPicture(ByVal lngColor As Long) As IPicture
+    Dim Pixels(1 To C_ICONSIZE, 1 To C_ICONSIZE) As Long
+    Dim x As Long, y As Long
+
+    lngColor = BGR2RGB(lngColor) + &HFF000000 '該当色 + α(不透明)
+    For y = 2 To C_ICONSIZE - 1
+        For x = 2 To C_ICONSIZE - 1
+            If (x = 2) Or (x = C_ICONSIZE - 1) Or (y = 2) Or (y = C_ICONSIZE - 1) Then
+                Pixels(y, x) = &HFF808080 '囲い(50%灰色)
+            Else
+                Pixels(y, x) = lngColor
+            End If
+        Next
+    Next
+
+    Dim objGdip As New CGdiplus
+    Call objGdip.CreateFromPixels(Pixels())
+    Set GetColorPicture = objGdip.ToIPicture
+End Function
+
+'*****************************************************************************
+'[概要] BGR -> RGB に変換
+'[引数] BGRカラー(例：&HFF0000)
+'[戻値] RGBカラー(例：&H0000FF)
+'*****************************************************************************
+Private Function BGR2RGB(ByVal lngColor As Long) As Long
+    Dim strBGR As String
+    strBGR = WorksheetFunction.Dec2Hex(lngColor, 6)
+    Dim R As String, G As String, B As String
+    B = Mid(strBGR, 1, 2)
+    G = Mid(strBGR, 3, 2)
+    R = Mid(strBGR, 5, 2)
+    BGR2RGB = "&H" & R & G & B
+End Function
+
+''*****************************************************************************
+''[イベント] getItemLabel
+''*****************************************************************************
+'Sub getItemLabel(Control As IRibbonControl, index As Integer, ByRef returnedVal)
+'    returnedVal = ""
+'End Sub
+'
+''*****************************************************************************
+''[イベント] getItemScreentip
+''*****************************************************************************
+'Sub getItemScreentip(Control As IRibbonControl, index As Integer, ByRef returnedVal)
+'    returnedVal = ""
+'End Sub
+
+'*****************************************************************************
+'[イベント] galleryのアイテムをクリックした時
+'*****************************************************************************
+Sub gallery_onAction(Control As IRibbonControl, itemID As String, Index As Integer)
+    Select Case Control.ID
+    Case "G621"
+        GetTmpControl("BMarkColor").Parameter = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(Index + 1, 1).Value
+        Call GetRibbonUI.InvalidateControl("B621")
+        Call GetRibbonUI.InvalidateControl("C2")
+        If TypeOf Selection Is Range Then
+            With Selection.Interior
+                .Color = FColor(E_BMarkColor)
+                .Pattern = xlSolid
+                .PatternColor = C_PatternColor
+            End With
+        End If
+    Case "G631"
+        Select Case Index
+        Case 0 To 45
+            GetTmpControl("FillColor").Parameter = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(Index + 1, 1).Value
+            Call GetRibbonUI.InvalidateControl("B631")
+            Call FillColor
+        Case 46, 47
+        Case Else
+            Dim Keys() As Variant
+            Keys = FPickupColors.Keys
+            GetTmpControl("FillColor").Parameter = Keys(Index - 48)
+            Call GetRibbonUI.InvalidateControl("B631")
+            Call FillColor
+        End Select
+    End Select
+End Sub
+
+'*****************************************************************************
+'[概要] 選択セル(または図形)の色を取得
+'[引数] なし
+'[戻値] なし
+'*****************************************************************************
+Private Sub PickupColor()
+    GetTmpControl("FillColor").Parameter = Selection.Interior.Color
+    Call GetRibbonUI.InvalidateControl("B631")
+    
+    Dim i As Long
+    Dim lngColor As Long
+    Dim lngFillColor As Long
+    lngFillColor = FColor(E_FillColor)
+    For i = 1 To 46
+        lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i, 1).Value
+        If lngFillColor = lngColor Then
+            Exit Sub
+        End If
+    Next
+    
+    If FPickupColors Is Nothing Then
+        Set FPickupColors = CreateObject("Scripting.Dictionary")
+    End If
+    
+    If FPickupColors.Exists(lngFillColor) Then
+        Exit Sub
+    End If
+    
+    Call FPickupColors.Add(lngFillColor, GetColorPicture(lngFillColor))
+End Sub
+
+'*****************************************************************************
 '[概要] チェックボックスのチェックを設定する
 '[引数] なし
 '[戻値] なし
@@ -591,262 +849,6 @@ On Error GoTo ErrHandle
     Next
     objCell = strFilename
 ErrHandle:
-End Sub
-
-'*****************************************************************************
-'[イベント] getItemWidth
-'*****************************************************************************
-Sub getItemWidth(Control As IRibbonControl, ByRef returnedVal)
-    returnedVal = C_ICONSIZE
-End Sub
-
-'*****************************************************************************
-'[イベント] getItemHeight
-'*****************************************************************************
-Sub getItemHeight(Control As IRibbonControl, ByRef returnedVal)
-    returnedVal = C_ICONSIZE
-End Sub
-
-'*****************************************************************************
-'[イベント] getSelectedItemID
-'*****************************************************************************
-'Sub getSelectedItemID(Control As IRibbonControl, ByRef returnedVal)
-'End Sub
-
-'*****************************************************************************
-'[イベント] getSelectedItemIndex
-'*****************************************************************************
-Sub getSelectedItemIndex(Control As IRibbonControl, ByRef returnedVal)
-    Select Case Control.ID
-    Case "G621"
-        Dim lngColor As Long
-        Dim i As Long
-        For i = 0 To 39
-            lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i + 1, 1).Value
-            If lngColor = FColor(E_BMarkColor) Then
-                returnedVal = i
-                Exit Sub
-            End If
-        Next
-    Case "G62"
-'        Dim lngColorIndex As Long
-'        Dim objInterior As Interior
-'        Set objInterior = Selection.Interior
-'
-'        If VarType(objInterior.ColorIndex) <> vbNull Then
-'            Dim i As Long
-'            For i = 1 To 40
-'                If objInterior.ColorIndex = ThisWorkbook.Worksheets("Color").Range("B2:B47").Cells(i, 1).Value Then
-'                    If objInterior.Color - ActiveWorkbook.Colors(objInterior.ColorIndex) = 0 Then
-'                        index = i - 1
-'                        Exit Sub
-'                    End If
-'                End If
-'            Next
-'        End If
-'        index = -1
-'        Application.WarnOnFunctionNameConflict = False
-'        Application.GenerateTableRefs = xlGenerateTableRefStruct
-    End Select
-'    Debug.Print index
-End Sub
-
-'*****************************************************************************
-'[イベント] getItemCount
-'*****************************************************************************
-Sub getItemCount(Control As IRibbonControl, ByRef returnedVal)
-    If FIcons(0) Is Nothing Then
-        Dim lngColorIndex As Long
-        Dim i As Long
-        For i = 0 To 45
-            lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(i + 2, 2)
-            Set FIcons(i) = GetColorPicture(ActiveWorkbook.Colors(lngColorIndex))
-        Next
-        '無効用の透明アイコンの作成
-        Dim Pixels(1 To C_ICONSIZE, 1 To C_ICONSIZE) As Long
-        Dim objGdip As New CGdiplus
-        Call objGdip.CreateFromPixels(Pixels())
-        Set FIcons(46) = objGdip.ToIPicture
-        Set FIcons(47) = objGdip.ToIPicture
-    End If
-    
-    Select Case Control.ID
-    Case "G621"
-        returnedVal = 46
-    Case "G631"
-        If FPickupColors Is Nothing Then
-            returnedVal = 46
-        Else
-            returnedVal = 48 + FPickupColors.Count
-        End If
-        Call GetRibbonUI.InvalidateControl("B632")
-    End Select
-End Sub
-
-'*****************************************************************************
-'[イベント] getItemID
-'*****************************************************************************
-Sub getItemID(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
-    Dim lngColorIndex As Long
-    lngColorIndex = ThisWorkbook.Worksheets("Color").Cells(Index + 2, 2)
-    returnedVal = Control.ID & "_I" & Format(lngColorIndex, "00") 'IDは重複してはいけない
-End Sub
-
-'*****************************************************************************
-'[イベント] getItemSupertip
-'*****************************************************************************
-Sub getItemSupertip(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
-    Select Case Control.ID
-    Case "G621"
-        With ThisWorkbook.Worksheets("Color").Rows(Index + 2)
-            returnedVal = .Columns(3)
-        End With
-    Case "G631"
-        Select Case Index
-        Case 0 To 45
-            With ThisWorkbook.Worksheets("Color").Rows(Index + 2)
-                returnedVal = .Columns(3) & " #" & Mid(.Columns(4), 7, 2) _
-                                                 & Mid(.Columns(4), 5, 2) _
-                                                 & Mid(.Columns(4), 3, 2)
-            End With
-        Case 46, 47
-            returnedVal = "無効"
-        Case Else
-            Dim Keys() As Variant
-            Keys = FPickupColors.Keys
-            returnedVal = GetColorHex(Keys(Index - 48))
-        End Select
-    End Select
-End Sub
-
-'*****************************************************************************
-'[イベント] getItemImage
-'*****************************************************************************
-Sub getItemImage(Control As IRibbonControl, Index As Integer, ByRef returnedVal)
-    Select Case Index
-    Case 0 To 47
-        Set returnedVal = FIcons(Index)
-    Case Else
-        Dim Items() As Variant
-        Items = FPickupColors.Items
-        Set returnedVal = Items(Index - 48)
-    End Select
-End Sub
-
-'*****************************************************************************
-'[概要] galleryアイテム用のカラーのイメージを動的に作成する
-'[引数] RGBカラー(例：&HFF0000)
-'[戻値] IPicture
-'*****************************************************************************
-Public Function GetColorPicture(ByVal lngColor As Long) As IPicture
-    Dim Pixels(1 To C_ICONSIZE, 1 To C_ICONSIZE) As Long
-    Dim x As Long, y As Long
-
-    lngColor = BGR2RGB(lngColor) + &HFF000000 '該当色 + α(不透明)
-    For y = 2 To C_ICONSIZE - 1
-        For x = 2 To C_ICONSIZE - 1
-            If (x = 2) Or (x = C_ICONSIZE - 1) Or (y = 2) Or (y = C_ICONSIZE - 1) Then
-                Pixels(y, x) = &HFF808080 '囲い(50%灰色)
-            Else
-                Pixels(y, x) = lngColor
-            End If
-        Next
-    Next
-
-    Dim objGdip As New CGdiplus
-    Call objGdip.CreateFromPixels(Pixels())
-    Set GetColorPicture = objGdip.ToIPicture
-End Function
-
-'*****************************************************************************
-'[概要] BGR -> RGB に変換
-'[引数] BGRカラー(例：&HFF0000)
-'[戻値] RGBカラー(例：&H0000FF)
-'*****************************************************************************
-Private Function BGR2RGB(ByVal lngColor As Long) As Long
-    Dim strBGR As String
-    strBGR = WorksheetFunction.Dec2Hex(lngColor, 6)
-    Dim R As String, G As String, B As String
-    B = Mid(strBGR, 1, 2)
-    G = Mid(strBGR, 3, 2)
-    R = Mid(strBGR, 5, 2)
-    BGR2RGB = "&H" & R & G & B
-End Function
-
-''*****************************************************************************
-''[イベント] getItemLabel
-''*****************************************************************************
-'Sub getItemLabel(Control As IRibbonControl, index As Integer, ByRef returnedVal)
-'    returnedVal = ""
-'End Sub
-'
-''*****************************************************************************
-''[イベント] getItemScreentip
-''*****************************************************************************
-'Sub getItemScreentip(Control As IRibbonControl, index As Integer, ByRef returnedVal)
-'    returnedVal = ""
-'End Sub
-
-'*****************************************************************************
-'[イベント] galleryのアイテムをクリックした時
-'*****************************************************************************
-Sub gallery_onAction(Control As IRibbonControl, itemID As String, Index As Integer)
-    Select Case Control.ID
-    Case "G621"
-        GetTmpControl("BMarkColor").Parameter = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(Index + 1, 1).Value
-        If TypeOf Selection Is Range Then
-            With Selection.Interior
-                .Color = FColor(E_BMarkColor)
-                .Pattern = xlSolid
-                .PatternColor = C_PatternColor
-            End With
-        End If
-        Call GetRibbonUI.InvalidateControl("B621")
-        Call GetRibbonUI.InvalidateControl("C2")
-    Case "G631"
-        Select Case Index
-        Case 0 To 45
-            GetTmpControl("FillColor").Parameter = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(Index + 1, 1).Value
-            Call FillColor
-        Case 46, 47
-        Case Else
-            Dim Keys() As Variant
-            Keys = FPickupColors.Keys
-            GetTmpControl("FillColor").Parameter = Keys(Index - 48)
-            Call FillColor
-        End Select
-    End Select
-End Sub
-
-'*****************************************************************************
-'[概要] 選択セル(または図形)の色を取得
-'[引数] なし
-'[戻値] なし
-'*****************************************************************************
-Private Sub PickupColor()
-    GetTmpControl("FillColor").Parameter = Selection.Interior.Color
-    Call GetRibbonUI.InvalidateControl("B631")
-    
-    Dim i As Long
-    Dim lngColor As Long
-    Dim lngFillColor As Long
-    lngFillColor = FColor(E_FillColor)
-    For i = 1 To 46
-        lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i, 1).Value
-        If lngFillColor = lngColor Then
-            Exit Sub
-        End If
-    Next
-    
-    If FPickupColors Is Nothing Then
-        Set FPickupColors = CreateObject("Scripting.Dictionary")
-    End If
-    
-    If FPickupColors.Exists(lngFillColor) Then
-        Exit Sub
-    End If
-    
-    Call FPickupColors.Add(lngFillColor, GetColorPicture(lngFillColor))
 End Sub
 
 '*****************************************************************************
