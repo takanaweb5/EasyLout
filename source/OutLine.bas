@@ -10,6 +10,7 @@ Const RIGHTKIGO = ")}]>）｝］＞』」】》≫.．"
 '[戻値] 例：（ア）→（イ）
 '*****************************************************************************
 Public Function OutLineNext() As Variant
+Attribute OutLineNext.VB_Description = "カレントセルより上にあるアウトライン記号の次の値を返します"
     Dim i As Long
     Dim Value As Variant
     Application.Volatile 'これがないと再計算されない
