@@ -44,7 +44,7 @@ Private udtPlacement() As TPlacement
 '[–ß’l] ‚È‚µ
 '*****************************************************************************
 Private Sub OpenHelp()
-    Call OpenHelpPage("http://takana.web5.jp/EasyLout/V5/?r=hlp")
+    Call OpenHelpPage("http://takana.web5.jp/EasyLout/V5/?r=hlp51")
 End Sub
 
 '*****************************************************************************
@@ -1674,8 +1674,8 @@ Private Function ChangeCellToTextbox(ByRef objRange As Range) As Shape
         .Weight = DPIRatio
         .DashStyle = msoLineSolid
         .Style = msoLineSingle
-        .ForeColor.RGB = 0
-        .BackColor.RGB = RGB(255, 255, 255)
+        .ForeColor.Rgb = 0
+        .BackColor.Rgb = Rgb(255, 255, 255)
     End With
     With objRange
         If .Borders(xlEdgeTop).LineStyle = xlNone Or _
@@ -1767,8 +1767,8 @@ Private Function ChangeCommentToTextbox(ByRef objCell As Range) As Shape
         .Weight = DPIRatio
         .DashStyle = msoLineSolid
         .Style = msoLineSingle
-        .ForeColor.RGB = 0
-        .BackColor.RGB = RGB(255, 255, 255)
+        .ForeColor.Rgb = 0
+        .BackColor.Rgb = Rgb(255, 255, 255)
         .Visible = msoTrue
     End With
     
