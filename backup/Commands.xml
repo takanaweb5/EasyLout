@@ -10,10 +10,9 @@
   <Author>TAKAHASHI Naoki</Author>
   <Description>列の幅や行の高さをかんたんに変更することが出来ます</Description>
   <LastAuthor>高橋直生</LastAuthor>
-  <Created>2023-05-13T01:14:03Z</Created>
-  <LastSaved>2023-05-10T13:05:37Z</LastSaved>
-  <Slides>5.0</Slides>
-  <Version>15.00</Version>
+  <Created>2023-06-01T00:00:00Z</Created>
+  <LastSaved>2023-06-01T00:00:00Z</LastSaved>
+  <Version>5.1</Version>
  </DocumentProperties>
  <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
   <AllowPNG/>
