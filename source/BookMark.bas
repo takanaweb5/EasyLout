@@ -203,12 +203,14 @@ On Error GoTo ErrHandle
             Set objCell = ActiveWorkbook.Worksheets(j).Cells(1, 1)
         End If
         
-        Set objNextCell = FindNextFormat(objCell, xlDirection)
-        If Not (objNextCell Is Nothing) Then
-            Call objNextCell.Worksheet.Select
-            Call objNextCell.Select
-            Application.FindFormat.Clear
-            Exit Sub
+        If objCell.Worksheet.Visible = True Then
+            Set objNextCell = FindNextFormat(objCell, xlDirection)
+            If Not (objNextCell Is Nothing) Then
+                Call objNextCell.Worksheet.Select
+                Call objNextCell.Select
+                Application.FindFormat.Clear
+                Exit Sub
+            End If
         End If
     Next
 
@@ -318,18 +320,20 @@ On Error GoTo ErrHandle
         Call colRange.Add(objActiveSheetRange)
         lngActiveIdx = 1
     Else
-        'すべてのブックマークの数を計算
+        'すべてのブックマークを取得
         For i = 1 To ActiveWorkbook.Worksheets.Count
-            If i = ActiveWorkbook.ActiveSheet.Index Then
-                Set objRange = objActiveSheetRange
-            Else
-                Set objRange = GetBookmarks(ActiveWorkbook.Worksheets(i))
-            End If
-            If Not (objRange Is Nothing) Then
-                j1 = j1 + objRange.Count
-                Call colRange.Add(objRange)
+            If ActiveWorkbook.Worksheets(i).Visible = True Then
                 If i = ActiveWorkbook.ActiveSheet.Index Then
-                    lngActiveIdx = colRange.Count
+                    Set objRange = objActiveSheetRange
+                Else
+                    Set objRange = GetBookmarks(ActiveWorkbook.Worksheets(i))
+                End If
+                If Not (objRange Is Nothing) Then
+                    j1 = j1 + objRange.Count
+                    Call colRange.Add(objRange)
+                    If i = ActiveWorkbook.ActiveSheet.Index Then
+                        lngActiveIdx = colRange.Count
+                    End If
                 End If
             End If
         Next
@@ -405,7 +409,8 @@ End Sub
 Private Function GetBookmarks(ByRef objSheet As Worksheet) As Range
     Dim objCell  As Range
     
-    Set objCell = GetLastCell(objSheet)
+'    Set objCell = GetLastCell(objSheet)
+    Set objCell = objSheet.Cells(Rows.Count, Columns.Count)
     Do While (True)
         Set objCell = FindNextFormat(objCell, xlNext)
         If objCell Is Nothing Then
@@ -432,6 +437,8 @@ Private Function FindNextFormat(ByRef objCell As Range, _
         Set objUsedRange = .Range(.Range("A1"), .Cells.SpecialCells(xlLastCell))
         Set objUsedRange = UnionRange(objUsedRange, objCell)
     End With
+    
+    On Error Resume Next
     Set FindNextFormat = objUsedRange.Find("", objCell, _
                   xlFormulas, xlPart, xlByRows, xlDirection, False, False, True)
 End Function
