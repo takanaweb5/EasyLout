@@ -535,7 +535,7 @@ Sub getItemCount(Control As IRibbonControl, ByRef returnedVal)
         Else
             returnedVal = 48 + FPickupColors.Count
         End If
-'        Call GetRibbonUI.InvalidateControl("B632")
+        Call GetRibbonUI.InvalidateControl("B632")
     End Select
 End Sub
 

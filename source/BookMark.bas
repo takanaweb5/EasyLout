@@ -194,15 +194,14 @@ On Error GoTo ErrHandle
             If j > lngSheetCnt Then
                 j = 1
             End If
-            Set objCell = ActiveWorkbook.Worksheets(j).Cells(Rows.Count, Columns.Count)
         Else
             j = j - 1
             If j < 1 Then
                 j = lngSheetCnt
             End If
-            Set objCell = ActiveWorkbook.Worksheets(j).Cells(1, 1)
         End If
         
+        Set objCell = ActiveWorkbook.Worksheets(j).Cells(Rows.Count, Columns.Count)
         If objCell.Worksheet.Visible = True Then
             Set objNextCell = FindNextFormat(objCell, xlDirection)
             If Not (objNextCell Is Nothing) Then
@@ -524,12 +523,3 @@ End Sub
 '    End If
 'ErrHandle:
 'End Function
-
-'*****************************************************************************
-'[概要] 使用されている最後のセルを取得する
-'[引数] 対象のシート
-'[戻値] 最後のセル
-'*****************************************************************************
-Private Function GetLastCell(ByRef objSheet As Worksheet) As Range
-    Set GetLastCell = objSheet.Cells.SpecialCells(xlLastCell)
-End Function
