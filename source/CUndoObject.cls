@@ -973,51 +973,51 @@ End Sub
 Public Sub SetOnUndo()
     Select Case (Me.UndoType)
     Case E_ColSize, E_ColSize2, E_ColHide, E_ColReShow
-        Call Application.OnUndo("幅の変更", "ExecUndo")
+        Call Application.OnUndo("幅の変更", MacroName("ExecUndo"))
     Case E_RowSize, E_RowSize2, E_RowHide, E_RowReShow
-        Call Application.OnUndo("高さの変更", "ExecUndo")
+        Call Application.OnUndo("高さの変更", MacroName("ExecUndo"))
     Case E_ShapeSize, E_ShapeSize2
-        Call Application.OnUndo("図形のサイズの変更", "ExecUndo")
+        Call Application.OnUndo("図形のサイズの変更", MacroName("ExecUndo"))
     Case E_CellBorder
-        Call Application.OnUndo("セルの境界移動", "ExecUndo")
+        Call Application.OnUndo("セルの境界移動", MacroName("ExecUndo"))
     Case E_MergeCell
-        Call Application.OnUndo("セルの結合", "ExecUndo")
+        Call Application.OnUndo("セルの結合", MacroName("ExecUndo"))
     Case E_MoveCell
-        Call Application.OnUndo("領域の移動", "ExecUndo")
+        Call Application.OnUndo("領域の移動", MacroName("ExecUndo"))
     Case E_CopyCell
-        Call Application.OnUndo("領域のコピー", "ExecUndo")
+        Call Application.OnUndo("領域のコピー", MacroName("ExecUndo"))
     Case E_PasteValue
-        Call Application.OnUndo("値の貼り付け", "ExecUndo")
+        Call Application.OnUndo("値の貼り付け", MacroName("ExecUndo"))
     Case E_ApplyFormat
-        Call Application.OnUndo("書式の反映", "ExecUndo")
+        Call Application.OnUndo("書式の反映", MacroName("ExecUndo"))
     Case E_SplitCol
-        Call Application.OnUndo("列の分割", "ExecUndo")
+        Call Application.OnUndo("列の分割", MacroName("ExecUndo"))
     Case E_EraseCol
-        Call Application.OnUndo("列の消去", "ExecUndo")
+        Call Application.OnUndo("列の消去", MacroName("ExecUndo"))
     Case E_SplitRow
-        Call Application.OnUndo("行の分割", "ExecUndo")
+        Call Application.OnUndo("行の分割", MacroName("ExecUndo"))
     Case E_EraseRow
-        Call Application.OnUndo("行の消去", "ExecUndo")
+        Call Application.OnUndo("行の消去", MacroName("ExecUndo"))
     Case E_CellToText
-        Call Application.OnUndo("セルをテキストボックスに変換", "ExecUndo")
+        Call Application.OnUndo("セルをテキストボックスに変換", MacroName("ExecUndo"))
     Case E_TextToCell
-        Call Application.OnUndo("テキストボックスをセルに変換", "ExecUndo")
+        Call Application.OnUndo("テキストボックスをセルに変換", MacroName("ExecUndo"))
     Case E_CommentToText
-        Call Application.OnUndo("コメントをテキストボックスに変換", "ExecUndo")
+        Call Application.OnUndo("コメントをテキストボックスに変換", MacroName("ExecUndo"))
     Case E_TextToComment
-        Call Application.OnUndo("テキストボックスをコメントに戻す", "ExecUndo")
+        Call Application.OnUndo("テキストボックスをコメントに戻す", MacroName("ExecUndo"))
     Case E_CommentToRule
-        Call Application.OnUndo("コメントを入力規則に変換", "ExecUndo")
+        Call Application.OnUndo("コメントを入力規則に変換", MacroName("ExecUndo"))
     Case E_RuleToComment
-        Call Application.OnUndo("入力規則をコメントに変換", "ExecUndo")
+        Call Application.OnUndo("入力規則をコメントに変換", MacroName("ExecUndo"))
     Case E_CellValue
-        Call Application.OnUndo("セルの値を変更", "ExecUndo")
+        Call Application.OnUndo("セルの値を変更", MacroName("ExecUndo"))
     Case E_FillRange, E_FillShape
-        Call Application.OnUndo("塗りつぶし", "ExecUndo")
+        Call Application.OnUndo("塗りつぶし", MacroName("ExecUndo"))
     Case E_FilterERR
-        Call Application.OnUndo("フィルタ使用中の操作はUndo出来ません", "ExecUndo")
+        Call Application.OnUndo("フィルタ使用中の操作はUndo出来ません", MacroName("ExecUndo"))
     Case E_UndoERR
-        Call Application.OnUndo("変更前の状態の保存に失敗しました", "ExecUndo")
+        Call Application.OnUndo("変更前の状態の保存に失敗しました", MacroName("ExecUndo"))
     End Select
     
     'クリップボードの中身を復元

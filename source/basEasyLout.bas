@@ -682,13 +682,14 @@ End Sub
 '[–ß’l] ‚È‚µ
 '*****************************************************************************
 Private Sub PickupColor()
-    GetTmpControl("FillColor").Parameter = Selection.Interior.Color
+    Dim lngColor As Long
+    Dim lngFillColor As Long
+    
+    lngFillColor = Selection.Interior.Color
+    GetTmpControl("FillColor").Parameter = lngFillColor
     Call GetRibbonUI.InvalidateControl("B631")
     
     Dim i As Long
-    Dim lngColor As Long
-    Dim lngFillColor As Long
-    lngFillColor = FColor(E_FillColor)
     For i = 1 To 46
         lngColor = ThisWorkbook.Worksheets("Color").Range("D2:D47").Cells(i, 1).Value
         If lngFillColor = lngColor Then

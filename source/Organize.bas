@@ -133,7 +133,7 @@ Private Sub DeleteUserStyles()
     Call GetRibbonUI.ActivateTabMso("TabHome")
     
     'タブを切り替えるため、タイマーを使用
-    Call Application.OnTime(Now(), "DeleteUserStyles2")
+    Call Application.OnTime(Now(), MacroName("DeleteUserStyles2"))
 End Sub
 Private Sub DeleteUserStyles2()
     DoEvents

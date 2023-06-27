@@ -2167,7 +2167,7 @@ End Sub
 '*****************************************************************************
 Public Sub SetOnUndo()
     Call clsUndoObject.SetOnUndo
-    Call Application.OnTime(Now(), "SetOnRepeat")
+    Call Application.OnTime(Now(), MacroName("SetOnRepeat"))
 End Sub
 
 '*****************************************************************************
@@ -2176,7 +2176,7 @@ End Sub
 '[–ß’l] ‚È‚µ
 '*****************************************************************************
 Private Sub SetOnRepeat()
-    Call Application.OnRepeat("ŒJ‚è•Ô‚µ", "OnRepeat")
+    Call Application.OnRepeat("ŒJ‚è•Ô‚µ", MacroName("OnRepeat"))
 End Sub
 
 '*****************************************************************************
@@ -2186,9 +2186,9 @@ End Sub
 '*****************************************************************************
 Private Sub OnRepeat()
     If FParam = "" Then
-        Call Application.Run(FCommand)
+        Call Application.Run(MacroName(FCommand))
     Else
-        Call Application.Run(FCommand, FParam)
+        Call Application.Run(MacroName(FCommand), FParam)
     End If
 End Sub
 
@@ -2569,7 +2569,7 @@ On Error GoTo ErrHandle
     Else
         Call SendKeys("{BS}")
     End If
-    Call Application.OnTime(Now(), "SetBackSpace")
+    Call Application.OnTime(Now(), MacroName("SetBackSpace"))
 ErrHandle:
 End Sub
 
@@ -2581,7 +2581,7 @@ End Sub
 '*****************************************************************************
 Private Sub SetBackSpace()
 On Error GoTo ErrHandle
-    Call Application.OnKey("{BS}", "PressBackSpace")
+    Call Application.OnKey("{BS}", MacroName("PressBackSpace"))
 ErrHandle:
 End Sub
 
@@ -2618,44 +2618,44 @@ On Error GoTo ErrHandle
     blnKeys(6) = GetSetting(REGKEY, "KEY", "FindPrev", True)
     
     If blnKeys(1) = True Then
-        Call Application.OnKey("+{F2}", "OpenEdit")
+        Call Application.OnKey("+{F2}", MacroName("OpenEdit"))
     Else
         Call Application.OnKey("+{F2}")
     End If
     
     If blnKeys(2) = True Then
-        Call Application.OnKey("+^{c}", "CopyText")
+        Call Application.OnKey("+^{c}", MacroName("CopyText"))
     Else
         Call Application.OnKey("+^{c}")
     End If
     
     If blnKeys(3) = True Then
-        Call Application.OnKey("+^{v}", "PasteText")
+        Call Application.OnKey("+^{v}", MacroName("PasteText"))
     Else
         Call Application.OnKey("+^{v}")
     End If
     
     If blnKeys(4) = True Then
-        Call Application.OnKey("{BS}", "PressBackSpace")
+        Call Application.OnKey("{BS}", MacroName("PressBackSpace"))
     Else
         Call Application.OnKey("{BS}")
     End If
 
     If blnKeys(5) = True Then
-        Call Application.OnKey("{F3}", "FindNext")
+        Call Application.OnKey("{F3}", MacroName("FindNext"))
     Else
         Call Application.OnKey("{F3}")
     End If
 
     If blnKeys(6) = True Then
-        Call Application.OnKey("+{F3}", "FindPrev")
+        Call Application.OnKey("+{F3}", MacroName("FindPrev"))
     Else
         Call Application.OnKey("+{F3}")
     End If
 
-    Call Application.OnKey("+ ", "SelectRow")
-    Call Application.OnKey("^ ", "SelectCol")
-    Call Application.OnKey("^6", "ToggleHideShapes")
+    Call Application.OnKey("+ ", MacroName("SelectRow"))
+    Call Application.OnKey("^ ", MacroName("SelectCol"))
+    Call Application.OnKey("^6", MacroName("ToggleHideShapes"))
 ErrHandle:
 End Sub
 

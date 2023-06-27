@@ -1267,3 +1267,13 @@ Public Sub ClearRange(ByRef objRange As Range, ByVal blnOnlyValue As Boolean)
     End If
     Call objRange.ClearContents
 End Sub
+
+'*****************************************************************************
+'[概要] マクロ名にワークブック名を付加する
+'[引数] 例：ChangeWidth
+'[戻値] 例：EasyLout.xlam!ChangeWidth
+'*****************************************************************************
+Public Function MacroName(ByVal strMacroName As String) As String
+    MacroName = ThisWorkbook.Name & "!" & strMacroName
+End Function
+
