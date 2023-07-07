@@ -10,7 +10,7 @@
   <button id="B102" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
   <button id="B103" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <splitButton id="SP12" visible="true" enabled="true" showLabel="true">
-  <button idMso="UnmergeCells" getShowLabel="basEasyLout.getShowLabel" label="結合解除" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+  <button idMso="UnmergeCells" showLabel="true" label="結合解除"/>
  <menu id="M12" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage">
   <button id="B104" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  </menu>
@@ -53,21 +53,27 @@
  <buttonGroup id="buttonGroup23">
   <button id="B208" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
   <button id="B209" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <control idMso="SheetColumnsInsert" showLabel="false" label="列の挿入" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
-  <control idMso="SheetColumnsDelete" showLabel="false" label="列の削除" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+  <control idMso="SheetColumnsInsert" showLabel="false"/>
+  <control idMso="SheetColumnsDelete" showLabel="false"/>
  </buttonGroup>
  <buttonGroup id="buttonGroup24">
   <button id="B218" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
   <button id="B219" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
-  <control idMso="SheetRowsInsert" showLabel="false" label="行の挿入" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
-  <control idMso="SheetRowsDelete" showLabel="false" label="行の削除" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage"/>
+  <control idMso="SheetRowsInsert" showLabel="false"/>
+  <control idMso="SheetRowsDelete" showLabel="false"/>
  </buttonGroup>
  <separator id="SP22"/>
  <buttonGroup id="buttonGroup25">
-  <button idMso="BorderInsideVertical"   showLabel="false" label="縦罫線" screentip="縦罫線" supertip="縦罫線の描画と消去のトグル&#13;※Excel標準機能"/>
+  <control idMso="BorderLeft" showLabel="false"/>
+  <control idMso="BorderInsideVertical" showLabel="false" supertip="縦罫線の表示/非表示"/>
+  <control idMso="BorderRight" showLabel="false"/>
+  <control idMso="BorderOutside" showLabel="false"/>
  </buttonGroup>
  <buttonGroup id="buttonGroup26">
-  <button idMso="BorderInsideHorizontal" showLabel="false" label="横罫線" screentip="横罫線" supertip="横罫線の描画と消去のトグル&#13;※Excel標準機能"/>
+  <control idMso="BorderTop" showLabel="false"/>
+  <control idMso="BorderInsideHorizontal" showLabel="false" supertip="横罫線の表示/非表示"/>
+  <control idMso="BorderBottom" showLabel="false"/>
+  <control idMso="BorderNone" showLabel="false"/>
  </buttonGroup>
 </group>
 
@@ -77,9 +83,9 @@
   <checkBox id="C1" getPressed="basEasyLout.getPressed" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" onAction="basEasyLout.onCheckAction"/>
   <button id="B302" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getSize="basEasyLout.getSize" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <buttonGroup id="buttonGroup31">
-  <control idMso="ViewGridlinesToggleExcel" showLabel="false" label="枠線の表示"/>
-  <toggleButton idMso="SnapToGrid"   showLabel="false" label="枠線に合わせる" screentip="枠線に合わせる" supertip="図形移動時に図形の位置を枠線に合わせます"/>
-  <toggleButton idMso="SnapToShapes" showLabel="false" label="図形に合わせる" screentip="図形に合わせる" supertip="図形移動時に図形の位置を図形に合わせます&#13;※マウス操作時のみ有効です"/>
+  <control idMso="ViewGridlinesToggleExcel" showLabel="false" screentip="枠線の表示" supertip="枠線の表示と非表示を切り替えます"/>
+  <control idMso="SnapToGrid"   showLabel="false" screentip="枠線に合わせる" supertip="図形移動時に図形の位置を枠線に合わせます"/>
+  <control idMso="SnapToShapes" showLabel="false" screentip="図形に合わせる" supertip="図形移動時に図形の位置を図形に合わせます&#13;※マウス操作時のみ有効です"/>
  </buttonGroup>
  <separator id="SP32"/>
  <dynamicMenu id="M31" visible="true" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" getContent="basEasyLout.getContent" invalidateContentOnDrop="true"/>
@@ -98,11 +104,11 @@
  </splitButton>
   <button id="B421" getShowLabel="basEasyLout.getShowLabel" getLabel="basEasyLout.getLabel" getScreentip="basEasyLout.getScreentip" getSupertip="basEasyLout.getSupertip" getShowImage="basEasyLout.getShowImage" getImage="basEasyLout.getImage" onAction="basEasyLout.onAction"/>
  <buttonGroup id="buttonGroup41">
-  <button idMso="PasteNoBorders" showLabel="false" label="罫線を除くすべて" screentip="罫線を除くすべて" supertip="罫線を除くすべてを貼付け" />
-  <control idMso="PasteFormatting" showLabel="false" label="書式の貼付け"/>
-  <control idMso="PasteValues" showLabel="false" label="値の貼付け"/>
-  <control idMso="PasteAsHyperlink" showLabel="false" label="ハイパーリンクとして貼付け"/>
-  <control idMso="PasteFormulas" showLabel="false" label="数式の貼付け"/>
+  <control idMso="PasteNoBorders" showLabel="false" screentip="罫線を除くすべてを貼付け" supertip="罫線を除くすべてを貼付けます" />
+  <control idMso="PasteFormatting" showLabel="false"/>
+  <control idMso="PasteValues" showLabel="false"/>
+  <control idMso="PasteAsHyperlink" showLabel="false"/>
+  <control idMso="PasteFormulas" showLabel="false"/>
  </buttonGroup>
 </group>
 
