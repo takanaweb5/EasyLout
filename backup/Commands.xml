@@ -7,92 +7,36 @@
  xmlns:html="http://www.w3.org/TR/REC-html40">
  <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
   <Title>かんたんレイアウト</Title>
-  <Author>TAKAHASHI Naoki</Author>
   <Description>列の幅や行の高さをかんたんに変更することが出来ます</Description>
-  <LastAuthor>高橋直生</LastAuthor>
-  <Created>2023-06-01T00:00:00Z</Created>
-  <LastSaved>2023-06-01T00:00:00Z</LastSaved>
-  <Version>5.1</Version>
  </DocumentProperties>
- <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
-  <AllowPNG/>
- </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>9384</WindowHeight>
-  <WindowWidth>23040</WindowWidth>
-  <WindowTopX>0</WindowTopX>
-  <WindowTopY>0</WindowTopY>
-  <ProtectStructure>False</ProtectStructure>
-  <ProtectWindows>False</ProtectWindows>
  </ExcelWorkbook>
  <Styles>
   <Style ss:ID="Default" ss:Name="Normal">
    <Alignment ss:Vertical="Center"/>
    <Borders/>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="11"
-    ss:Color="#000000"/>
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior/>
    <NumberFormat/>
    <Protection/>
   </Style>
-  <Style ss:ID="s72">
-   <Alignment ss:Vertical="Bottom"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Double" ss:Weight="3"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
+  <Style ss:ID="s62">
+   <Alignment ss:Vertical="Center" ss:WrapText="1"/>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <NumberFormat/>
   </Style>
-  <Style ss:ID="s73">
-   <Alignment ss:Vertical="Top"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Double" ss:Weight="3"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s74">
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s75">
-   <Alignment ss:Vertical="Top"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s76">
+  <Style ss:ID="s63">
    <Alignment ss:Vertical="Top" ss:WrapText="1"/>
    <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Bottom" ss:LineStyle="Double" ss:Weight="3"/>
     <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
     <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
    </Borders>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <NumberFormat/>
   </Style>
   <Style ss:ID="s77">
-   <Alignment ss:Vertical="Top"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s78">
    <Alignment ss:Vertical="Top" ss:WrapText="1"/>
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -103,19 +47,7 @@
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <NumberFormat/>
   </Style>
-  <Style ss:ID="s79">
-   <Alignment ss:Vertical="Top"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#D9D9D9" ss:Pattern="Solid"/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s80">
+  <Style ss:ID="s65">
    <Alignment ss:Vertical="Top" ss:WrapText="1"/>
    <Borders>
     <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
@@ -125,106 +57,77 @@
    </Borders>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior ss:Color="#D9D9D9" ss:Pattern="Solid"/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s81">
-   <Alignment ss:Vertical="Top"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior/>
-   <NumberFormat/>
-  </Style>
-  <Style ss:ID="s82">
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior/>
    <NumberFormat/>
   </Style>
  </Styles>
  <Worksheet ss:Name="Commands">
   <Table ss:ExpandedColumnCount="16" ss:ExpandedRowCount="124" x:FullColumns="1"
-   x:FullRows="1" ss:StyleID="s74" ss:DefaultRowHeight="12">
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="87" ss:Span="1"/>
-   <Column ss:Index="3" ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="83.4"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="115.80000000000001"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="63"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="56.4" ss:Span="1"/>
-   <Column ss:Index="8" ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="126"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="134.4"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="205.20000000000002"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="371.4"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="158.4"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="56.4"/>
-   <Column ss:Index="15" ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="9.6"/>
-   <Column ss:StyleID="s74" ss:AutoFitWidth="0" ss:Width="15"/>
+   x:FullRows="1" ss:StyleID="s62" ss:DefaultRowHeight="12">
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="87"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="81"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="83.4"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="115.80000000000001"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="54" ss:Span="1"/>
+   <Column ss:Index="7" ss:StyleID="s62" ss:AutoFitWidth="0"
+    ss:Width="54.599999999999994"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="126"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="111"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="205.20000000000002"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="371.4"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="158.4"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="56.4"/>
+   <Column ss:Index="15" ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="9.6"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="15"/>
    <Row ss:AutoFitHeight="0" ss:Height="12.45">
-    <Cell ss:StyleID="s72"><Data ss:Type="String">Tab</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">Group</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">Id</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">Label</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">ButtonSize</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">ShowLabel</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">ShowImage</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">ImageMso</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">ImageFile</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">Screentip</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">Supertip</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">Action</Data></Cell>
-    <Cell ss:StyleID="s73"><Data ss:Type="String">Parameter</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Tab</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Group</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Id</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Label</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">ButtonSize</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">ShowLabel</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">ShowImage</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">ImageMso</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">ImageFile</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Screentip</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Supertip</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Action</Data></Cell>
+    <Cell ss:StyleID="s63"><Data ss:Type="String">Parameter</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="12.45">
-    <Cell ss:StyleID="s75"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s75"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="String">B101</Data></Cell>
-    <Cell ss:StyleID="s75"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ソウサ</PhoneticText><Data
-      ss:Type="String">領域操作</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="String">PivotChartMultipleUnified</Data></Cell>
-    <Cell ss:StyleID="s75"/>
-    <Cell ss:StyleID="s75" ss:Formula="=RC[-6]"><Data ss:Type="String">領域操作</Data></Cell>
-    <Cell ss:StyleID="s76"><Data ss:Type="String">結合されたセルを含む領域の移動・コピー・サイズの変更など</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="String">MoveCell</Data></Cell>
-    <Cell ss:StyleID="s75"/>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">B101</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">領域操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">PivotChartMultipleUnified</Data></Cell>
+    <Cell ss:StyleID="s77"/>
+    <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">領域操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合されたセルを含む領域の移動・コピー・サイズの変更など</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">MoveCell</Data></Cell>
+    <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B102</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウ</PhoneticText><Data
-      ss:Type="String">セル結合</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル結合</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeCell.png</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">アタイホジケツゴウ</PhoneticText><Data
-      ss:Type="String">値を保持してセル結合</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">行方向は改行、列方向は空白で値を連結してセルを結合します&#10;※ヘルプの設定から連結する文字をカスタマイズすることが出来ます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">値を保持してセル結合</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行方向は改行、列方向は空白で値を連結してセルを結合します&#10;※ヘルプの設定から連結する文字をカスタマイズすることが出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeCell</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B103</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウゴトカイジョ</PhoneticText><Data
-      ss:Type="String">行毎解除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行毎解除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -237,437 +140,337 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UnmergeCells</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">結合解除</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B104</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">チュウオウヨ</PhoneticText><Data
-      ss:Type="String">結合を解除して中央寄せ</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合を解除して中央寄せ</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UnmergeCells</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">結合を解除して中央寄せ</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウカイジョアタイニュウリョクセンタクハンイチュウオウヨオコナ</PhoneticText><Data
-      ss:Type="String">結合を解除して、値の入力されたセルは選択範囲で中央寄せを行います</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合を解除して、値の入力されたセルは選択範囲で中央寄せを行います</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UnmergeCells</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B105</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヨコホウコウケツゴウ</PhoneticText><Data
-      ss:Type="String">横方向に結合</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">横方向に結合</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeCellsAsColumn.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">横方向に結合</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">複数の列に値があれば空白で連結します&#10;※ヘルプの設定から連結する文字をカスタマイズすることが出来ます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">複数の列に値があれば空白で連結します&#10;※ヘルプの設定から連結する文字をカスタマイズすることが出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeCellsAsColumn</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B106</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒダリ</PhoneticText><Data
-      ss:Type="String">セル境界左移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界左移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveCellBorderL.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界左移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">結合されたセルの境界を1列左に移動します&#10;(先頭を1列削除し、末尾に1列挿入)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合されたセルの境界を1列左に移動します&#10;(先頭を1列削除し、末尾に1列挿入)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveColumnsBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">-1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B107</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ミギ</PhoneticText><Data
-      ss:Type="String">セル境界右移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界右移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveCellBorderR.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界右移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">結合されたセルの境界を1列右に移動します&#10;(先頭に1列挿入し、末尾を1列削除)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合されたセルの境界を1列右に移動します&#10;(先頭に1列挿入し、末尾を1列削除)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveColumnsBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B108</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タテホウコウ</PhoneticText><Data
-      ss:Type="String">縦方向に結合</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">縦方向に結合</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeCellsAsRow.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">縦方向に結合</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">複数の行に値があれば改行で連結します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">複数の行に値があれば改行で連結します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeCellsAsRow</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B109</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ウエ</PhoneticText><Data
-      ss:Type="String">セル境界上移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界上移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveCellBorderU.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界上移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">結合されたセルの境界を1行上に移動します&#10;(先頭を1行削除し、末尾に1行挿入)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合されたセルの境界を1行上に移動します&#10;(先頭を1行削除し、末尾に1行挿入)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveRowsBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">-1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウソウサ</PhoneticText><Data
-      ss:Type="String">結合セルの操作</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの操作</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B110</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">シタ</PhoneticText><Data
-      ss:Type="String">セル境界下移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界下移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveCellBorderD.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界下移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">結合されたセルの境界を1行下に移動します&#10;(先頭に1行挿入し、末尾を1行削除)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合されたセルの境界を1行下に移動します&#10;(先頭に1行挿入し、末尾を1行削除)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveRowsBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B201</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハバ</PhoneticText><Data
-      ss:Type="String">幅の一覧</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">幅の一覧</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ColumnWidth</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">幅の一覧</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハバ</PhoneticText><Data
-      ss:Type="String">セルの幅をPixelやmm単位で指定が可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セルの幅をPixelやmm単位で指定が可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ShowWidth</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="48">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B202</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハバ</PhoneticText><Data
-      ss:Type="String">幅の縮小</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">幅の縮小</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ReduceColsWidth.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">幅の縮小</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイセンタクジズケイハバヘンコウ</PhoneticText><Data
-      ss:Type="String">セル(図形)の幅を1ピクセル(Ctrlで5倍)ずつ縮小します&#10;離れた列にも対応しています&#10;※Shiftで列を非表示にします&#10;※図形選択時は、図形の幅を変更します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル(図形)の幅を1ピクセル(Ctrlで5倍)ずつ縮小します&#10;離れた列にも対応しています&#10;※Shiftで列を非表示にします&#10;※図形選択時は、図形の幅を変更します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeWidth</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">-1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="48">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B203</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハバ</PhoneticText><Data
-      ss:Type="String">幅の拡大</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">幅の拡大</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ExpandColsWidth.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">幅の拡大</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒヒョウジサイ</PhoneticText><Data
-      ss:Type="String">セル(図形)の幅を1ピクセル(Ctrlで5倍)ずつ拡大します&#10;離れた列にも対応&#10;※Shiftで非表示の列を再表示します&#10;※図形選択時は、図形の幅を変更します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル(図形)の幅を1ピクセル(Ctrlで5倍)ずつ拡大します&#10;離れた列にも対応&#10;※Shiftで非表示の列を再表示します&#10;※図形選択時は、図形の幅を変更します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeWidth</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B204</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒダリ</PhoneticText><Data
-      ss:Type="String">セル境界左移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界左移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveColBorderL.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界左移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">セル境界を左に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数列の選択時は、先頭列を縮小し最終列を拡大します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界を左に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数列の選択時は、先頭列を縮小し最終列を拡大します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveVerticalBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">-1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B205</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ミギ</PhoneticText><Data
-      ss:Type="String">セル境界右移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界右移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveColBorderR.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界右移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">セル境界を右に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数列の選択時は、先頭列を拡大し最終列を縮小します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界を右に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数列の選択時は、先頭列を拡大し最終列を縮小します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveVerticalBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="36">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B207</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハバソロ</PhoneticText><Data
-      ss:Type="String">幅を揃える</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">幅を揃える</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">TableColumnsDistribute</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">幅を揃える</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">セル(図形)の幅を揃えます&#10;離れた列にも対応しています&#10;※図形選択時は、図形の幅を揃えます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル(図形)の幅を揃えます&#10;離れた列にも対応しています&#10;※図形選択時は、図形の幅を揃えます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DistributeColsWidth</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B206</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">モジレツハバアワ</PhoneticText><Data
-      ss:Type="String">文字列の幅に合わせる</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">文字列の幅に合わせる</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">AutoColFit.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">文字列の幅に合わせる</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウ</PhoneticText><Data
-      ss:Type="String">結合セルや離れた列にも対応しています</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルや離れた列にも対応しています</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">AutoColFit</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B208</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">レツ</PhoneticText><Data
-      ss:Type="String">列の分割</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">列の分割</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SplitColumn.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">列の分割</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">レツシテイレツスウブンカツ</PhoneticText><Data
-      ss:Type="String">列を指定した列数に分割します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">列を指定した列数に分割します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SplitColumn</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B209</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">レツ</PhoneticText><Data
-      ss:Type="String">列の消去</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">列の消去</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">EraseColumn.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">列の消去</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">選択された列を消去します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択された列を消去します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">EraseColumn</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SheetColumnsInsert</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">レツソウニュウ</PhoneticText><Data
-      ss:Type="String">シートの列を挿入</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">シートの列を挿入</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SheetColumnsDelete</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">レツサクジョ</PhoneticText><Data
-      ss:Type="String">シートの列を削除</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">シートの列を削除</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">BorderLeft</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒダリケイセンヒョウジヒヒョウジ</PhoneticText><Data
-      ss:Type="String">左罫線の表示/非表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">左罫線の表示/非表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">BorderInsideVertical</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タテケイセンウチガワ</PhoneticText><Data
-      ss:Type="String">縦罫線（内側）</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">縦罫線の表示/非表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">縦罫線（内側）</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">縦罫線の表示/非表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">BorderRight</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ミギケイセンヒョウジヒヒョウジ</PhoneticText><Data
-      ss:Type="String">右罫線の表示/非表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">右罫線の表示/非表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B211</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">高さの一覧</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -676,15 +479,13 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">RowHeight</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">高さの一覧</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">セルの高さをPixelやmm単位で指定が可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セルの高さをPixelやmm単位で指定が可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ShowHeight</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="48">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B212</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">高さの縮小</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -693,17 +494,13 @@
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ReduceRowsHeight.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">高さの縮小</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウタカ</PhoneticText><Data
-      ss:Type="String">セル(図形)の高さを1ピクセル(Ctrlで5倍)ずつ縮小します&#10;離れた行にも対応しています&#10;※Shiftで行を非表示にします&#10;※図形選択時は、図形の高さを変更します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル(図形)の高さを1ピクセル(Ctrlで5倍)ずつ縮小します&#10;離れた行にも対応しています&#10;※Shiftで行を非表示にします&#10;※図形選択時は、図形の高さを変更します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeHeight</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">-1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="48">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B213</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">高さの拡大</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -712,95 +509,73 @@
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ExpandRowsHeight.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">高さの拡大</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒヒョウジギョウサイ</PhoneticText><Data
-      ss:Type="String">セル(図形)の高さを1ピクセル(Ctrlで5倍)ずつ拡大します&#10;離れた行にも対応しています&#10;※Shiftで非表示の行を再表示します&#10;※図形選択時は、図形の高さを変更します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル(図形)の高さを1ピクセル(Ctrlで5倍)ずつ拡大します&#10;離れた行にも対応しています&#10;※Shiftで非表示の行を再表示します&#10;※図形選択時は、図形の高さを変更します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeHeight</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B214</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ウエ</PhoneticText><Data
-      ss:Type="String">セル境界上移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界上移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveRowBorderU.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界上移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">セル境界を上に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数行の選択時は、先頭行を縮小し最終行を拡大します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界を上に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数行の選択時は、先頭行を縮小し最終行を拡大します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveHorizonBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">-1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B215</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">シタ</PhoneticText><Data
-      ss:Type="String">セル境界下移動</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界下移動</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveRowBorderD.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">セル境界下移動</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">セル境界を下に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数行の選択時は、先頭行を拡大し最終行を縮小します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル境界を下に1ピクセル(Ctrlで5倍)ずつ移動します&#10;複数行の選択時は、先頭行を拡大し最終行を縮小します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveHorizonBorder</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="36">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B217</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ソロ</PhoneticText><Data
-      ss:Type="String">高さを揃える</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">高さを揃える</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">TableRowsDistribute</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">高さを揃える</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">セル(図形)の高さを揃えます&#10;離れた行にも対応しています&#10;※図形選択時は、図形の高さを揃えます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">セル(図形)の高さを揃えます&#10;離れた行にも対応しています&#10;※図形選択時は、図形の高さを揃えます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DistributeRowsHeight</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B216</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">アワ</PhoneticText><Data
-      ss:Type="String">文字の高さに合わせる</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">文字の高さに合わせる</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">AutoRowFit.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">文字の高さに合わせる</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">離れた行にも対応しています</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">離れた行にも対応しています</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">AutoRowFit</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B218</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">行の分割</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -809,17 +584,13 @@
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SplitRow.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">行の分割</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">シテイブンカツ</PhoneticText><Data
-      ss:Type="String">行を指定した行数に分割します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行を指定した行数に分割します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SplitRow</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B219</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">行の消去</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -828,167 +599,127 @@
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">EraseRow.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">行の消去</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">選択された行を消去します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択された行を消去します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">EraseRow</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SheetRowsInsert</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウソウニュウ</PhoneticText><Data
-      ss:Type="String">シートの行を挿入</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">シートの行を挿入</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SheetRowsDelete</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウサクジョ</PhoneticText><Data
-      ss:Type="String">シートの行を削除</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">シートの行を削除</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">BorderTop</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ウエケイセンヒョウジヒヒョウジ</PhoneticText><Data
-      ss:Type="String">上罫線の表示/非表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">上罫線の表示/非表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">BorderInsideHorizontal</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヨコケイセン</PhoneticText><Data
-      ss:Type="String">横罫線（内側）</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">横罫線の表示/非表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">横罫線（内側）</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">横罫線の表示/非表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウレツ</PhoneticText><Data
-      ss:Type="String">行・列</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行・列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">BorderBottom</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">シタケイセンヒョウジヒヒョウジ</PhoneticText><Data
-      ss:Type="String">下罫線の表示/非表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">下罫線の表示/非表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B301</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">イドウヘンコウ</PhoneticText><Data
-      ss:Type="String">移動・サイズ変更</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">移動・サイズ変更</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DrawingCanvasExpand</Data></Cell>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイイドウヘンコウ</PhoneticText><Data
-      ss:Type="String">図形の移動やサイズ変更</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイイドウヘンコウカノウ</PhoneticText><Data
-      ss:Type="String">図形の移動やサイズの変更が可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形の移動やサイズ変更</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形の移動やサイズの変更が可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MoveShape</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">C1</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイヒヒョウジ</PhoneticText><Data
-      ss:Type="String">図形非表示</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形非表示</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイヒヒョウジ</PhoneticText><Data
-      ss:Type="String">図形非表示(Ctrl+6)</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイヒヒョウジズケイタイショウガイデキ</PhoneticText><Data
-      ss:Type="String">チェックすると図形が非表示になります&#10;また、図形をコピーの対象外にすることが出来ます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形非表示(Ctrl+6)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">チェックすると図形が非表示になります&#10;また、図形をコピーの対象外にすることが出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">-</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B302</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイセンタク</PhoneticText><Data
-      ss:Type="String">図形選択</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形選択</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ObjectsSelect</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">図形選択</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクジョウズケイセンタクタイショウトキズケイセンタク</PhoneticText><Data
-      ss:Type="String">選択されたセル上の図形を選択します&#10;対象がない時は、図形選択モードにします</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセル上の図形を選択します&#10;対象がない時は、図形選択モードにします</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectShapes</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -997,51 +728,49 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ViewGridlinesToggleExcel</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">枠線の表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">枠線の表示</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">枠線の表示と非表示を切り替えます</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">枠線の表示</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">枠線の表示と非表示を切り替えます</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SnapToGrid</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">枠線に合わせる</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">枠線に合わせる</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">図形移動時に図形の位置を枠線に合わせます</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">枠線に合わせる</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">図形移動時に図形の位置を枠線に合わせます</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
-   <Row ss:Height="24">
+   <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SnapToShapes</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">図形に位置を合わせる</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">図形に位置を合わせる</Data></Cell>
-    <Cell ss:StyleID="s80"><Data ss:Type="String">図形移動時に図形の位置を図形に合わせます&#10;※マウス操作時のみ有効です</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">図形に位置を合わせる</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">図形移動時に図形の位置を図形に合わせます&#10;※マウス操作時のみ有効です</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M31</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">配置/整列</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1056,9 +785,7 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B311</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">横方向に連結</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1067,15 +794,13 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">AlignDistributeHorizontallyClassic</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ConnectShapes</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B312</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">縦方向に連結</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1090,47 +815,37 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B313</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハバソロ</PhoneticText><Data
-      ss:Type="String">幅を揃える</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">幅を揃える</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">TableColumnsDistribute</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DistributeShapeWidth</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B314</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タカソロ</PhoneticText><Data
-      ss:Type="String">高さを揃える</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">高さを揃える</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">TableRowsDistribute</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DistributeShapeHeight</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B315</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">図形の四方を枠線に合わせる</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1139,15 +854,13 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">SizeToGridAccess</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FitShapes</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B316</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">左上の位置を枠線に移動する</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1156,19 +869,15 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">ControlAlignToGrid</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FitShapes</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M32</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ソウゴヘンカン</PhoneticText><Data
-      ss:Type="String">相互変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">相互変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -1181,9 +890,7 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B321</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">セルをテキストボックスに変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1198,138 +905,106 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B322</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヘンカン</PhoneticText><Data
-      ss:Type="String">テキストボックスをセルに変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">テキストボックスをセルに変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeTextboxesToCells</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B323</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヘンカン</PhoneticText><Data
-      ss:Type="String">コメントをテキストボックスに変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">コメントをテキストボックスに変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeCommentsToTextboxes</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B324</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">モド</PhoneticText><Data
-      ss:Type="String">テキストボックスをコメントに戻す</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">テキストボックスをコメントに戻す</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeTextboxesToComments</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B325</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ニュウリョクキソクヘンカン</PhoneticText><Data
-      ss:Type="String">コメントを入力規則に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">コメントを入力規則に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ニュウリョクキソクフダヘンコウ</PhoneticText><Data
-      ss:Type="String">コメントを入力規則の吹き出しに変更します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">コメントを入力規則の吹き出しに変更します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeCommentsToInputRules</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B326</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ニュウリョクキソクヘンカン</PhoneticText><Data
-      ss:Type="String">入力規則をコメントに変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">入力規則をコメントに変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヘンコウ</PhoneticText><Data
-      ss:Type="String">入力規則の吹き出しをコメントに変更します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">入力規則の吹き出しをコメントに変更します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeInputRulesToComments</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ShapeChangeShapeGallery</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイヘンコウ</PhoneticText><Data
-      ss:Type="String">図形変更</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形変更</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B401</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ミハリツ</PhoneticText><Data
-      ss:Type="String">見たまま貼付け</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">見たまま貼付け</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteTableWithSourceFormatting</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">-</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">見たまま貼付け</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケツゴウヨコハバミチカカタチハツホウガンシハリツナドコウカハッキ</PhoneticText><Data
-      ss:Type="String">結合セルの横幅を見たままに近い形で貼付けます&#10;方眼紙シートへの貼付け等で効果を発揮します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">結合セルの横幅を見たままに近い形で貼付けます&#10;方眼紙シートへの貼付け等で効果を発揮します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteAppearance</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -1344,7 +1019,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">Copy</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">-</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -1359,9 +1034,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">Copy</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">テキストでコピー(Ctrl+Shift+C)</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">アタイ</PhoneticText><Data
-      ss:Type="String">プレーンテキストで値をコピーします</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">プレーンテキストで値をコピーします</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">CopyText</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -1369,18 +1042,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B412</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキ</PhoneticText><Data
-      ss:Type="String">数式をテキストでコピー</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">数式をテキストでコピー</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">Formula</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">数式をテキストでコピー</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキソウタイサンショウスウシキゼッタイサンショウデキ</PhoneticText><Data
-      ss:Type="String">数式をプレーンテキストでコピーします&#10;相対参照の数式を絶対参照のようにコピー出来ます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">数式をプレーンテキストでコピーします&#10;相対参照の数式を絶対参照のようにコピー出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">CopyFormula</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -1388,18 +1057,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B421</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハリツ</PhoneticText><Data
-      ss:Type="String">テキストの貼付け</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">テキストの貼付け</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteTextOnly</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">テキストの貼付け(Ctrl+Shift+V)</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハリツ</PhoneticText><Data
-      ss:Type="String">プレーンテキストを貼付けます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">プレーンテキストを貼付けます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteText</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -1408,150 +1073,126 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteNoBorders</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">罫線を除くすべて</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">罫線を除くすべてを貼付け</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">罫線を除くすべてを貼付けます</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">罫線を除くすべてを貼付け</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">罫線を除くすべてを貼付けます</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteFormatting</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ショシキハツ</PhoneticText><Data
-      ss:Type="String">書式の貼り付け</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">書式の貼り付け</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteValues</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">アタイ</PhoneticText><Data
-      ss:Type="String">値の貼り付け</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">値の貼り付け</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteAsHyperlink</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ハイパーリンクとして貼り付け</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">クリップボード</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">PasteFormulas</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキ</PhoneticText><Data
-      ss:Type="String">数式の貼り付け</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">数式の貼り付け</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M51</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">モジシュヘンカン</PhoneticText><Data
-      ss:Type="String">文字種の変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">文字種の変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeCase</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">文字種の変換</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクモジシュヘンカン</PhoneticText><Data
-      ss:Type="String">選択されたセルの文字種を変換します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルの文字種を変換します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">-</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B511</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">オオモジヘンカン</PhoneticText><Data
-      ss:Type="String">大文字に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">大文字に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">大文字に変換</Data></Cell>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ConvertStr</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UpperCase</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B512</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">コモジヘンカン</PhoneticText><Data
-      ss:Type="String">小文字に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">小文字に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">小文字に変換</Data></Cell>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ConvertStr</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">LowerCase</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B513</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">セントウ</PhoneticText><Data
-      ss:Type="String">先頭のみ大文字に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">先頭のみ大文字に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1564,13 +1205,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B514</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヘンカン</PhoneticText><Data
-      ss:Type="String">ひらがなに変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ひらがなに変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1583,9 +1220,7 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B515</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">カタカナに変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1600,13 +1235,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B516</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ゼンカク</PhoneticText><Data
-      ss:Type="String">全角に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">全角に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1619,13 +1250,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B517</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハンカク</PhoneticText><Data
-      ss:Type="String">半角に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">半角に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1638,9 +1265,7 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B518</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">カタカナのみ全角に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1655,13 +1280,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B519</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">イガイ</PhoneticText><Data
-      ss:Type="String">カタカナ以外半角に変換</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">カタカナ以外半角に変換</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1674,13 +1295,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B51a</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">セントウマツビクウハクサクジョ</PhoneticText><Data
-      ss:Type="String">先頭と末尾の空白を削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">先頭と末尾の空白を削除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1693,13 +1310,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B51b</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">マツビクウハクサクジョ</PhoneticText><Data
-      ss:Type="String">末尾の空白を削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">末尾の空白を削除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1712,13 +1325,9 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M52</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ニュウリョクホジョ</PhoneticText><Data
-      ss:Type="String">入力補助</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">入力補助</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -1731,9 +1340,7 @@
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B521</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">入力補助画面(Shift+F2)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1748,9 +1355,7 @@
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B522</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">選択範囲の変更や記憶</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
@@ -1759,63 +1364,45 @@
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ReverseCell.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">選択範囲の変更や記憶</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクリョウイキヘンコウオコナセンタクリョウイキキオクサイセンタクデキ</PhoneticText><Data
-      ss:Type="String">選択領域の変更が行えます&#10;選択した領域を記憶させて、再選択させることも出来ます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択領域の変更が行えます&#10;選択した領域を記憶させて、再選択させることも出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UnSelect</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B523</Data></Cell>
-    <Cell ss:StyleID="s81"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">レツセンタク</PhoneticText><Data
-      ss:Type="String">列の選択(Ctrl+Space)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">列の選択(Ctrl+Space)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectCol.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">列の選択(Ctrl+Space)</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクレツゼンタイセンタクハナレツセンタクカノウ</PhoneticText><Data
-      ss:Type="String">選択されたセルの列全体を選択します&#10;※離れた列も選択可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルの列全体を選択します&#10;※離れた列も選択可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectCol</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B524</Data></Cell>
-    <Cell ss:StyleID="s81"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ギョウセンタク</PhoneticText><Data
-      ss:Type="String">行の選択(Shift+Space)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">行の選択(Shift+Space)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectRow.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">行の選択(Shift+Space)</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクギョウゼンタイセンタクギョウ</PhoneticText><Data
-      ss:Type="String">選択されたセルの行全体を選択します&#10;※離れた行も選択可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルの行全体を選択します&#10;※離れた行も選択可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectRow</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M53</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">セイリ</PhoneticText><Data
-      ss:Type="String">整理/クリア</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">整理/クリア</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -1828,97 +1415,69 @@
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B531</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタク</PhoneticText><Data
-      ss:Type="String">A1選択</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">A1選択</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">A1選択</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スベバイリツセンタクカイカイジョ</PhoneticText><Data
-      ss:Type="String">全てのシートの倍率を100%にして、A1セルを選択します&#10;あわせて、改ページプレビューを解除します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">全てのシートの倍率を100%にして、A1セルを選択します&#10;あわせて、改ページプレビューを解除します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectHomePosition</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="36">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B532</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ショシキスウシキハンエイ</PhoneticText><Data
-      ss:Type="String">書式や数式の反映</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">書式や数式の反映</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">書式や数式の反映</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキアタイモジレツトキショシキハンエイスウシキサイケイサンキョウセイテキジッコウシヨウオウカアタイヘンカン</PhoneticText><Data
-      ss:Type="String">数式や値が文字列になった時、書式を反映します&#10;また、数式の再計算を強制的に実行させたいときに使用します&#10;※Shift押下で数式を値に変換します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">数式や値が文字列になった時、書式を反映します&#10;また、数式の再計算を強制的に実行させたいときに使用します&#10;※Shift押下で数式を値に変換します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ApplyFormat</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B533</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">テイギサクジョ</PhoneticText><Data
-      ss:Type="String">ユーザ定義スタイルの削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ユーザ定義スタイルの削除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">CellStylesGallery</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">ユーザ定義スタイルの削除</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">テイギサクジョ</PhoneticText><Data
-      ss:Type="String">ユーザ定義のスタイルをすべて削除します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ユーザ定義のスタイルをすべて削除します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DeleteUserStyles</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B534</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ナマエサクジョ</PhoneticText><Data
-      ss:Type="String">ユーザ定義の名前の削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ユーザ定義の名前の削除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">NameManager</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">ユーザ定義の名前の削除</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">テイギナマエサクジョ</PhoneticText><Data
-      ss:Type="String">ユーザ定義の名前をすべて削除します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ユーザ定義の名前をすべて削除します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">DeleteNameObjects</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B535</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">セッテイサクジョ</PhoneticText><Data
-      ss:Type="String">ユーザ設定のビューの削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ユーザ設定のビューの削除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -1931,118 +1490,84 @@
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B536</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">メンセキズケイセンタク</PhoneticText><Data
-      ss:Type="String">面積ゼロの図形の選択</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">面積ゼロの図形の選択</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">面積ゼロの図形の選択</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ジョウズケイセンタクフヨウサクジョカノウ</PhoneticText><Data
-      ss:Type="String">アクティブシート上のぺちゃんこになっている図形を選択します&#10;不要であればDeleteキーで削除可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">アクティブシート上のぺちゃんこになっている図形を選択します&#10;不要であればDeleteキーで削除可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectFlatShapes</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B537</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケイセンドウカチョクセンセンタク</PhoneticText><Data
-      ss:Type="String">罫線と同化した直線の選択</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">罫線と同化した直線の選択</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">罫線と同化した直線の選択</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケイセンドウカチョクセンセンタク</PhoneticText><Data
-      ss:Type="String">アクティブシート上の罫線と同化した直線を選択します&#10;不要であればDeleteキーで削除可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">アクティブシート上の罫線と同化した直線を選択します&#10;不要であればDeleteキーで削除可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectFlatArrows</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B538</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキセンタク</PhoneticText><Data
-      ss:Type="String">エラーの数式の選択</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">エラーの数式の選択</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">エラーの数式の選択</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキセンタクフヨウサクジョカノウ</PhoneticText><Data
-      ss:Type="String">数式がエラーになっているセルを選択します&#10;不要であればDeleteキーで削除可能です</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">数式がエラーになっているセルを選択します&#10;不要であればDeleteキーで削除可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectErrFormula</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B539</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ジョウケンツショシキトウゴウ</PhoneticText><Data
-      ss:Type="String">条件付き書式の統合</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">条件付き書式の統合</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ConditionalFormattingMenu</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">条件付き書式の統合</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ジョウケンツショシキドウイツトウゴウ</PhoneticText><Data
-      ss:Type="String">条件付き書式が同一のものを統合します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">条件付き書式が同一のものを統合します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">MergeFormatConditions</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
-    <Cell ss:StyleID="s79"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s79"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">B5??</Data></Cell>
-    <Cell ss:StyleID="s79"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ジョウケンツショシキサクジョ</PhoneticText><Data
-      ss:Type="String">エラーの条件付き書式の削除</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">1</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">ConditionalFormattingMenu</Data></Cell>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79" ss:Formula="=RC[-6]"><Data ss:Type="String">エラーの条件付き書式の削除</Data></Cell>
-    <Cell ss:StyleID="s79"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">スウシキサクジョ</PhoneticText><Data
-      ss:Type="String">数式がエラーになっている条件付き書式を削除します</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">DeleteErrFormatConditions</Data></Cell>
-    <Cell ss:StyleID="s79"/>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">B5??</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">エラーの条件付き書式の削除</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">ConditionalFormattingMenu</Data></Cell>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65" ss:Formula="=RC[-6]"><Data ss:Type="String">エラーの条件付き書式の削除</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">数式がエラーになっている条件付き書式を削除します</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">DeleteErrFormatConditions</Data></Cell>
+    <Cell ss:StyleID="s65"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M531</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒョウジュンヘンコウ</PhoneticText><Data
-      ss:Type="String">標準フォントの変更</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">標準フォントの変更</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -2053,143 +1578,107 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">-</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
-   <Row ss:Height="24">
+   <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B5311</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヘンコウ</PhoneticText><Data
-      ss:Type="String">{FONTNAME}に変更</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">{FONTNAME}に変更</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">{FONTNAME}に変更</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヒョウジュンテキヨウ</PhoneticText><Data
-      ss:Type="String">標準スタイルのフォントを{FONTNAME}に変更します&#10;※ヘルプの設定から適用するフォントをカスタマイズすることが出来ます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">標準スタイルのフォントを{FONTNAME}に変更します&#10;※ヘルプの設定から適用するフォントをカスタマイズすることが出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ChangeNormalFont</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
-   <Row>
+   <Row ss:AutoFitHeight="0" ss:Height="24">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B5312</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクヒョウジュンテキヨウ</PhoneticText><Data
-      ss:Type="String">選択されたセルに標準フォントを適用</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルに標準フォントを適用</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">選択されたセルに標準フォントを適用</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクヒョウジュンテキヨウ</PhoneticText><Data
-      ss:Type="String">選択されたセルに標準フォントを適用します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルに標準フォントを適用します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ApplyNormalFont</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="36">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B5313</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイ</PhoneticText><Data
-      ss:Type="String">図形に標準フォントを適用</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">図形に標準フォントを適用</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">図形に標準フォントを適用</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクズケイヒョウジュンテキヨウズケイセンタクトキズケイヒョウジュンテキヨウ</PhoneticText><Data
-      ss:Type="String">選択された図形に標準フォントを適用します&#10;図形が選択されていない時は、アクティブシートのすべての図形に標準フォントを適用します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択された図形に標準フォントを適用します&#10;図形が選択されていない時は、アクティブシートのすべての図形に標準フォントを適用します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ApplyNormalFontToShape</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B53A</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">キリカエ</PhoneticText><Data
-      ss:Type="String">A1⇔R1C1切替</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">A1⇔R1C1切替</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">A1⇔R1C1切替</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケイシキサンショウケイシキソウゴキカ</PhoneticText><Data
-      ss:Type="String">A1形式とR1C1参照形式を相互に切替えます</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">A1形式とR1C1参照形式を相互に切替えます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ToggleA1R1C1</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">タ</PhoneticText><Data
-      ss:Type="String">その他</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">その他</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B53B</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">サイゴサイテキカ</PhoneticText><Data
-      ss:Type="String">最後のセルの最適化</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">最後のセルの最適化</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">最後のセルの最適化</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハンイサイテキカ</PhoneticText><Data
-      ss:Type="String">CTRL+Endでジャンプするセルの範囲を最適化します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">CTRL+Endでジャンプするセルの範囲を最適化します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UsedRange</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
-   <Row ss:AutoFitHeight="0" ss:StyleID="s82">
-    <Cell ss:StyleID="s81"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s81"><Data ss:Type="String">ブックマーク</Data></Cell>
-    <Cell ss:StyleID="s81"><Data ss:Type="String">FindDialogExcel</Data></Cell>
-    <Cell ss:StyleID="s81"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ケンサク</PhoneticText><Data
-      ss:Type="String">検索</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">FindDialogExcel</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">検索</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B611</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ツギケンサク</PhoneticText><Data
-      ss:Type="String">次を検索</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">次を検索</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FindNext.png</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ツギケンサク</PhoneticText><Data
-      ss:Type="String">次を検索(F3)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">次を検索(F3)</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FindNextOrPrev</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -2198,37 +1687,31 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B612</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">マエケンサク</PhoneticText><Data
-      ss:Type="String">前を検索</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">前を検索</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FindPrev.png</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">マエケンサク</PhoneticText><Data
-      ss:Type="String">前を検索(Shift+F3)</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">前を検索(Shift+F3)</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FindNextOrPrev</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">2</Data></Cell>
    </Row>
-   <Row ss:AutoFitHeight="0" ss:StyleID="s82">
-    <Cell ss:StyleID="s81"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
-    <Cell ss:StyleID="s81"><Data ss:Type="String">ブックマーク</Data></Cell>
-    <Cell ss:StyleID="s81"><Data ss:Type="String">GoToSpecial</Data></Cell>
-    <Cell ss:StyleID="s81"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ジョウケンセンタク</PhoneticText><Data
-      ss:Type="String">条件を選択してジャンプ</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="Number">0</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">GoTo</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
-    <Cell ss:StyleID="s79"><Data ss:Type="String">-</Data></Cell>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">GoToSpecial</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">条件を選択してジャンプ</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="Number">0</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">GoTo</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
+    <Cell ss:StyleID="s65"><Data ss:Type="String">-</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
@@ -2241,7 +1724,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">BookmarkInsert</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマークの設定/解除 （{COLOR}）</Data></Cell>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SetBookmark</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -2249,18 +1732,16 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">G621</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">イロセンタク</PhoneticText><Data
-      ss:Type="String">ブックマーク色の選択</Data></Cell>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s80"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク色の選択</Data></Cell>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
@@ -2273,9 +1754,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">HtmlNextBookmark</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">次のブックマーク</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクトキドウショク</PhoneticText><Data
-      ss:Type="String">ブックマークされているセルを選択している時は、同色のブックマークへジャンプします</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマークされているセルを選択している時は、同色のブックマークへジャンプします</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">NextorPrevBookMark</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
    </Row>
@@ -2283,20 +1762,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B623</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">マエ</PhoneticText><Data
-      ss:Type="String">前のブックマーク</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">前のブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">HtmlPreviousBookmark</Data></Cell>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">マエ</PhoneticText><Data
-      ss:Type="String">前のブックマーク</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクトキドウショク</PhoneticText><Data
-      ss:Type="String">ブックマークされているセルを選択している時は、同色のブックマークへジャンプします</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">前のブックマーク</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマークされているセルを選択している時は、同色のブックマークへジャンプします</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">NextorPrevBookMark</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">2</Data></Cell>
    </Row>
@@ -2304,18 +1777,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B624</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">サクジョ</PhoneticText><Data
-      ss:Type="String">すべてのブックマークの削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">すべてのブックマークの削除</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">HtmlClearBookmarks</Data></Cell>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクサクジョ</PhoneticText><Data
-      ss:Type="String">すべてのブックマークを選択し削除</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">アクティブシート上のブックマークセルをすべて選択し、削除するかどうかの選択画面を表示します&#10;単一のブックマークセルを選択している時は、同色のブックマークのみを対象とします&#10;範囲選択している時は、選択範囲のみを対象とします</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">すべてのブックマークを選択し削除</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">アクティブシート上のブックマークセルをすべて選択し、削除するかどうかの選択画面を表示します&#10;単一のブックマークセルを選択している時は、同色のブックマークのみを対象とします&#10;範囲選択している時は、選択範囲のみを対象とします</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ClearBookMarks</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -2323,20 +1792,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B631</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヌ</PhoneticText><Data
-      ss:Type="String">塗りつぶし</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">塗りつぶし</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヌ</PhoneticText><Data
-      ss:Type="String">塗りつぶし （{COLOR}）</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ズケイヌ</PhoneticText><Data
-      ss:Type="String">Excel2003までのクラシックカラーでセルや図形を塗りつぶします</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">塗りつぶし （{COLOR}）</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">Excel2003までのクラシックカラーでセルや図形を塗りつぶします</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">FillColor</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -2344,26 +1807,22 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">G631</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ヌイロセンタク</PhoneticText><Data
-      ss:Type="String">塗りつぶし色の選択</Data></Cell>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s80"/>
-    <Cell ss:StyleID="s79"/>
-    <Cell ss:StyleID="s79"/>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">塗りつぶし色の選択</Data></Cell>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
+    <Cell ss:StyleID="s65"/>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B632</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">センタクイロシュトク</PhoneticText><Data
-      ss:Type="String">選択セルの色を取得</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">選択セルの色を取得</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -2378,20 +1837,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマーク</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">C2</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ホカ</PhoneticText><Data
-      ss:Type="String">他のシート</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">他のシート</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ハンイ</PhoneticText><Data
-      ss:Type="String">ブックマークの範囲</Data></Cell>
-    <Cell ss:StyleID="s78"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">ホカサクジョケンサクタイショウシテイ</PhoneticText><Data
-      ss:Type="String">他のシートのブックマークを、ジャンプおよび削除の検索対象とするかどうかを指定します</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ブックマークの範囲</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">他のシートのブックマークを、ジャンプおよび削除の検索対象とするかどうかを指定します</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">-</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -2399,7 +1852,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ヘルプ</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">M71</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">ヘルプ&#10;</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ヘルプ&#10;</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -2414,14 +1867,14 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ヘルプ</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B711</Data></Cell>
-    <Cell ss:StyleID="s78"><Data ss:Type="String">ヘルプ&#10;</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">ヘルプ&#10;</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">Help</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">Help</Data></Cell>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">OpenHelp</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -2436,7 +1889,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">GroupLink</Data></Cell>
     <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">オンラインヘルプ</Data></Cell>
-    <Cell ss:StyleID="s78"/>
+    <Cell ss:StyleID="s77"/>
     <Cell ss:StyleID="s77"><Data ss:Type="String">OpenOnlineHelp</Data></Cell>
     <Cell ss:StyleID="s77"/>
    </Row>
@@ -2444,9 +1897,7 @@
     <Cell ss:StyleID="s77"><Data ss:Type="String">かんたんレイアウト</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">ヘルプ</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">B713</Data></Cell>
-    <Cell ss:StyleID="s77"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">セッテイ</PhoneticText><Data
-      ss:Type="String">設定</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">設定</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
@@ -2488,43 +1939,5 @@
     <Cell ss:StyleID="s77"/>
    </Row>
   </Table>
-  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
-   <PageSetup>
-    <Header x:Margin="0.3"/>
-    <Footer x:Margin="0.3"/>
-    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
-   </PageSetup>
-   <Unsynced/>
-   <Print>
-    <ValidPrinterInfo/>
-    <PaperSizeIndex>9</PaperSizeIndex>
-    <VerticalResolution>0</VerticalResolution>
-   </Print>
-   <Selected/>
-   <FreezePanes/>
-   <FrozenNoSplit/>
-   <SplitHorizontal>1</SplitHorizontal>
-   <TopRowBottomPane>1</TopRowBottomPane>
-   <ActivePane>2</ActivePane>
-   <Panes>
-    <Pane>
-     <Number>3</Number>
-    </Pane>
-    <Pane>
-     <Number>2</Number>
-     <ActiveRow>0</ActiveRow>
-    </Pane>
-   </Panes>
-   <ProtectObjects>False</ProtectObjects>
-   <ProtectScenarios>False</ProtectScenarios>
-  </WorksheetOptions>
-  <DataValidation xmlns="urn:schemas-microsoft-com:office:excel">
-   <Range>R1C5</Range>
-   <InputMessage>1:Large&#10;0:Small</InputMessage>
-  </DataValidation>
-  <DataValidation xmlns="urn:schemas-microsoft-com:office:excel">
-   <Range>R1C6:R1C7</Range>
-   <InputMessage>1:表示</InputMessage>
-  </DataValidation>
  </Worksheet>
 </Workbook>
