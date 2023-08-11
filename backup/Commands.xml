@@ -36,17 +36,6 @@
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <NumberFormat/>
   </Style>
-  <Style ss:ID="s77">
-   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <NumberFormat/>
-  </Style>
   <Style ss:ID="s65">
    <Alignment ss:Vertical="Top" ss:WrapText="1"/>
    <Borders>
@@ -57,6 +46,17 @@
    </Borders>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior ss:Color="#D9D9D9" ss:Pattern="Solid"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="s77">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <NumberFormat/>
   </Style>
  </Styles>
@@ -1361,8 +1361,8 @@
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">SelectCell</Data></Cell>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><Data ss:Type="String">ReverseCell.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">選択範囲の変更や記憶</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">選択領域の変更が行えます&#10;選択した領域を記憶させて、再選択させることも出来ます</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">UnSelect</Data></Cell>
@@ -1376,8 +1376,8 @@
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">SelectColumn</Data></Cell>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><Data ss:Type="String">SelectCol.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">列の選択(Ctrl+Space)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルの列全体を選択します&#10;※離れた列も選択可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectCol</Data></Cell>
@@ -1391,8 +1391,8 @@
     <Cell ss:StyleID="s77"><Data ss:Type="Number">0</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s77"><Data ss:Type="String">SelectRow</Data></Cell>
     <Cell ss:StyleID="s77"/>
-    <Cell ss:StyleID="s77"><Data ss:Type="String">SelectRow.png</Data></Cell>
     <Cell ss:StyleID="s77" ss:Formula="=RC[-6]"><Data ss:Type="String">行の選択(Shift+Space)</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">選択されたセルの行全体を選択します&#10;※離れた行も選択可能です</Data></Cell>
     <Cell ss:StyleID="s77"><Data ss:Type="String">SelectRow</Data></Cell>
