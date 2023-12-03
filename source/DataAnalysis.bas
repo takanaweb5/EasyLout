@@ -8,10 +8,11 @@ Private Const adLockReadOnly = 1
 '[概要] GoogleスプレッドシートのQUERY()関数もどき
 '[引数] データの範囲、クエリ文字列
 '       True:最初の行をヘッダーとして扱う
+'       NULL表現(数値項目のNullの扱い)：1=空白,2=0,3=#NULL!,4=文字列も#NULL!
 '[戻値] 実行結果(2次元配列)※スピルで取り出す
 '*****************************************************************************
-Public Function Query(ByRef データ範囲 As Range, ByVal クエリ文字列 As String, Optional 見出し As Boolean = True) As Variant
-Attribute Query.VB_Description = "Googleスプレッドシートに実装されている、QUERY()関数もどきを実装します\n1行目を見出しとして扱う時は第3引数を省略するかTRUEを設定し、見出しがそのままカラム名となります\n1行目から明細として扱う時は第3引数にFALSEを設定し、カラム名は左から順番にF1,F2..となります"
+Public Function Query(ByRef データ範囲 As Range, ByVal クエリ文字列 As String, Optional 見出し As Boolean = True, Optional NULL表現 As Byte = 1) As Variant
+Attribute Query.VB_Description = "Googleスプレッドシートに実装されている、QUERY()関数もどきを実装します\n第3引数を省略するかTRUEを設定すると1行目を見出しとして扱い、見出しがそのままカラム名となります\n第3引数にFALSEを設定すると1行目から明細として扱い、カラム名は左から順番にF1,F2..となります\n第4引数は数値項目がNULLになった時の出力方法を指定します\n　1(省略時)=空白, 2=0, 3=#NULL!, 4=文字列も#NULL!"
 On Error GoTo ErrHandle
     Dim strCon As String
     strCon = C_CONNECTSTR
@@ -45,7 +46,23 @@ On Error GoTo ErrHandle
     For j = 1 To objRecordset.RecordCount
         For i = 0 To objRecordset.Fields.Count - 1
             If IsNull(objRecordset.Fields(i).value) Then
-                vData(j, i) = CVErr(xlErrNull)
+                '文字列かどうか判定
+                If objRecordset.Fields(i).Type >= 200 Then
+                    If NULL表現 = 4 Then
+                        vData(j, i) = CVErr(xlErrNull)
+                    Else
+                        vData(j, i) = ""
+                    End If
+                Else
+                    Select Case NULL表現
+                    Case 1
+                        vData(j, i) = ""
+                    Case 2
+                        vData(j, i) = 0
+                    Case Else
+                        vData(j, i) = CVErr(xlErrNull)
+                    End Select
+                End If
             Else
                 vData(j, i) = objRecordset.Fields(i).value
             End If
@@ -103,11 +120,8 @@ End Function
 Public Function UnionV(領域1, ParamArray 領域2())
 Attribute UnionV.VB_Description = "領域と領域を縦方向に結合します"
     Dim arr As Variant
-    Dim i As Long
-    
     Dim ColCount As Long
     Dim RowCount As Long
-    ReDim RowCntList(0 To 1 + UBound(領域2)) As Long
     
     'Rangeの時、Variant配列に変換
     arr = 領域1
@@ -115,43 +129,32 @@ Attribute UnionV.VB_Description = "領域と領域を縦方向に結合します"
     '次元数を判定
     Select Case ArrayDims(arr)
     Case 1
-        RowCntList(0) = 1
-        ColCount = UBound(arr) - LBound(arr) + 1
+        RowCount = 1
+        ColCount = UBound(arr)
     Case 2
-        RowCntList(0) = UBound(arr, 1) - LBound(arr, 1) + 1
-        ColCount = UBound(arr, 2) - LBound(arr, 2) + 1
+        RowCount = UBound(arr, 1)
+        ColCount = UBound(arr, 2)
     Case Else
         Call Err.Raise(513)
     End Select
     
     Dim vRange
-    i = 1
     For Each vRange In 領域2
         'Rangeの時、Variant配列に変換
         arr = vRange
         '次元数を判定
         Select Case ArrayDims(arr)
         Case 1
-            RowCntList(i) = 1
-            If ColCount <> UBound(arr) - LBound(arr) + 1 Then
-                Call Err.Raise(513)
-            End If
+            RowCount = RowCount + UBound(arr)
+            If ColCount <> UBound(arr) Then Call Err.Raise(513)
         Case 2
-            RowCntList(i) = UBound(arr, 1) - LBound(arr, 1) + 1
-            If ColCount <> UBound(arr, 2) - LBound(arr, 2) + 1 Then
-                Call Err.Raise(513)
-            End If
+            RowCount = RowCount + UBound(arr, 1)
+            If ColCount <> UBound(arr, 2) Then Call Err.Raise(513)
         Case Else
             Call Err.Raise(513)
         End Select
-        i = i + 1
     Next
     
-    'RowCountを配列の合計から求める
-    For i = 0 To UBound(RowCntList)
-        RowCount = RowCount + RowCntList(i)
-    Next
-
     ReDim Result(1 To RowCount, 1 To ColCount)
     Dim CurrentRow As Long
     'Rangeの時、Variant配列に変換
@@ -173,40 +176,22 @@ End Function
 '*****************************************************************************
 Public Function UnionH(領域1, ParamArray 領域2())
 Attribute UnionH.VB_Description = "領域と領域を横方向に結合します"
-    Dim arr As Variant
-    Dim i As Long
-    
+    Dim arr  As Variant
     Dim ColCount As Long
     Dim RowCount As Long
-    ReDim ColCntList(0 To 1 + UBound(領域2)) As Long
     
     'Rangeの時、Variant配列に変換
-    arr = 領域1
+    arr = ConvertTo2DArray(領域1)
         
-    '次元数を判定
-    Select Case ArrayDims(arr)
-    Case 2
-        ColCntList(0) = UBound(arr, 2) - LBound(arr, 2) + 1
-        RowCount = UBound(arr, 1) - LBound(arr, 1) + 1
-    Case Else
-        Call Err.Raise(513)
-    End Select
+    RowCount = UBound(arr, 1)
+    ColCount = UBound(arr, 2)
     
     Dim vRange
-    i = 1
     For Each vRange In 領域2
         'Rangeの時、Variant配列に変換
-        arr = vRange
-        ColCntList(i) = UBound(arr, 2) - LBound(arr, 2) + 1
-        If RowCount <> UBound(arr, 1) - LBound(arr, 1) + 1 Then
-            Call Err.Raise(513)
-        End If
-        i = i + 1
-    Next
-    
-    'ColCountを配列の合計から求める
-    For i = 0 To UBound(ColCntList)
-        ColCount = ColCount + ColCntList(i)
+        arr = ConvertTo2DArray(vRange)
+        ColCount = ColCount + UBound(arr, 2)
+        If RowCount <> UBound(arr, 1) Then Call Err.Raise(513)
     Next
     
     '行列を入れ替えた結果を求める
@@ -214,18 +199,47 @@ Attribute UnionH.VB_Description = "領域と領域を横方向に結合します"
     
     Dim CurrentCol As Long
     'Rangeの時、Variant配列に変換
-    arr = 領域1
+    arr = ConvertTo2DArray(領域1)
     '行列を入れ替えて実行
     Call AppenResult(Transpose(arr), CurrentCol, Result)
     For Each vRange In 領域2
         'Rangeの時、Variant配列に変換
-        arr = vRange
+        arr = ConvertTo2DArray(vRange)
         '行列を入れ替えて実行
         Call AppenResult(Transpose(arr), CurrentCol, Result)
     Next
     
     '行列を元に戻す
     UnionH = Transpose(Result)
+End Function
+
+'*****************************************************************************
+'[概要] 1セルだけの1次元配列を2次元配列に変換
+'[引数] 1セルだけの1次元配列
+'[戻値] 2次元配列
+'*****************************************************************************
+Private Function ConvertTo2DArray(ByRef vRange)
+    'Rangeの時、Variant配列に変換
+    Dim arr
+    arr = vRange
+    
+    Select Case ArrayDims(arr)
+    Case 1
+        Dim value
+        If UBound(arr) = 1 Then
+            value = arr(1)
+            ReDim arr(1 To 1, 1 To 1)
+            arr(1, 1) = value
+            ConvertTo2DArray = arr
+        Else
+            Call Err.Raise(513)
+        End If
+    Case 2
+        ConvertTo2DArray = arr
+    Case Else
+        Call Err.Raise(513)
+    End Select
+    
 End Function
 
 '*****************************************************************************
