@@ -45,7 +45,7 @@ On Error GoTo ErrHandle
     '明細の設定
     For j = 1 To objRecordset.RecordCount
         For i = 0 To objRecordset.Fields.Count - 1
-            If IsNull(objRecordset.Fields(i).value) Then
+            If IsNull(objRecordset.Fields(i).Value) Then
                 '文字列かどうか判定
                 If objRecordset.Fields(i).Type >= 200 Then
                     If NULL表現 = 4 Then
@@ -64,7 +64,7 @@ On Error GoTo ErrHandle
                     End Select
                 End If
             Else
-                vData(j, i) = objRecordset.Fields(i).value
+                vData(j, i) = objRecordset.Fields(i).Value
             End If
         Next
         objRecordset.MoveNext
@@ -117,53 +117,34 @@ End Function
 '[引数] 対象領域
 '[戻値] 結合結果の2次元配列
 '*****************************************************************************
-Public Function UnionV(領域1, ParamArray 領域2())
+Public Function UnionV(領域1, ParamArray 領域2()) As Variant
 Attribute UnionV.VB_Description = "領域と領域を縦方向に結合します"
     Dim arr As Variant
     Dim ColCount As Long
     Dim RowCount As Long
     
-    'Rangeの時、Variant配列に変換
-    arr = 領域1
-        
-    '次元数を判定
-    Select Case ArrayDims(arr)
-    Case 1
-        RowCount = 1
-        ColCount = UBound(arr)
-    Case 2
-        RowCount = UBound(arr, 1)
-        ColCount = UBound(arr, 2)
-    Case Else
-        Call Err.Raise(513)
-    End Select
+    '入力を2次元配列に変換
+    arr = ConvertTo2DArray(領域1)
+    RowCount = UBound(arr, 1)
+    ColCount = UBound(arr, 2)
     
     Dim vRange
     For Each vRange In 領域2
-        'Rangeの時、Variant配列に変換
-        arr = vRange
-        '次元数を判定
-        Select Case ArrayDims(arr)
-        Case 1
-            RowCount = RowCount + UBound(arr)
-            If ColCount <> UBound(arr) Then Call Err.Raise(513)
-        Case 2
-            RowCount = RowCount + UBound(arr, 1)
-            If ColCount <> UBound(arr, 2) Then Call Err.Raise(513)
-        Case Else
-            Call Err.Raise(513)
-        End Select
+        '入力を2次元配列に変換
+        arr = ConvertTo2DArray(vRange)
+        RowCount = RowCount + UBound(arr, 1)
+        If ColCount <> UBound(arr, 2) Then Call Err.Raise(513)
     Next
     
     ReDim Result(1 To RowCount, 1 To ColCount)
     Dim CurrentRow As Long
-    'Rangeの時、Variant配列に変換
-    arr = 領域1
+    '入力を2次元配列に変換
+    arr = ConvertTo2DArray(領域1)
     Call AppenResult(arr, CurrentRow, Result)
     
     For Each vRange In 領域2
-        'Rangeの時、Variant配列に変換
-        arr = vRange
+        '入力を2次元配列に変換
+        arr = ConvertTo2DArray(vRange)
         Call AppenResult(arr, CurrentRow, Result)
     Next
     UnionV = Result
@@ -174,21 +155,20 @@ End Function
 '[引数] 対象領域
 '[戻値] 結合結果の2次元配列
 '*****************************************************************************
-Public Function UnionH(領域1, ParamArray 領域2())
+Public Function UnionH(領域1, ParamArray 領域2()) As Variant
 Attribute UnionH.VB_Description = "領域と領域を横方向に結合します"
     Dim arr  As Variant
     Dim ColCount As Long
     Dim RowCount As Long
     
-    'Rangeの時、Variant配列に変換
+    '入力を2次元配列に変換
     arr = ConvertTo2DArray(領域1)
-        
     RowCount = UBound(arr, 1)
     ColCount = UBound(arr, 2)
     
     Dim vRange
     For Each vRange In 領域2
-        'Rangeの時、Variant配列に変換
+        '入力を2次元配列に変換
         arr = ConvertTo2DArray(vRange)
         ColCount = ColCount + UBound(arr, 2)
         If RowCount <> UBound(arr, 1) Then Call Err.Raise(513)
@@ -198,12 +178,12 @@ Attribute UnionH.VB_Description = "領域と領域を横方向に結合します"
     ReDim Result(1 To ColCount, 1 To RowCount)
     
     Dim CurrentCol As Long
-    'Rangeの時、Variant配列に変換
+    '入力を2次元配列に変換
     arr = ConvertTo2DArray(領域1)
     '行列を入れ替えて実行
     Call AppenResult(Transpose(arr), CurrentCol, Result)
     For Each vRange In 領域2
-        'Rangeの時、Variant配列に変換
+        '入力を2次元配列に変換
         arr = ConvertTo2DArray(vRange)
         '行列を入れ替えて実行
         Call AppenResult(Transpose(arr), CurrentCol, Result)
@@ -214,40 +194,42 @@ Attribute UnionH.VB_Description = "領域と領域を横方向に結合します"
 End Function
 
 '*****************************************************************************
-'[概要] 1セルだけの1次元配列を2次元配列に変換
-'[引数] 1セルだけの1次元配列
+'[概要] 入力を2次元配列に変換
+'[引数] 変換元
 '[戻値] 2次元配列
 '*****************************************************************************
-Private Function ConvertTo2DArray(ByRef vRange)
+Private Function ConvertTo2DArray(ByRef vRange) As Variant
     'Rangeの時、Variant配列に変換
     Dim arr
     arr = vRange
-    
-    Select Case ArrayDims(arr)
-    Case 1
-        Dim value
-        If UBound(arr) = 1 Then
-            value = arr(1)
-            ReDim arr(1 To 1, 1 To 1)
-            arr(1, 1) = value
+        
+    If IsArray(arr) Then
+        Select Case ArrayDims(arr)
+        Case 1
+            ReDim arr2(1 To 1, 1 To UBound(arr))
+            Dim i As Long
+            For i = 1 To UBound(arr)
+                arr2(1, i) = arr(i)
+            Next
+            ConvertTo2DArray = arr2
+        Case 2
             ConvertTo2DArray = arr
-        Else
+        Case Else
             Call Err.Raise(513)
-        End If
-    Case 2
-        ConvertTo2DArray = arr
-    Case Else
-        Call Err.Raise(513)
-    End Select
-    
+        End Select
+    Else
+        ReDim arr2(1 To 1, 1 To 1)
+        arr2(1, 1) = arr
+        ConvertTo2DArray = arr2
+    End If
 End Function
 
 '*****************************************************************************
 '[概要] 行と列を置換する(WorksheetFunction.Transposeは低速のため)
-'[引数] なし
-'[戻値] なし
+'[引数] 変換前
+'[戻値] 変換後
 '*****************************************************************************
-Private Function Transpose(ByRef arr)
+Private Function Transpose(ByRef arr) As Variant
     ReDim work(LBound(arr, 2) To UBound(arr, 2), LBound(arr, 1) To UBound(arr, 1))
     Dim x As Long, y As Long
     For x = LBound(arr, 1) To UBound(arr, 1)
@@ -259,34 +241,27 @@ Private Function Transpose(ByRef arr)
 End Function
 
 '*****************************************************************************
-'[概要] 領域の値をResult配列に格納
-'[引数] arr:対象領域、row:カレント行数(値を進めて返す)、Result:結果配列(値を追加して返す)
+'[概要] 対象の2次元配列の値をResult配列に格納
+'[引数] arr:対象の配列、row:カレント行数(値を進めて返す)、Result:結果配列(値を追加して返す)
 '[戻値] なし
 '*****************************************************************************
-Private Function AppenResult(ByRef arr, ByRef CurrentRow As Long, ByRef Result)
-    Dim col As Long
+Private Sub AppenResult(ByRef arr, ByRef CurrentRow As Long, ByRef Result)
+    Dim CurrentCol As Long
     Dim row As Long
-    Dim i As Long
-    Dim value
-    '配列の次元数を判定
-    Select Case ArrayDims(arr)
-    Case 1
+    Dim col As Long
+    For row = LBound(arr, 1) To UBound(arr, 1)
         CurrentRow = CurrentRow + 1
-        For Each value In arr
-            col = col + 1
-            Result(CurrentRow, col) = value
+        CurrentCol = 0
+        For col = LBound(arr, 2) To UBound(arr, 2)
+            CurrentCol = CurrentCol + 1
+            If IsEmpty(arr(row, col)) Then
+                Result(CurrentRow, CurrentCol) = ""
+            Else
+                Result(CurrentRow, CurrentCol) = arr(row, col)
+            End If
         Next
-    Case 2
-        For row = LBound(arr, 1) To UBound(arr, 1)
-            CurrentRow = CurrentRow + 1
-            col = 0
-            For i = LBound(arr, 2) To UBound(arr, 2)
-                col = col + 1
-                Result(CurrentRow, col) = arr(row, i)
-            Next
-        Next
-    End Select
-End Function
+    Next
+End Sub
 
 '*****************************************************************************
 '[概要] バリアント配列の次元数を取得
