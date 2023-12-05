@@ -242,7 +242,7 @@ End Function
 
 '*****************************************************************************
 '[概要] 対象の2次元配列の値をResult配列に格納
-'[引数] arr:対象の配列、row:カレント行数(値を進めて返す)、Result:結果配列(値を追加して返す)
+'[引数] arr:対象の配列、CurrentRow:カレント行数(値を進めて返す)、Result:結果配列(値を追加して返す)
 '[戻値] なし
 '*****************************************************************************
 Private Sub AppenResult(ByRef arr, ByRef CurrentRow As Long, ByRef Result)
@@ -280,3 +280,15 @@ Private Function ArrayDims(arr) As Long
     ArrayDims = i - 1
 End Function
 
+'*****************************************************************************
+'[概要] 文字列を数式として評価して計算結果を返す
+'[引数] 評価式
+'[戻値] 計算結果
+'*****************************************************************************
+Public Function Eval(ByVal 評価式 As String) As Variant
+Attribute Eval.VB_Description = "文字列を数式として評価して計算結果を返す"
+    '再計算を強制する
+    Application.Volatile
+    
+    Eval = Application.Evaluate(評価式)
+End Function
