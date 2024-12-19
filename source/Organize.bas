@@ -35,6 +35,7 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub ApplyNormalFontToShape()
+    Application.ScreenUpdating = False
     If CheckSelection() = E_Shape Then
         On Error Resume Next
         With Selection.ShapeRange.TextFrame2.TextRange.Font
@@ -42,61 +43,22 @@ Private Sub ApplyNormalFontToShape()
             .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
             .Name = ActiveWorkbook.Styles("Normal").Font.Name
         End With
+        On Error GoTo 0
     Else
         Dim ws As Worksheet
+        Dim shp As Shape
         For Each ws In ActiveWindow.SelectedSheets
-            Call ApplyNormalFontToShapeSub(ws)
+            For Each shp In ws.Shapes
+                On Error Resume Next
+                With shp.TextFrame2.TextRange.Font
+                    .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
+                    .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
+                    .Name = ActiveWorkbook.Styles("Normal").Font.Name
+                End With
+                On Error GoTo 0
+            Next
         Next
     End If
-End Sub
-
-'*****************************************************************************
-'[概要] 図形に標準フォントを適用
-'[引数] Worksheet
-'[戻値] なし
-'*****************************************************************************
-Private Sub ApplyNormalFontToShapeSub(ByRef ws As Worksheet)
-    Dim j As Long
-    Dim shp As Shape
-    Dim strArray() As String
-
-    j = 0
-    For Each shp In ws.Shapes
-        Call ProcessShape(shp, strArray, j)
-    Next
-
-    If j = 0 Then
-        Exit Sub
-    End If
-
-    On Error Resume Next
-    With ws.Shapes.Range(strArray).TextFrame2.TextRange.Font
-        .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
-        .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
-        .Name = ActiveWorkbook.Styles("Normal").Font.Name
-    End With
-End Sub
-
-'*****************************************************************************
-'[概要] 再帰的に図形を処理し、標準フォントを適用するための配列を作成
-'[引数] shp: Shape オブジェクト
-'         strArray: 処理対象図形のNameを格納する配列
-'         j: 処理対象図形の数を管理するカウンタ
-'[戻値] なし
-'*****************************************************************************
-Private Sub ProcessShape(ByRef shp As Shape, ByRef strArray() As String, ByRef j As Long)
-    Dim childShp As Shape
-
-    Select Case shp.Type
-    Case msoAutoShape, msoTextBox, msoCallout
-        j = j + 1
-        ReDim Preserve strArray(1 To j)
-        strArray(j) = shp.Name
-    Case msoGroup
-        For Each childShp In shp.GroupItems
-            Call ProcessShape(childShp, strArray, j)
-        Next
-    End Select
 End Sub
 
 '*****************************************************************************
