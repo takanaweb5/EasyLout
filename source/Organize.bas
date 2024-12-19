@@ -19,8 +19,13 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub ApplyNormalFont()
-    If CheckSelection() = E_Range Then
+    If ActiveWindow.SelectedSheets.Count = 1 And CheckSelection() = E_Range Then
         Selection.Font.Name = ActiveWorkbook.Styles("Normal").Font.Name
+    Else
+        Dim ws As Worksheet
+        For Each ws In ActiveWindow.SelectedSheets
+            ws.Cells.Font.Name = ActiveWorkbook.Styles("Normal").Font.Name
+        Next
     End If
 End Sub
 
@@ -30,41 +35,68 @@ End Sub
 '[戻値] なし
 '*****************************************************************************
 Private Sub ApplyNormalFontToShape()
-    ReDim lngArray(1 To ActiveSheet.Shapes.Count)
-    Dim i As Long
+    If CheckSelection() = E_Shape Then
+        On Error Resume Next
+        With Selection.ShapeRange.TextFrame2.TextRange.Font
+            .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
+            .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
+            .Name = ActiveWorkbook.Styles("Normal").Font.Name
+        End With
+    Else
+        Dim ws As Worksheet
+        For Each ws In ActiveWindow.SelectedSheets
+            Call ApplyNormalFontToShapeSub(ws)
+        Next
+    End If
+End Sub
+
+'*****************************************************************************
+'[概要] 図形に標準フォントを適用
+'[引数] Worksheet
+'[戻値] なし
+'*****************************************************************************
+Private Sub ApplyNormalFontToShapeSub(ByRef ws As Worksheet)
     Dim j As Long
-    Dim k As Long
-    Dim blnShapeSelect As Boolean
-    blnShapeSelect = (CheckSelection() = E_Shape)
-    
-    For i = 1 To ActiveSheet.Shapes.Count
-        Select Case ActiveSheet.Shapes(i).Type
-        Case msoAutoShape, msoTextBox, msoCallout
-            If blnShapeSelect Then
-                For k = 1 To Selection.ShapeRange.Count
-                    If Selection.ShapeRange(k).Name = ActiveSheet.Shapes(i).Name Then
-                        j = j + 1
-                        lngArray(j) = i
-                        Exit For
-                    End If
-                Next
-            Else
-                j = j + 1
-                lngArray(j) = i
-            End If
-        End Select
+    Dim shp As Shape
+    Dim strArray() As String
+
+    j = 0
+    For Each shp In ws.Shapes
+        Call ProcessShape(shp, strArray, j)
     Next
+
     If j = 0 Then
         Exit Sub
     End If
-    
-    ReDim Preserve lngArray(1 To j)
+
     On Error Resume Next
-    With ActiveSheet.Shapes.Range(lngArray).TextFrame2.TextRange.Font
+    With ws.Shapes.Range(strArray).TextFrame2.TextRange.Font
         .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
         .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
         .Name = ActiveWorkbook.Styles("Normal").Font.Name
     End With
+End Sub
+
+'*****************************************************************************
+'[概要] 再帰的に図形を処理し、標準フォントを適用するための配列を作成
+'[引数] shp: Shape オブジェクト
+'         strArray: 処理対象図形のNameを格納する配列
+'         j: 処理対象図形の数を管理するカウンタ
+'[戻値] なし
+'*****************************************************************************
+Private Sub ProcessShape(ByRef shp As Shape, ByRef strArray() As String, ByRef j As Long)
+    Dim childShp As Shape
+
+    Select Case shp.Type
+    Case msoAutoShape, msoTextBox, msoCallout
+        j = j + 1
+        ReDim Preserve strArray(1 To j)
+        strArray(j) = shp.Name
+    Case msoGroup
+        For Each childShp In shp.GroupItems
+            Call ProcessShape(childShp, strArray, j)
+        Next
+    End Select
 End Sub
 
 '*****************************************************************************
