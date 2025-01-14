@@ -121,15 +121,15 @@ Private Function IsSameCondition(ByRef F1 As FormatCondition, ByRef F2 As Format
         Operator(1) = .Operator
         TextOperator(1) = .TextOperator
         Text(1) = .Text
-        Formula1_R1C1(1) = Application.ConvertFormula(.Formula1, xlA1, xlR1C1, , GetTopLeftCell(.AppliesTo))
-        Formula2_R1C1(1) = Application.ConvertFormula(.Formula2, xlA1, xlR1C1, , GetTopLeftCell(.AppliesTo))
+        Formula1_R1C1(1) = ConvertToR1C1Formula(.Formula1, GetTopLeftCell(.AppliesTo))
+        Formula2_R1C1(1) = ConvertToR1C1Formula(.Formula2, GetTopLeftCell(.AppliesTo))
     End With
     With F2
         Operator(2) = .Operator
         TextOperator(2) = .TextOperator
         Text(2) = .Text
-        Formula1_R1C1(2) = Application.ConvertFormula(.Formula1, xlA1, xlR1C1, , GetTopLeftCell(.AppliesTo))
-        Formula2_R1C1(2) = Application.ConvertFormula(.Formula2, xlA1, xlR1C1, , GetTopLeftCell(.AppliesTo))
+        Formula1_R1C1(2) = ConvertToR1C1Formula(.Formula1, GetTopLeftCell(.AppliesTo))
+        Formula2_R1C1(2) = ConvertToR1C1Formula(.Formula2, GetTopLeftCell(.AppliesTo))
     End With
     On Error GoTo 0
     
@@ -236,6 +236,54 @@ Private Function SortAreas(ByRef objRange As Range) As Range
         j = Right(SortArray(i), 4) 'Index=下4桁
         Set SortAreas = Application.Union(SortAreas, objRange.Areas(j))
     Next
+End Function
+
+'*****************************************************************************
+'[概要] A1タイプのセル関数をR1C1タイプに変換する
+'[引数] 変換前のセル関数、一番左上のセル
+'[戻値] 例：A1 → RC
+'*****************************************************************************
+Private Function ConvertToR1C1Formula(ByVal strFormula As String, ByRef objCell As Range) As String
+    ConvertToR1C1Formula = ConvertToR1C1FormulaSub(Application.ConvertFormula(strFormula, xlA1, xlR1C1, , objCell))
+End Function
+
+'*****************************************************************************
+'[概要] R1C1タイプで相対パスがマイナスの時、プラスに変換する
+'       セル関数が、A1=A1048575 と A2=A1 が同じ条件なのに同じ条件と判定されないため
+'[引数] 変換前のセル関数
+'[戻値] 例：R[-1]C[-1] → R[1048575]C[16383]
+'*****************************************************************************
+Private Function ConvertToR1C1FormulaSub(ByVal strFormula As String) As String
+    Dim reg As Object
+    Dim matches As Object
+    Dim result As String
+    result = strFormula
+    
+    ' 正規表現オブジェクトの作成
+    Set reg = CreateObject("VBScript.RegExp")
+    reg.Global = True    ' 全ての一致を検索
+    reg.IgnoreCase = False ' 大文字小文字を区別する
+    reg.Pattern = "([RC])\[-([0-9]+)\]"
+    If Not reg.Test(strFormula) Then
+        ConvertToR1C1FormulaSub = result
+        Exit Function
+    End If
+    
+    Set matches = reg.Execute(strFormula)
+    
+    Dim i As Long
+    Dim newValue As Long
+    For i = matches.Count - 1 To 0 Step -1
+        With matches(i)
+            If .SubMatches(0) = "R" Then
+                newValue = Rows.Count - .SubMatches(1)
+            Else
+                newValue = Columns.Count - .SubMatches(1)
+            End If
+            result = Left(result, .FirstIndex + 2) & newValue & Mid(result, .FirstIndex + .Length)
+        End With
+    Next
+    ConvertToR1C1FormulaSub = result
 End Function
 
 '*****************************************************************************
