@@ -1419,7 +1419,7 @@ Private Sub ChangeTextboxToCell(ByRef objTextbox As Shape, ByRef objRange As Ran
     Call objRange.Merge
     
     '•¶š—ñ‚Ìİ’è
-    objRange(1, 1).Value = objTextbox.TextFrame2.TextRange.Text
+    objRange(1).Value = objTextbox.TextFrame2.TextRange.Text
     
     'c‘‚« or ‰¡‘‚«
     Select Case objTextbox.TextFrame2.Orientation
@@ -2802,7 +2802,7 @@ On Error GoTo ErrHandle
     Dim lngLast As Long
     If objSelection.Rows.Count = Rows.Count Then
         'g—p‚³‚ê‚Ä‚¢‚éÅŒã‚Ìs
-        lngLast = Cells.SpecialCells(xlCellTypeLastCell).Row
+        lngLast = Cells.SpecialCells(xlCellTypeLastCell).row
     Else
         lngLast = objSelection.Rows.Count
     End If
