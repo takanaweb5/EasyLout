@@ -11,6 +11,76 @@ Private FCount As Long
 '*****************************************************************************
 Private Sub ChangeNormalFont()
     ActiveWorkbook.Styles("Normal").Font.Name = GetSetting(REGKEY, "KEY", "FontName", DEFAULTFONT)
+    Call ChangeDefaultShape
+End Sub
+
+'**********************************************
+'[概要] 既定の図形を変更
+'[引数] なし
+'[戻値] なし
+'**********************************************
+Private Sub ChangeDefaultShape()
+    Dim objShape As Shape
+    Set objShape = ActiveSheet.Shapes.AddShape(msoShapeRectangle, 10, 10, 100, 50)
+    Call SetShapeProperties(objShape, RGB(255, 0, 0), 1.5, False)
+    
+    Set objShape = ActiveSheet.Shapes.AddTextbox(msoTextOrientationHorizontal, 10, 110, 100, 50)
+    Call SetShapeProperties(objShape, RGB(0, 0, 0), 0.75, True)
+    
+    Set objShape = ActiveSheet.Shapes.AddLine(120, 10, 200, 50)
+    Call SetShapeProperties(objShape, RGB(0, 0, 0), 0.75, True)
+End Sub
+
+'**********************************************
+'[概要] 図形のプロパティを設定し、既定値として保存後削除する
+'[引数] objShape: 設定対象の図形
+'       lngLineColor: 線の色（RGB値）
+'       dblLineWeight: 線の太さ
+'       blnFillVisible: 塗りつぶしの表示/非表示
+'[戻値] なし
+'**********************************************
+Private Sub SetShapeProperties(ByRef objShape As Shape, ByVal lngLineColor As Long, ByVal dblLineWeight As Double, ByVal blnFillVisible As Boolean)
+
+    ' 図形が四角形などの場合は塗りつぶしを設定
+    If objShape.Type <> msoLine Then
+        With objShape.Fill
+            .ForeColor.RGB = RGB(255, 255, 255) ' 白
+            .Transparency = 0 ' 不透明
+            .Solid ' 単色
+            .Visible = blnFillVisible '塗りつぶしの有無
+        End With
+    End If
+    
+    ' テキストフレームがある場合はフォント設定
+    If objShape.Type <> msoLine Then
+        With objShape.TextFrame2.TextRange.Font
+            .NameComplexScript = ActiveWorkbook.Styles("Normal").Font.Name
+            .NameFarEast = ActiveWorkbook.Styles("Normal").Font.Name
+            .Name = ActiveWorkbook.Styles("Normal").Font.Name
+        End With
+        With objShape.TextFrame2.TextRange.Font.Fill
+            .ForeColor.RGB = RGB(0, 0, 0) ' 黒
+            .Transparency = 0 ' 不透明
+            .Solid ' 単色
+            .Visible = True
+        End With
+    End If
+    
+    ' 線の設定
+    With objShape.Line
+        .ForeColor.RGB = lngLineColor
+        .Transparency = 0 ' 不透明
+        .Weight = dblLineWeight
+        .Visible = True
+        If objShape.Type = msoLine Then
+            .BeginArrowheadStyle = msoArrowheadNone
+            .EndArrowheadStyle = msoArrowheadNone
+        End If
+    End With
+    
+    ' 既定値として設定して削除
+    Call objShape.SetShapesDefaultProperties
+    Call objShape.Delete
 End Sub
 
 '*****************************************************************************
